@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8D913B4D-3361-4030-9BC6-0DD1F51026E4}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>aq</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>ENABLE_AQL_PARSER;WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Program Files\MySQL\MySQL Connector C++ 1.1.3 Bin\include;C:\Program Files\MySQL\MySQL Connector C++ 1.1.3 Bin\include\cppconn;$(BOOST_INSTALL_INCLUDE);./</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Program Files\MySQL\MySQL Connector C++ 1.1.3 Bin\lib\opt;C:\Program Files\MySQL\MySQL Server 5.5\lib;$(BOOST_INSTALL_LIB)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mysqlcppconn.lib;libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>ENABLE_AQL_PARSER;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Program Files\MySQL\MySQL Connector C++ 1.1.3 Bin\include;C:\Program Files\MySQL\MySQL Connector C++ 1.1.3 Bin\include\cppconn;$(BOOST_INSTALL_INCLUDE);./</AdditionalIncludeDirectories>
+      <EnableParallelCodeGeneration>
+      </EnableParallelCodeGeneration>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\Program Files\MySQL\MySQL Connector C++ 1.1.3 Bin\lib\opt;C:\Program Files\MySQL\MySQL Server 5.5\lib;$(BOOST_INSTALL_LIB)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mysqlcppconn.lib;libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="aq\ApplyRowVisitor.cpp" />
+    <ClCompile Include="aq\AQFunctor.cpp" />
+    <ClCompile Include="aq\Column2Table.cpp" />
+    <ClCompile Include="aq\ColumnItem.cpp" />
+    <ClCompile Include="aq\db_loader\DatabaseLoader.cpp" />
+    <ClCompile Include="aq\DumpVisitor.cpp" />
+    <ClCompile Include="aq\engine\AQEngine.cpp" />
+    <ClCompile Include="aq\engine\AQEngineException.cpp" />
+    <ClCompile Include="aq\engine\AQMatrix.cpp" />
+    <ClCompile Include="aq\NodeWritter.cpp" />
+    <ClCompile Include="aq\Optimizations.cpp" />
+    <ClCompile Include="aq\parser\ID2Str.cpp" />
+    <ClCompile Include="aq\parser\JeqParser.cpp" />
+    <ClCompile Include="aq\parser\sql92_grm_tab.cpp" />
+    <ClCompile Include="aq\parser\SQLParser.cpp" />
+    <ClCompile Include="aq\ParsException.cpp" />
+    <ClCompile Include="aq\QueryResolver.cpp" />
+    <ClCompile Include="aq\Row.cpp" />
+    <ClCompile Include="aq\RowBinaryWritter.cpp" />
+    <ClCompile Include="aq\RowSolver.cpp" />
+    <ClCompile Include="aq\RowTableWritter.cpp" />
+    <ClCompile Include="aq\RowTemporaryWritter.cpp" />
+    <ClCompile Include="aq\RowVerbProcess.cpp" />
+    <ClCompile Include="aq\RowWritter.cpp" />
+    <ClCompile Include="aq\Settings.cpp" />
+    <ClCompile Include="aq\SQLPrefix.cpp" />
+    <ClCompile Include="aq\statement_resolver.cpp" />
+    <ClCompile Include="aq\TemporaryColumnMapper.cpp" />
+    <ClCompile Include="aq\tests\DatabaseGenerator.cpp" />
+    <ClCompile Include="aq\tests\DatabaseHelper.cpp" />
+    <ClCompile Include="aq\tests\FunctionalTests.cpp" />
+    <ClCompile Include="aq\tests\MySQLHelper.cpp" />
+    <ClCompile Include="aq\tests\QueryGenerator.cpp" />
+    <ClCompile Include="aq\tests\Report.cpp" />
+    <ClCompile Include="aq\tests\TestRunner.cpp" />
+    <ClCompile Include="aq\tests\Util.cpp" />
+    <ClCompile Include="aq\tests\VerbBuilder.cpp" />
+    <ClCompile Include="aq\TreeUtilities.cpp" />
+    <ClCompile Include="aq\UpdateResolver.cpp" />
+    <ClCompile Include="aq\util\AQLInfixSpiritParser.cpp" />
+    <ClCompile Include="aq\util\AQLQuery.cpp" />
+    <ClCompile Include="aq\util\AQLSpiritParser.cpp" />
+    <ClCompile Include="aq\util\Base.cpp" />
+    <ClCompile Include="aq\util\BaseDesc.cpp" />
+    <ClCompile Include="aq\util\Column.cpp" />
+    <ClCompile Include="aq\util\Database.cpp" />
+    <ClCompile Include="aq\util\DateConversion.cpp" />
+    <ClCompile Include="aq\util\DBTypes.cpp" />
+    <ClCompile Include="aq\util\Exceptions.cpp" />
+    <ClCompile Include="aq\util\GenericFileMapper.cpp" />
+    <ClCompile Include="aq\util\Logger.cpp" />
+    <ClCompile Include="aq\util\QueryReader.cpp" />
+    <ClCompile Include="aq\util\Table.cpp" />
+    <ClCompile Include="aq\util\Timer.cpp" />
+    <ClCompile Include="aq\util\Utilities.cpp" />
+    <ClCompile Include="aq\util\WIN32FileMapper.cpp" />
+    <ClCompile Include="aq\verbs\AggregateVerbs.cpp" />
+    <ClCompile Include="aq\verbs\ArithmeticVerbs.cpp" />
+    <ClCompile Include="aq\verbs\AuxiliaryVerbs.cpp" />
+    <ClCompile Include="aq\verbs\CaseVerb.cpp" />
+    <ClCompile Include="aq\verbs\ComparisonVerbs.cpp" />
+    <ClCompile Include="aq\verbs\ConversionVerbs.cpp" />
+    <ClCompile Include="aq\verbs\DateVerbs.cpp" />
+    <ClCompile Include="aq\verbs\JoinVerbs.cpp" />
+    <ClCompile Include="aq\verbs\MainVerbs.cpp" />
+    <ClCompile Include="aq\verbs\OverVerbs.cpp" />
+    <ClCompile Include="aq\verbs\ScalarVerbs.cpp" />
+    <ClCompile Include="aq\verbs\Verb.cpp" />
+    <ClCompile Include="aq\verbs\VerbFactory.cpp" />
+    <ClCompile Include="aq\verbs\VerbNode.cpp" />
+    <ClCompile Include="aq\verbs\VerbResult.cpp" />
+    <ClCompile Include="Tools\aq_tests_batch.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="aq\engine\AQEngine.h" />
+    <ClInclude Include="aq\engine\AQEngineException.h" />
+    <ClInclude Include="aq\engine\AQEngine_Intf.h" />
+    <ClInclude Include="aq\engine\AQMatrix.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
