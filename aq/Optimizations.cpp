@@ -1,6 +1,8 @@
 #include "Optimizations.h"
 #include "verbs/AuxiliaryVerbs.h"
 #include <aq/util/Exceptions.h>
+#include <aq/util/Database.h>
+#include <aq/util/FileCloser.h>
 #include <boost/scoped_array.hpp>
 
 namespace aq
@@ -17,7 +19,7 @@ typename ColumnItem<T>::Ptr getMinMaxFromThesaurus(Column::Ptr column, size_t ta
     if (baseDesc->getTables()[tableIdx]->ID == tableID)
       break;
   }
-	std::string fileName = getThesaurusFileName(settings->dataPath.c_str(), tableIdx + 1, colIdx + 1, partIdx);
+  std::string fileName = Database::getThesaurusFileName(settings->dataPath.c_str(), tableIdx + 1, colIdx + 1, partIdx);
 	FILE* pFIn = fopen(fileName.c_str(), "rb");
 	if ( pFIn == nullptr )
 		return minMax;
@@ -27,7 +29,7 @@ typename ColumnItem<T>::Ptr getMinMaxFromThesaurus(Column::Ptr column, size_t ta
 	size_t tmpBufSize = 1000;
 	switch( column->getType() )
 	{
-	case COL_TYPE_INT: 
+	case COL_TYPE_INT:
 		binItemSize = 4;
 		break;
 	case COL_TYPE_BIG_INT:
@@ -61,7 +63,7 @@ typename ColumnItem<T>::Ptr getMinMaxFromThesaurus(Column::Ptr column, size_t ta
 
 	switch( column->getType() )
 	{
-	case COL_TYPE_INT: 
+	case COL_TYPE_INT:
 		{
 			int *pItemData = (int*)( pTmpBuf );
 			minMax = new ColumnItem<int32_t>( *pItemData );
@@ -90,8 +92,8 @@ typename ColumnItem<T>::Ptr getMinMaxFromThesaurus(Column::Ptr column, size_t ta
 }
 
 //-------------------------------------------------------------------------------
-Table::Ptr solveOptimalMinMax(aq::verb::VerbNode::Ptr spTree, 
-                              Base::Ptr baseDesc, 
+Table::Ptr solveOptimalMinMax(aq::verb::VerbNode::Ptr spTree,
+                              Base::Ptr baseDesc,
                               Settings::Ptr settings )
 {
 	if( !spTree->getLeftChild() )
@@ -101,7 +103,7 @@ Table::Ptr solveOptimalMinMax(aq::verb::VerbNode::Ptr spTree,
   }
 	aq::verb::VerbNode::Ptr verb1 = spTree->getLeftChild();
   aq::verb::VerbNode::Ptr verb2 = nullptr;
-	if( !verb1 ) 
+	if( !verb1 )
     return Table::Ptr();;
   if ((verb1->getVerbType() == K_MIN) || (verb1->getVerbType() == K_MAX))
     verb2 = verb1->getLeftChild();
@@ -140,7 +142,7 @@ Table::Ptr solveOptimalMinMax(aq::verb::VerbNode::Ptr spTree,
 		//	if( min == ColumnItem::lessThan(item.get(), minMax.get(), column->Type) )
 		//		minMax = item;
 	}
-	
+
   assert(false);
 	table.reset(new Table("", 0, 1));
 	Column::Ptr newColumn(new Column(*column));

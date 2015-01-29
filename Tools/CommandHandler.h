@@ -2,7 +2,7 @@
 #define __AQ_COMMAND_HANDLER_H__
 
 #include <aq/Settings.h>
-#include <aq/Base.h>
+#include <aq/util/Base.h>
 
 namespace aq
 {
@@ -10,7 +10,7 @@ namespace aq
 class CommandHandler
 {
 public:
-  CommandHandler(const std::string& _dbsPath, const std::string& _dbName, aq::Settings::Ptr _settings, aq::Base::Ptr _baseDesc) 
+  CommandHandler(const std::string& _dbsPath, const std::string& _dbName, aq::Settings::Ptr _settings, aq::Base::Ptr _baseDesc)
     : databasesPath(_dbsPath), databaseName(_dbName), settings(_settings), baseDesc(_baseDesc)
   {
   }

@@ -3,7 +3,7 @@
 
 namespace aq
 {
-	namespace 
+	namespace
 	{
 		void write_query(std::ostream& report, const aq::core::SelectStatement& ss)
 		{
@@ -21,7 +21,7 @@ namespace aq
 		: filename(_filename), n_db(0), n_query(0), current_database(false)
 	{
 		std::cout << "open " << filename << std::endl;
-		report.open(filename.c_str(), std::ios::beg | std::ios::out | std::ios::trunc);
+		report.open(filename.c_str(), std::ios_base::out | std::ios_base::trunc);
 		report << "<databases>" << std::endl;
 	}
 
@@ -36,14 +36,14 @@ namespace aq
 		report << "</databases>" << std::endl;
 		report.close();
 	}
-	
+
 	void Report::new_db(const DatabaseGenerator::handle_t::tables_t& tables)
 	{
 		if (current_database)
 		{
 			n_query = 0;
 			report << "</queries>" << std::endl;
-			report << "</database>" << std::endl;	
+			report << "</database>" << std::endl;
 		}
 		else
 		{
@@ -66,7 +66,7 @@ namespace aq
 			}
 			report << "</values>" << std::endl;
 			report << "</column>" << std::endl;
-			
+
 			// column values
 			report << "<column name=\"v1\">" << std::endl;
 			report << "<values>";
@@ -85,18 +85,18 @@ namespace aq
 		}
 		report << "<queries>" << std::endl;
 	}
-	
+
 	void Report::new_query(const aq::core::SelectStatement& ss)
 	{
 		report << "<query id=\"" << ++n_query << "\">" << std::endl;
 		write_query(report, ss);
 	}
-	
+
 	void Report::close_query()
 	{
 		report << "</query>" << std::endl;
 	}
-	
+
 	void Report::time_exec(std::string db_name, uint64_t duration_ms)
 	{
 		report << "<" << db_name << " execution_time=" << duration_ms << "/>" << std::endl;

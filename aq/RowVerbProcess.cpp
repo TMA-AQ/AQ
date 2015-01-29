@@ -1,21 +1,21 @@
 #include "RowVerbProcess.h"
-#include "verbs\VerbFactory.h"
+#include "verbs/VerbFactory.h"
 
 namespace aq
 {
-  
-    RowVerbProcess::RowVerbProcess(aq::verb::VerbNode::Ptr _spTree, 
-      std::vector<aq::verb::VerbNode::Ptr>& _selectVerbs) 
+
+    RowVerbProcess::RowVerbProcess(aq::verb::VerbNode::Ptr _spTree,
+      std::vector<aq::verb::VerbNode::Ptr>& _selectVerbs)
       : spTree(_spTree), verbs(_selectVerbs)
     {
       this->applyRowVisitor.reset(new aq::ApplyRowVisitor);
     }
-    
-    RowVerbProcess::RowVerbProcess(const RowVerbProcess& o) 
+
+    RowVerbProcess::RowVerbProcess(const RowVerbProcess& o)
       : spTree(o.spTree)
     {
       this->applyRowVisitor.reset(new aq::ApplyRowVisitor);
-      for (auto& verb : o.verbs) 
+      for (auto& verb : o.verbs)
       {
         aq::verb::VerbNode::Ptr v = aq::verb::VerbFactory::GetInstance().getVerb(verb->getVerbType());
         v->cloneSubtree(verb);

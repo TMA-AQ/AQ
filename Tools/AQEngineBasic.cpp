@@ -1,6 +1,6 @@
 #include "AQEngineBasic.h"
-#include <aq/AQLQuery.h>
-#include <aq/AQLParser.h>
+#include <aq/util/AQLQuery.h>
+#include <aq/util/AQLParser.h>
 #include <iostream>
 
 using namespace aq;
@@ -34,7 +34,7 @@ void AQEngineBasic::call(const aq::core::SelectStatement& stmt, aq::engine::AQEn
 {
   this->matrix.reset(new aq::engine::AQMatrix(this->settings, this->base));
   auto& mtx = this->matrix->getMatrix();
-  
+
   for (const auto& table : stmt.fromTables)
   {
     auto t = this->base->getTable(table.name);

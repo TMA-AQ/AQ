@@ -1,7 +1,6 @@
 #include "AQEngineSimulate.h"
-#include <aq/AQLParser.h>
-
-#include <aq/Exceptions.h>
+#include <aq/util/AQLParser.h>
+#include <aq/util/Exceptions.h>
 #include <aq/TreeUtilities.h>
 
 namespace aq
@@ -22,12 +21,12 @@ namespace aq
     std::cout << ss.to_string(aq::core::SelectStatement::output_t::AQL) << std::endl;
 
     //std::cout << "TableIDs value =" << std::endl;
-    //for (auto& tid : this->tableIDs) 
+    //for (auto& tid : this->tableIDs)
     //{
     //  std::cout << "[" << tid << "]" << std::endl;
     //}
     // this->aqMatrix->simulate( rand() % 1000, this->tableIDs );
-    
+
     if (mode != aq::engine::AQEngine_Intf::mode_t::NESTED_2)
     {
       this->aqMatrix.reset(new aq::engine::AQMatrix(this->settings, this->baseDesc));
@@ -67,7 +66,7 @@ namespace aq
     // TODO
     (void)id;
     (void)resultTables;
-    std::for_each(this->tableIDs.begin(), this->tableIDs.end(), [&] (uint64_t tid) { 
+    std::for_each(this->tableIDs.begin(), this->tableIDs.end(), [&] (uint64_t tid) {
       std::ostringstream oss;
       oss << "REG" << tid << "TMP" << id;
       resultTables.push_back(std::make_pair(oss.str(), this->baseDesc->getTable(id)->getName()));
@@ -100,7 +99,7 @@ namespace aq
     if ( !pNode )
       return;
 
-    if ( (pNode->tag == K_IDENT) 
+    if ( (pNode->tag == K_IDENT)
       && (std::find( this->tableIDs.begin(), this->tableIDs.end(), this->baseDesc->getTable( pNode->getData().val_str )->getID() ) == this->tableIDs.end()) )
       this->tableIDs.push_back( this->baseDesc->getTable( pNode->getData().val_str )->getID() );
 
@@ -130,10 +129,10 @@ namespace aq
       querySS >> s;
     } while ((s != "") && (s != ";") && (s != "WHERE") && (s != "GROUP") && (s != "ORDER"));
 
-    for (const auto& tname : tableNames) 
+    for (const auto& tname : tableNames)
     {
       this->tableIDs.push_back(this->baseDesc->getTable(tname)->getID());
     }
-    
+
   }
 }

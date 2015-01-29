@@ -5,11 +5,10 @@
 
 #pragma once
 
+#if defined(WIN32)
 #include "targetver.h"
-
 #include <stdio.h>
 #include <tchar.h>
-
-
+#endif
 
 // TODO: faites référence ici aux en-têtes supplémentaires nécessaires au programme

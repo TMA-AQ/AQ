@@ -16,6 +16,10 @@ typedef long long llong;
 //------------------------------------------------------------------------------
 #define STR_BUF_SIZE 4096
 
+#ifndef _MAX_PATH
+#define _MAX_PATH 1024
+#endif
+
 namespace aq {
 
 /// utils functions
@@ -42,7 +46,7 @@ void removeCharAtEnd(char * input, char c = ' ');
 /// \brief Change all char that match an input char in a string
 /// \param input string to modify
 /// \param old_c the char to change
-/// \param new_c the new char 
+/// \param new_c the new char
 void ChangeChar(char * input, char old_c, char new_c);
 
 /// \defgroup file_function miscellaenous files functions

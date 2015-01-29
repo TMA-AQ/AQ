@@ -9,7 +9,7 @@
 
 namespace aq
 {
-  
+
 // -------------------------------------------------------------------------------------------------
 Base::Base()
 {
@@ -113,30 +113,30 @@ void Base::clear()
 }
 
 //------------------------------------------------------------------------------
-void Base::loadFromBaseDesc(const aq::base_t& base) 
+void Base::loadFromBaseDesc(const aq::base_t& base)
 {
   this->Name = base.name;
-  for (const auto& table : base.table) 
+  for (const auto& table : base.table)
   {
 		Table::Ptr pTD(new Table(table.name, table.id, table.nb_record));
-    for (const auto& column : table.colonne) 
+    for (const auto& column : table.colonne)
     {
       aq::ColumnType type = aq::util::symbole_to_column_type(column.type);
       unsigned int size = 0;
       switch (type)
       {
-      case COL_TYPE_VARCHAR: 
-        size = column.size; 
+      case COL_TYPE_VARCHAR:
+        size = column.size;
         break;
-      case COL_TYPE_INT: 
+      case COL_TYPE_INT:
       case COL_TYPE_BIG_INT:
       case COL_TYPE_DOUBLE:
-      case COL_TYPE_DATE: 
-        size = 1; 
+      case COL_TYPE_DATE:
+        size = 1;
         break;
       }
-      Column::Ptr column(new Column(column.name, column.id, size, type));
-      pTD->Columns.push_back(column);
+      Column::Ptr col(new Column(column.name, column.id, size, type));
+      pTD->Columns.push_back(col);
     }
 		this->Tables.push_back(pTD);
   }
@@ -152,7 +152,7 @@ void Base::dumpRaw( std::ostream& os ) const
     table->dumpRaw(os);
   }
  }
- 
+
 //------------------------------------------------------------------------------
 void Base::dumpXml( std::ostream& os ) const
 {
@@ -162,5 +162,5 @@ void Base::dumpXml( std::ostream& os ) const
   os << "</Tables>" << std::endl;
   os << "</Database>" << std::endl;
  }
- 
+
 }

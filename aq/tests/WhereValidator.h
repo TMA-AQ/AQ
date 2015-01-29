@@ -9,7 +9,7 @@
 # include "WhereIn.h"
 # include "WhereComparator.h"
 
-# include <aq/AQLQuery.h>
+# include <aq/util/AQLQuery.h>
 
 namespace aq
 {

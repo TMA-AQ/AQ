@@ -1,9 +1,9 @@
 #include "AQManager.h"
 #include "AQEngineSimulate.h"
 
-#include <aq/Database.h>
-#include <aq/FileMapper.h>
-#include <aq/Timer.h>
+#include <aq/util/Database.h>
+#include <aq/util/FileMapper.h>
+#include <aq/util/Timer.h>
 
 #include <aq/parser/SQLParser.h>
 #include <aq/parser/sql92_grm_tab.hpp>
@@ -52,14 +52,14 @@ int check_database(const aq::Settings::Ptr settings)
   //std::string value;
   //boost::shared_ptr<aq::columnmapper_intf> m;
   //boost::shared_ptr<aq::columnmapper_intf> tr;
-  
+
   for (auto& t : b.table)
   {
-	  aq::Logger::getInstance().log(AQ_NOTICE, "check table [id:%u;name:%s;cols:%u;records:%u]\n", 
+	  aq::Logger::getInstance().log(AQ_NOTICE, "check table [id:%u;name:%s;cols:%u;records:%u]\n",
 		  t.id, t.name.c_str(), t.colonne.size(), t.nb_record);
 	  for (auto& c : t.colonne)
 	  {
-		  aq::Logger::getInstance().log(AQ_NOTICE, "check table [%u;%s] column [%u;%s] [records:%u]\n", 
+		  aq::Logger::getInstance().log(AQ_NOTICE, "check table [%u;%s] column [%u;%s] [records:%u]\n",
 			  t.id, t.name.c_str(), c.id, c.name.c_str(), t.nb_record);
 		  for (size_t p = 0; p <= (t.nb_record / settings->packSize); p++)
 		  {
@@ -71,14 +71,14 @@ int check_database(const aq::Settings::Ptr settings)
   //      case aq::symbole::t_char:
   //        tr.reset(new aq::thesaurusreader<char, aq::filemapper>(settings.datapath.c_str(), t.id, c.id, c.size, settings.packsize, p, false));
   //        break;
-  //      case aq::symbole::t_double: 
+  //      case aq::symbole::t_double:
   //        tr.reset(new aq::thesaurusreader<double, aq::filemapper>(settings.datapath.c_str(), t.id, c.id, c.size, settings.packsize, p, false));
   //        break;
-  //      case aq::symbole::t_int: 
+  //      case aq::symbole::t_int:
   //        tr.reset(new aq::thesaurusreader<uint32_t, aq::filemapper>(settings.datapath.c_str(), t.id, c.id, c.size, settings.packsize, p, false));
   //        break;
-  //      case aq::symbole::t_long_long: 
-  //      case aq::symbole::t_date1: 
+  //      case aq::symbole::t_long_long:
+  //      case aq::symbole::t_date1:
   //        tr.reset(new aq::thesaurusreader<uint64_t, aq::filemapper>(settings.datapath.c_str(), t.id, c.id, c.size, settings.packsize, p, false));
   //        break;
   //      default:
@@ -108,18 +108,18 @@ int check_database(const aq::Settings::Ptr settings)
   //    aq::logger::getinstance().log(aq_notice, "read full column\n");
   //    switch (c.type)
   //    {
-  //    case aq::symbole::t_char: 
-  //      m.reset(new aq::columnmapper<char, aq::filemapper>(settings.datapath.c_str(), t.id, c.id, c.size, settings.packsize, false)); 
+  //    case aq::symbole::t_char:
+  //      m.reset(new aq::columnmapper<char, aq::filemapper>(settings.datapath.c_str(), t.id, c.id, c.size, settings.packsize, false));
   //      break;
-  //    case aq::symbole::t_double: 
-  //      m.reset(new aq::columnmapper<double, aq::filemapper>(settings.datapath.c_str(), t.id, c.id, c.size, settings.packsize, false)); 
+  //    case aq::symbole::t_double:
+  //      m.reset(new aq::columnmapper<double, aq::filemapper>(settings.datapath.c_str(), t.id, c.id, c.size, settings.packsize, false));
   //      break;
-  //    case aq::symbole::t_int: 
-  //      m.reset(new aq::columnmapper<uint32_t, aq::filemapper>(settings.datapath.c_str(), t.id, c.id, c.size, settings.packsize, false)); 
+  //    case aq::symbole::t_int:
+  //      m.reset(new aq::columnmapper<uint32_t, aq::filemapper>(settings.datapath.c_str(), t.id, c.id, c.size, settings.packsize, false));
   //      break;
-  //    case aq::symbole::t_long_long: 
-  //    case aq::symbole::t_date1: 
-  //      m.reset(new aq::columnmapper<uint64_t, aq::filemapper>(settings.datapath.c_str(), t.id, c.id, c.size, settings.packsize, false)); 
+  //    case aq::symbole::t_long_long:
+  //    case aq::symbole::t_date1:
+  //      m.reset(new aq::columnmapper<uint64_t, aq::filemapper>(settings.datapath.c_str(), t.id, c.id, c.size, settings.packsize, false));
   //      break;
   //    default:
   //      aq::logger::getinstance().log(aq_error, "type not supported [%s]\n", c.type);
@@ -171,17 +171,17 @@ int process_aq_matrix(const std::string& query, const std::string& aqMatrixFileN
 	//
 	// Parse SQL request
 	{
-    
+
 		boost::mutex::scoped_lock lock(parserMutex);
 		aq::Logger::getInstance().log(AQ_INFO, "parse sql query: '%s'\n", query.c_str());
-		if ((nRet = SQLParse(query.c_str(), pNode)) != 0 ) 
+		if ((nRet = SQLParse(query.c_str(), pNode)) != 0 )
 		{
 			aq::Logger::getInstance().log(AQ_ERROR, "error parsing sql request '%s'\n", query.c_str());
 			return EXIT_FAILURE;
 		}
 
 	}
-	
+
   boost::array<aq::tnode::tag_t, 6> categories_order = { { K_FROM, K_WHERE, K_SELECT, K_GROUP, K_HAVING, K_ORDER } };
 	aq::verb::VerbNode::Ptr spTree = aq::verb::VerbNode::BuildVerbsTree(pNode, categories_order, baseDesc, settings );
 	spTree->changeQuery();
@@ -191,7 +191,7 @@ int process_aq_matrix(const std::string& query, const std::string& aqMatrixFileN
 
 	boost::shared_ptr<aq::engine::AQMatrix> aqMatrix(new aq::engine::AQMatrix(settings, baseDesc));
 	std::vector<llong> tableIDs;
-	
+
 	aq::Timer timer;
 	std::vector<std::string> answerFile;
 	answerFile.push_back(aqMatrixFileName);
@@ -207,7 +207,7 @@ int process_aq_matrix(const std::string& query, const std::string& aqMatrixFileN
 	boost::shared_ptr<aq::AQEngineSimulate> aqEngine(new aq::AQEngineSimulate(baseDesc, settings));
 	aqEngine->setAQMatrix(aqMatrix);
 	aqEngine->setTablesIDs(tableIDs);
-  
+
   unsigned int id_generator = 1;
 	aq::QueryResolver queryResolver(pNode, settings, aqEngine, baseDesc, id_generator);
   queryResolver.solveAQMatrix(spTree);
@@ -227,19 +227,19 @@ int transform_query(const std::string& query, aq::Settings::Ptr settings, aq::Ba
 
 		boost::mutex::scoped_lock lock(parserMutex);
 		aq::Logger::getInstance().log(AQ_INFO, "parse sql query %s\n", query.c_str());
-		if ((nRet = SQLParse(query.c_str(), pNode)) != 0 ) 
+		if ((nRet = SQLParse(query.c_str(), pNode)) != 0 )
 		{
 			aq::Logger::getInstance().log(AQ_ERROR, "error parsing sql request '%s'\n", query.c_str());
 			return EXIT_FAILURE;
 		}
 
 	}
-  
+
   boost::array<uint32_t, 6> categories_order = { { K_FROM, K_WHERE, K_SELECT, K_GROUP, K_HAVING, K_ORDER } };
 	aq::verb::VerbNode::Ptr spTree = aq::verb::VerbNode::BuildVerbsTree(pNode, categories_order, baseDesc, settings);
 	spTree->changeQuery();
 	aq::util::cleanQuery( pNode );
-	
+
 	std::string str;
 	aq::syntax_tree_to_aql_form(pNode, str);
   aq::parser::ParseJeq( str );
@@ -326,7 +326,7 @@ int generate_tmp_table(const aq::Settings::Ptr settings, aq::base_t& baseDesc, u
 
 // -------------------------------------------------------------------------------------------------
 int prepareQuery(const std::string& query, const aq::Settings::Ptr settingsBase, aq::Base::Ptr baseDesc, aq::Settings::Ptr settings, std::string& displayFile, const std::string queryIdentStr, bool force)
-{		
+{
 	//
 	// generate ident and ini file
   std::string queryIdentTmp = queryIdentStr;
@@ -398,7 +398,7 @@ int processQuery(const std::string& query, aq::Settings::Ptr settings, aq::Base:
 
 	try
 	{
-	
+
 		aq::Logger::getInstance().log(AQ_INFO, "processing sql query\n");
 
 		aq::tnode	*pNode  = nullptr;
@@ -410,7 +410,7 @@ int processQuery(const std::string& query, aq::Settings::Ptr settings, aq::Base:
 
 			boost::mutex::scoped_lock lock(parserMutex);
 			aq::Logger::getInstance().log(AQ_INFO, "parse sql query %s\n", query.c_str());
-			if ((nRet = SQLParse(query.c_str(), pNode)) != 0 ) 
+			if ((nRet = SQLParse(query.c_str(), pNode)) != 0 )
 			{
 				aq::Logger::getInstance().log(AQ_ERROR, "error parsing sql request '%s'\n", query.c_str());
 				return EXIT_FAILURE;
@@ -423,7 +423,7 @@ int processQuery(const std::string& query, aq::Settings::Ptr settings, aq::Base:
     }
 
     //
-		// Transform SQL request in prefix form, 
+		// Transform SQL request in prefix form,
     if (pNode->tag == K_SELECT)
     {
       unsigned int id_generator = 1;
@@ -442,7 +442,7 @@ int processQuery(const std::string& query, aq::Settings::Ptr settings, aq::Base:
       aq::UpdateResolver updateResolver(pNode, settings, aq_engine, baseDesc);
       updateResolver.solve();
     }
-    else 
+    else
     {
       aq::Logger::getInstance().log(AQ_INFO, "[%s] is not supported", aq::id_to_string(pNode->tag));
     }
@@ -478,7 +478,7 @@ int processQuery(const std::string& query, aq::Settings::Ptr settings, aq::Base:
 
 // -------------------------------------------------------------------------------------------------
 int test_plugins(const std::string& plugins_path, const std::string& query, const aq::Settings::Ptr settings, const aq::Base::Ptr base)
-{   
+{
 
   aq::tnode * tree = nullptr;
   if (SQLParse(query.c_str(), tree) != 0 )

@@ -1,6 +1,6 @@
 #include "CommandHandler.h"
-#include <aq/Database.h>
-#include <aq/Exceptions.h>
+#include <aq/util/Database.h>
+#include <aq/util/Exceptions.h>
 #include <iostream>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/predicate.hpp>

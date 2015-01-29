@@ -4,9 +4,9 @@
 # include <aq/engine/AQEngine_Intf.h>
 # include <aq/parser/JeqParser.h>
 # include <aq/SQLPrefix.h>
-# include <aq/Logger.h>
 # include <aq/Settings.h>
-# include <aq/Base.h>
+# include <aq/util/Logger.h>
+# include <aq/util/Base.h>
 
 namespace aq
 {
@@ -19,17 +19,17 @@ namespace aq
     void prepare() const {}
     void clean() const {}
 
-    void call(const std::string& query, aq::engine::AQEngine_Intf::mode_t mode); 
-    void call(const aq::core::SelectStatement& query, aq::engine::AQEngine_Intf::mode_t mode); 
-    
+    void call(const std::string& query, aq::engine::AQEngine_Intf::mode_t mode);
+    void call(const aq::core::SelectStatement& query, aq::engine::AQEngine_Intf::mode_t mode);
+
     void renameResult(unsigned int id, std::vector<std::pair<std::string, std::string> >& resultTables);
 
     void setAQMatrix(aq::engine::AQMatrix::Ptr _aqMatrix);
     void setTablesIDs(std::vector<llong>& _tableIDs);
-    
+
     aq::engine::AQMatrix::Ptr   getAQMatrix();
     const std::vector<llong>&         getTablesIDs() const;
-    
+
   private:
     void createTableIDs(const std::string& query);
     void createTableIDs(aq::tnode* pNode);

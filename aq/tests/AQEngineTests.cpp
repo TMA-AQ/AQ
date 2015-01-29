@@ -2,7 +2,7 @@
 //
 
 #include "Util.h"
-#include <aq/Logger.h>
+#include <aq/util/Logger.h>
 #include <string>
 #include <stdint.h>
 #include <fstream>
@@ -14,12 +14,12 @@
 
 namespace po = boost::program_options;
 
-int yyerror(char const *)
-{
-  return 0;
-}
+// int yyerror(char const *)
+// {
+//   return 0;
+// }
 
-extern int functional_tests(const std::string& dbPath, std::string& queryIdent, const std::string& aqEngine, 
+extern int functional_tests(const std::string& dbPath, std::string& queryIdent, const std::string& aqEngine,
                             const std::string& queriesFilename, const std::string& filter,
                             const std::string& logFilename, uint64_t limit, bool stopOnError);
 
@@ -62,27 +62,27 @@ int main(int argc, char ** argv)
       ("with-index", po::bool_switch(&o.withIndex), "display table index")
       ("force", po::bool_switch(&o.force), "force creation of working directories even if already present")
       ;
-    
+
     po::positional_options_description p;
     p.add("backward-compatibility", -1);
-    
+
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
-    po::notify(vm);    
-    
+    po::notify(vm);
+
     if (vm.count("help") && !vm.count("parse") && !vm.count("query"))
     {
       std::cout << desc << "\n";
       return 0;
     }
-    
+
 		//
 		// Initialize Logger
 		aq::Logger::getInstance(argv[0], logMode == "STDOUT" ? STDOUT : logMode == "LOCALFILE" ? LOCALFILE : logMode == "SYSLOG" ? SYSLOG : STDOUT);
 		aq::Logger::getInstance().setLevel(logLevel);
-    
+
     o.dbPath = rootPath + "/" + dbName + "/";
-    
+
     if (generate)
     {
       //aq::QueryGenerator queryGen(query);
@@ -98,6 +98,6 @@ int main(int argc, char ** argv)
     std::cerr << e.what() << std::endl;
     return EXIT_FAILURE;
   }
-  
+
   return rc;
 }

@@ -6,13 +6,13 @@
 # include <vector>
 # include <boost/algorithm/string.hpp>
 
-# include <aq/AQMatrix.h>
-# include <aq/Base.h>
+# include <aq/engine/AQMatrix.h>
+# include <aq/util/Base.h>
 
 namespace aq
 {
 
-  
+
   typedef std::map<size_t, std::map<size_t, boost::shared_ptr<aq::ColumnMapper_Intf> > >  mapMap;
   typedef std::pair<size_t, size_t>                                                       pairSize;
   typedef std::pair<std::string, std::string>                                             pairString;

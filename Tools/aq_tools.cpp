@@ -1,9 +1,9 @@
 #include "AQEngineSimulate.h"
 
-#include <aq/Exceptions.h>
-#include <aq/Logger.h>
-#include <aq/Timer.h>
-#include <aq/QueryReader.h>
+#include <aq/util/Exceptions.h>
+#include <aq/util/Logger.h>
+#include <aq/util/Timer.h>
+#include <aq/util/QueryReader.h>
 #include <aq/engine/AQEngine_Intf.h>
 #include "VerbBuilder.h"
 #include "AQManager.h"
@@ -35,13 +35,13 @@ size_t failedQueries = 0;
 boost::mutex parserMutex;
 
 // -------------------------------------------------------------------------------------------------
-int processSQLQueries(const std::string       & query, 
-                      const aq::Settings::Ptr   settingsBase, 
-                      const std::string         queryIdent, 
-                      aq::Base::Ptr             baseDesc, 
+int processSQLQueries(const std::string       & query,
+                      const aq::Settings::Ptr   settingsBase,
+                      const std::string         queryIdent,
+                      aq::Base::Ptr             baseDesc,
                       bool                      simulateAQEngine,
                       bool                      basicAQEngine,
-                      bool                      keepFiles, 
+                      bool                      keepFiles,
                       bool                      force)
 {
 
@@ -89,17 +89,17 @@ int processSQLQueries(const std::string       & query,
 }
 
 // -------------------------------------------------------------------------------------------------
-int parse_queries(const std::string & aqHome, 
-                  const std::string & aqName, 
-                  const std::string & queryIdent, 
-                  const std::string & sqlQueriesFile, 
+int parse_queries(const std::string & aqHome,
+                  const std::string & aqName,
+                  const std::string & queryIdent,
+                  const std::string & sqlQueriesFile,
                   const std::string & aqMatrixFileName,
-                  aq::Settings::Ptr   settings, 
-                  aq::Base::Ptr       baseDesc, 
-                  bool                transform, 
-                  bool                simulateAQEngine, 
+                  aq::Settings::Ptr   settings,
+                  aq::Base::Ptr       baseDesc,
+                  bool                transform,
+                  bool                simulateAQEngine,
                   bool                basicAQEngine,
-                  bool                keepFiles, 
+                  bool                keepFiles,
                   bool                force)
 {
   //
@@ -124,7 +124,7 @@ int parse_queries(const std::string & aqHome,
   if (sqlQueriesFile != "")
   {
     boost::filesystem::path p(sqlQueriesFile);
-    if (!boost::filesystem::exists(p)) 
+    if (!boost::filesystem::exists(p))
     {
       std::cerr << "cannot find file " << p << std::endl;
       return -1;
@@ -138,7 +138,7 @@ int parse_queries(const std::string & aqHome,
     reader = new aq::QueryReader(std::cin, settings->cmdLine ? "aq" : "");
   }
 
-  // 
+  //
   // Get current database name from settings if set
   if (aqName == "")
   {
@@ -175,7 +175,7 @@ int parse_queries(const std::string & aqHome,
     {
       process_aq_matrix(query, aqMatrixFileName, settings->outputFile, settings, baseDesc);
     }
-    else 
+    else
     {
       if (cmdHandler.process(query) == -1)
       {
@@ -194,7 +194,7 @@ int main(int argc, char**argv)
 	{
 
 		// Settings
-		aq::Settings::Ptr settings(new aq::Settings);      
+		aq::Settings::Ptr settings(new aq::Settings);
     settings->outputFile = "stdout";
 
 		// log options
@@ -309,8 +309,8 @@ int main(int argc, char**argv)
       ("trace,t", po::bool_switch(&trace), "")
       ;
 
-    po::positional_options_description positionalOptions; 
-    positionalOptions.add("aq-name", -1); 
+    po::positional_options_description positionalOptions;
+    positionalOptions.add("aq-name", -1);
 
     po::options_description testing("Testing");
     testing.add_options()
@@ -335,7 +335,7 @@ int main(int argc, char**argv)
 			("load-db", po::bool_switch(&loadDatabase), "")
       ("load-table", po::value<std::string>(&tableNameToLoad), "")
 			;
-    
+
     po::options_description genTmpTable("GenerateTmpTable [TESTING PURPOSE]");
     genTmpTable.add_options()
       ("gen-tmp-table", po::bool_switch(&generateTmpTable), "")
@@ -349,7 +349,7 @@ int main(int argc, char**argv)
 
 		po::variables_map vm;
 		po::store(po::command_line_parser(argc, argv).options(all).positional(positionalOptions).run(), vm);
-		po::notify(vm);    
+		po::notify(vm);
 
 		if (vm.count("help"))
 		{
@@ -362,13 +362,13 @@ int main(int argc, char**argv)
     {
       aqName = vm["aq-name"].as<std::string>();
     }
-		
+
     //
     // settings flags bool
     settings->trace = trace || settings->trace;
     settings->displayCount = displayCount || settings->displayCount;
     settings->cmdLine = _isatty(_fileno(stdin)) != 0;
-    
+
     //
     //
     boost::replace_all(aqHome, "\\", "/");
@@ -396,7 +396,7 @@ int main(int argc, char**argv)
 		aq::Logger::getInstance().setLockMode(lock_mode);
 		aq::Logger::getInstance().setDateMode(date_mode);
 		aq::Logger::getInstance().setPidMode(pid_mode);
-    
+
 		//
 		// print Project Settings
     aq::Logger::getInstance().log(AQ_DEBUG, "Settings:\n%s\n", settings->to_string().c_str());
@@ -457,7 +457,7 @@ int main(int argc, char**argv)
     // Solve Queries
     aq::Base::Ptr bd(new aq::Base(settings->dbDesc));
     return parse_queries(
-      aqHome, aqName, queryIdent, sqlQueriesFile, aqMatrixFileName, 
+      aqHome, aqName, queryIdent, sqlQueriesFile, aqMatrixFileName,
       settings, bd,
       transform, simulateAQEngine, basicAQEngine, keepFiles, force);
 

@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 2.7.  */
+/* A Bison parser, made by GNU Bison 2.5.  */
 
 /* Bison implementation for Yacc-like parsers in C
    
-      Copyright (C) 1984, 1989-1990, 2000-2012 Free Software Foundation, Inc.
+      Copyright (C) 1984, 1989-1990, 2000-2011 Free Software Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "2.7"
+#define YYBISON_VERSION "2.5"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -58,11 +58,14 @@
 /* Pull parsers.  */
 #define YYPULL 1
 
+/* Using locations.  */
+#define YYLSP_NEEDED 0
 
 
 
 /* Copy the first part of user declarations.  */
-/* Line 371 of yacc.c  */
+
+/* Line 268 of yacc.c  */
 #line 2 "aq/parser/SQL92_Grm.y"
 
 // %option bison-bridge
@@ -91,16 +94,14 @@ int yylex( void );
 using namespace aq;
 
 
-/* Line 371 of yacc.c  */
-#line 96 "aq/parser/sql92_grm_tab.cpp"
 
-# ifndef YY_NULL
-#  if defined __cplusplus && 201103L <= __cplusplus
-#   define YY_NULL nullptr
-#  else
-#   define YY_NULL 0
-#  endif
-# endif
+/* Line 268 of yacc.c  */
+#line 100 "aq/parser/sql92_grm_tab.cpp"
+
+/* Enabling traces.  */
+#ifndef YYDEBUG
+# define YYDEBUG 0
+#endif
 
 /* Enabling verbose error messages.  */
 #ifdef YYERROR_VERBOSE
@@ -110,17 +111,11 @@ using namespace aq;
 # define YYERROR_VERBOSE 0
 #endif
 
-/* In a future release of Bison, this section will be replaced
-   by #include "sql92_grm_tab.hpp".  */
-#ifndef YY_YY_AQ_PARSER_SQL92_GRM_TAB_HPP_INCLUDED
-# define YY_YY_AQ_PARSER_SQL92_GRM_TAB_HPP_INCLUDED
-/* Enabling traces.  */
-#ifndef YYDEBUG
-# define YYDEBUG 0
+/* Enabling the token table.  */
+#ifndef YYTOKEN_TABLE
+# define YYTOKEN_TABLE 0
 #endif
-#if YYDEBUG
-extern int yydebug;
-#endif
+
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -285,6 +280,164 @@ extern int yydebug;
      K_TARGET = 412
    };
 #endif
+/* Tokens.  */
+#define K_AND 258
+#define K_OR 259
+#define K_PLUS 260
+#define K_MINUS 261
+#define K_MUL 262
+#define K_DIV 263
+#define K_EQ 264
+#define K_LT 265
+#define K_GT 266
+#define K_NEQ 267
+#define K_LEQ 268
+#define K_GEQ 269
+#define K_NOT 270
+#define K_CONCAT 271
+#define K_STAR 272
+#define K_UMINUS 273
+#define K_JEQ 274
+#define K_JAUTO 275
+#define K_PERIOD 276
+#define K_COMMA 277
+#define K_SEMICOLON 278
+#define K_INTEGER 279
+#define K_REAL 280
+#define K_STRING 281
+#define K_DATE_VALUE 282
+#define K_IDENT 283
+#define K_TRUE 284
+#define K_FALSE 285
+#define K_UNKNOWN 286
+#define K_ALL 287
+#define K_ANY 288
+#define K_AS 289
+#define K_ASC 290
+#define K_AVG 291
+#define K_BETWEEN 292
+#define K_BY 293
+#define K_CASE 294
+#define K_COMMIT 295
+#define K_COUNT 296
+#define K_DATE 297
+#define K_DAY 298
+#define K_DEFAULT 299
+#define K_DEFERRED 300
+#define K_DELETE 301
+#define K_DESC 302
+#define K_DISTINCT 303
+#define K_ELSE 304
+#define K_END 305
+#define K_EXISTS 306
+#define K_EXTRACT 307
+#define K_ESCAPE 308
+#define K_IMMEDIATE 309
+#define K_FOR 310
+#define K_FROM 311
+#define K_FULL 312
+#define K_GROUP 313
+#define K_HAVING 314
+#define K_IN 315
+#define K_INNER 316
+#define K_INSERT 317
+#define K_INTERVAL 318
+#define K_INTO 319
+#define K_IS 320
+#define K_JOIN 321
+#define K_LEFT 322
+#define K_LIKE 323
+#define K_MAX 324
+#define K_MIN 325
+#define K_MONTH 326
+#define K_NATURAL 327
+#define K_NULL 328
+#define K_ON 329
+#define K_ORDER 330
+#define K_OUTER 331
+#define K_RIGHT 332
+#define K_ROLLBACK 333
+#define K_SELECT 334
+#define K_SET 335
+#define K_SUBSTRING 336
+#define K_SUM 337
+#define K_TABLE 338
+#define K_THEN 339
+#define K_TRANSACTION 340
+#define K_UNION 341
+#define K_UPDATE 342
+#define K_VALUES 343
+#define K_WHEN 344
+#define K_WHERE 345
+#define K_WORK 346
+#define K_YEAR 347
+#define K_FUNC 348
+#define K_TO 349
+#define K_TO_DATE 350
+#define K_TO_CHAR 351
+#define K_CALL 352
+#define K_COLUMNS 353
+#define K_LIST 354
+#define K_OUTREF 355
+#define K_SOURCE 356
+#define K_START 357
+#define K_COLUMN 358
+#define K_LPAREN 359
+#define K_RPAREN 360
+#define K_LBRACE 361
+#define K_RBRACE 362
+#define K_LBRACKETS 363
+#define K_RBRACKETS 364
+#define K_SOME 365
+#define K_REPLACE 366
+#define K_DELETED 367
+#define K_FIRST_VALUE 368
+#define K_LAST_VALUE 369
+#define K_LEAD 370
+#define K_LAG 371
+#define K_OVER 372
+#define K_PARTITION 373
+#define K_SQRT 374
+#define K_ABS 375
+#define K_FRAME 376
+#define K_ROWS 377
+#define K_RANGE 378
+#define K_PRECEDING 379
+#define K_FOLLOWING 380
+#define K_UNBOUNDED 381
+#define K_CURRENT 382
+#define K_ROW 383
+#define K_CAST 384
+#define K_STRING_TYPE 385
+#define K_REAL_TYPE 386
+#define K_INTEGER_TYPE 387
+#define K_CREATE 388
+#define K_INSERT_ARGS 389
+#define K_CURRENT_DATE 390
+#define K_NVL 391
+#define K_UPDATE_ARGS 392
+#define K_ROW_NUMBER 393
+#define K_TRUNCATE 394
+#define K_DECODE 395
+#define K_NOT_BETWEEN 396
+#define K_NOT_LIKE 397
+#define K_NOT_IN 398
+#define K_JNO 399
+#define K_JINF 400
+#define K_JIEQ 401
+#define K_JSEQ 402
+#define K_JSUP 403
+#define K_JNEQ 404
+#define K_SEL_MINUS 405
+#define K_IN_VALUES 406
+#define K_MERGE 407
+#define K_MATCHED 408
+#define K_USING 409
+#define K_MERGE_ARGS1 410
+#define K_MERGE_ARGS2 411
+#define K_TARGET 412
+
+
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -294,28 +447,12 @@ typedef int YYSTYPE;
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
-extern YYSTYPE yylval;
-
-#ifdef YYPARSE_PARAM
-#if defined __STDC__ || defined __cplusplus
-int yyparse (void *YYPARSE_PARAM);
-#else
-int yyparse ();
-#endif
-#else /* ! YYPARSE_PARAM */
-#if defined __STDC__ || defined __cplusplus
-int yyparse (void);
-#else
-int yyparse ();
-#endif
-#endif /* ! YYPARSE_PARAM */
-
-#endif /* !YY_YY_AQ_PARSER_SQL92_GRM_TAB_HPP_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
 
-/* Line 390 of yacc.c  */
-#line 319 "aq/parser/sql92_grm_tab.cpp"
+
+/* Line 343 of yacc.c  */
+#line 456 "aq/parser/sql92_grm_tab.cpp"
 
 #ifdef short
 # undef short
@@ -368,24 +505,24 @@ typedef short int yytype_int16;
 # if defined YYENABLE_NLS && YYENABLE_NLS
 #  if ENABLE_NLS
 #   include <libintl.h> /* INFRINGES ON USER NAME SPACE */
-#   define YY_(Msgid) dgettext ("bison-runtime", Msgid)
+#   define YY_(msgid) dgettext ("bison-runtime", msgid)
 #  endif
 # endif
 # ifndef YY_
-#  define YY_(Msgid) Msgid
+#  define YY_(msgid) msgid
 # endif
 #endif
 
 /* Suppress unused-variable warnings by "using" E.  */
 #if ! defined lint || defined __GNUC__
-# define YYUSE(E) ((void) (E))
+# define YYUSE(e) ((void) (e))
 #else
-# define YYUSE(E) /* empty */
+# define YYUSE(e) /* empty */
 #endif
 
 /* Identity function, used to suppress warnings about constant conditions.  */
 #ifndef lint
-# define YYID(N) (N)
+# define YYID(n) (n)
 #else
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
@@ -421,7 +558,6 @@ YYID (yyi)
 #    if ! defined _ALLOCA_H && ! defined EXIT_SUCCESS && (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 #     include <stdlib.h> /* INFRINGES ON USER NAME SPACE */
-      /* Use EXIT_SUCCESS as a witness for stdlib.h.  */
 #     ifndef EXIT_SUCCESS
 #      define EXIT_SUCCESS 0
 #     endif
@@ -513,20 +649,20 @@ union yyalloc
 #endif
 
 #if defined YYCOPY_NEEDED && YYCOPY_NEEDED
-/* Copy COUNT objects from SRC to DST.  The source and destination do
+/* Copy COUNT objects from FROM to TO.  The source and destination do
    not overlap.  */
 # ifndef YYCOPY
 #  if defined __GNUC__ && 1 < __GNUC__
-#   define YYCOPY(Dst, Src, Count) \
-      __builtin_memcpy (Dst, Src, (Count) * sizeof (*(Src)))
+#   define YYCOPY(To, From, Count) \
+      __builtin_memcpy (To, From, (Count) * sizeof (*(From)))
 #  else
-#   define YYCOPY(Dst, Src, Count)              \
-      do                                        \
-        {                                       \
-          YYSIZE_T yyi;                         \
-          for (yyi = 0; yyi < (Count); yyi++)   \
-            (Dst)[yyi] = (Src)[yyi];            \
-        }                                       \
+#   define YYCOPY(To, From, Count)		\
+      do					\
+	{					\
+	  YYSIZE_T yyi;				\
+	  for (yyi = 0; yyi < (Count); yyi++)	\
+	    (To)[yyi] = (From)[yyi];		\
+	}					\
       while (YYID (0))
 #  endif
 # endif
@@ -792,7 +928,7 @@ static const yytype_uint16 yyrline[] =
 };
 #endif
 
-#if YYDEBUG || YYERROR_VERBOSE || 0
+#if YYDEBUG || YYERROR_VERBOSE || YYTOKEN_TABLE
 /* YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
@@ -877,7 +1013,7 @@ static const char *const yytname[] =
   "union_minus_list", "merge_stmt", "optional_into", "when_matched",
   "when_not_matched", "optional_by_target", "when_not_matched_by_source",
   "merge_matched", "merge_not_matched", "column_column_list",
-  "column_column_pair", YY_NULL
+  "column_column_pair", 0
 };
 #endif
 
@@ -1376,10 +1512,10 @@ static const yytype_int16 yytable[] =
        0,     0,    70,    71,     0,    72,     0,    73
 };
 
-#define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-341)))
+#define yypact_value_is_default(yystate) \
+  ((yystate) == (-341))
 
-#define yytable_value_is_error(Yytable_value) \
+#define yytable_value_is_error(yytable_value) \
   YYID (0)
 
 static const yytype_int16 yycheck[] =
@@ -1681,35 +1817,62 @@ static const yytype_uint16 yystos[] =
 
 #define YYRECOVERING()  (!!yyerrstatus)
 
-#define YYBACKUP(Token, Value)                                  \
-do                                                              \
-  if (yychar == YYEMPTY)                                        \
-    {                                                           \
-      yychar = (Token);                                         \
-      yylval = (Value);                                         \
-      YYPOPSTACK (yylen);                                       \
-      yystate = *yyssp;                                         \
-      goto yybackup;                                            \
-    }                                                           \
-  else                                                          \
-    {                                                           \
+#define YYBACKUP(Token, Value)					\
+do								\
+  if (yychar == YYEMPTY && yylen == 1)				\
+    {								\
+      yychar = (Token);						\
+      yylval = (Value);						\
+      YYPOPSTACK (1);						\
+      goto yybackup;						\
+    }								\
+  else								\
+    {								\
       yyerror (YY_("syntax error: cannot back up")); \
       YYERROR;							\
     }								\
 while (YYID (0))
 
-/* Error token number */
+
 #define YYTERROR	1
 #define YYERRCODE	256
 
 
+/* YYLLOC_DEFAULT -- Set CURRENT to span from RHS[1] to RHS[N].
+   If N is 0, then set CURRENT to the empty location which ends
+   the previous symbol: RHS[0] (always defined).  */
+
+#define YYRHSLOC(Rhs, K) ((Rhs)[K])
+#ifndef YYLLOC_DEFAULT
+# define YYLLOC_DEFAULT(Current, Rhs, N)				\
+    do									\
+      if (YYID (N))                                                    \
+	{								\
+	  (Current).first_line   = YYRHSLOC (Rhs, 1).first_line;	\
+	  (Current).first_column = YYRHSLOC (Rhs, 1).first_column;	\
+	  (Current).last_line    = YYRHSLOC (Rhs, N).last_line;		\
+	  (Current).last_column  = YYRHSLOC (Rhs, N).last_column;	\
+	}								\
+      else								\
+	{								\
+	  (Current).first_line   = (Current).last_line   =		\
+	    YYRHSLOC (Rhs, 0).last_line;				\
+	  (Current).first_column = (Current).last_column =		\
+	    YYRHSLOC (Rhs, 0).last_column;				\
+	}								\
+    while (YYID (0))
+#endif
+
+
 /* This macro is provided for backward compatibility. */
+
 #ifndef YY_LOCATION_PRINT
 # define YY_LOCATION_PRINT(File, Loc) ((void) 0)
 #endif
 
 
 /* YYLEX -- calling `yylex' with the right arguments.  */
+
 #ifdef YYLEX_PARAM
 # define YYLEX yylex (YYLEX_PARAM)
 #else
@@ -1759,8 +1922,6 @@ yy_symbol_value_print (yyoutput, yytype, yyvaluep)
     YYSTYPE const * const yyvaluep;
 #endif
 {
-  FILE *yyo = yyoutput;
-  YYUSE (yyo);
   if (!yyvaluep)
     return;
 # ifdef YYPRINT
@@ -1772,7 +1933,7 @@ yy_symbol_value_print (yyoutput, yytype, yyvaluep)
   switch (yytype)
     {
       default:
-        break;
+	break;
     }
 }
 
@@ -2012,11 +2173,12 @@ static int
 yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
                 yytype_int16 *yyssp, int yytoken)
 {
-  YYSIZE_T yysize0 = yytnamerr (YY_NULL, yytname[yytoken]);
+  YYSIZE_T yysize0 = yytnamerr (0, yytname[yytoken]);
   YYSIZE_T yysize = yysize0;
+  YYSIZE_T yysize1;
   enum { YYERROR_VERBOSE_ARGS_MAXIMUM = 5 };
   /* Internationalized format string. */
-  const char *yyformat = YY_NULL;
+  const char *yyformat = 0;
   /* Arguments of yyformat. */
   char const *yyarg[YYERROR_VERBOSE_ARGS_MAXIMUM];
   /* Number of reported tokens (one for the "unexpected", one per
@@ -2076,13 +2238,11 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
                     break;
                   }
                 yyarg[yycount++] = yytname[yyx];
-                {
-                  YYSIZE_T yysize1 = yysize + yytnamerr (YY_NULL, yytname[yyx]);
-                  if (! (yysize <= yysize1
-                         && yysize1 <= YYSTACK_ALLOC_MAXIMUM))
-                    return 2;
-                  yysize = yysize1;
-                }
+                yysize1 = yysize + yytnamerr (0, yytname[yyx]);
+                if (! (yysize <= yysize1
+                       && yysize1 <= YYSTACK_ALLOC_MAXIMUM))
+                  return 2;
+                yysize = yysize1;
               }
         }
     }
@@ -2102,12 +2262,10 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
 # undef YYCASE_
     }
 
-  {
-    YYSIZE_T yysize1 = yysize + yystrlen (yyformat);
-    if (! (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM))
-      return 2;
-    yysize = yysize1;
-  }
+  yysize1 = yysize + yystrlen (yyformat);
+  if (! (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM))
+    return 2;
+  yysize = yysize1;
 
   if (*yymsg_alloc < yysize)
     {
@@ -2167,27 +2325,32 @@ yydestruct (yymsg, yytype, yyvaluep)
     {
 
       default:
-        break;
+	break;
     }
 }
 
 
+/* Prevent warnings from -Wmissing-prototypes.  */
+#ifdef YYPARSE_PARAM
+#if defined __STDC__ || defined __cplusplus
+int yyparse (void *YYPARSE_PARAM);
+#else
+int yyparse ();
+#endif
+#else /* ! YYPARSE_PARAM */
+#if defined __STDC__ || defined __cplusplus
+int yyparse (void);
+#else
+int yyparse ();
+#endif
+#endif /* ! YYPARSE_PARAM */
 
 
 /* The lookahead symbol.  */
 int yychar;
 
-
-#ifndef YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-# define YY_IGNORE_MAYBE_UNINITIALIZED_END
-#endif
-#ifndef YY_INITIAL_VALUE
-# define YY_INITIAL_VALUE(Value) /* Nothing. */
-#endif
-
 /* The semantic value of the lookahead symbol.  */
-YYSTYPE yylval YY_INITIAL_VALUE(yyval_default);
+YYSTYPE yylval;
 
 /* Number of syntax errors so far.  */
 int yynerrs;
@@ -2227,7 +2390,7 @@ yyparse ()
        `yyss': related to states.
        `yyvs': related to semantic values.
 
-       Refer to the stacks through separate pointers, to allow yyoverflow
+       Refer to the stacks thru separate pointers, to allow yyoverflow
        to reallocate them elsewhere.  */
 
     /* The state stack.  */
@@ -2245,7 +2408,7 @@ yyparse ()
   int yyn;
   int yyresult;
   /* Lookahead token as an internal (translated) token number.  */
-  int yytoken = 0;
+  int yytoken;
   /* The variables used to return semantic value and location from the
      action routines.  */
   YYSTYPE yyval;
@@ -2263,8 +2426,9 @@ yyparse ()
      Keep to zero when no symbol should be popped.  */
   int yylen = 0;
 
-  yyssp = yyss = yyssa;
-  yyvsp = yyvs = yyvsa;
+  yytoken = 0;
+  yyss = yyssa;
+  yyvs = yyvsa;
   yystacksize = YYINITDEPTH;
 
   YYDPRINTF ((stderr, "Starting parse\n"));
@@ -2273,6 +2437,14 @@ yyparse ()
   yyerrstatus = 0;
   yynerrs = 0;
   yychar = YYEMPTY; /* Cause a token to be read.  */
+
+  /* Initialize stack pointers.
+     Waste one element of value and location stack
+     so that they stay on the same level as the state stack.
+     The wasted elements are never initialized.  */
+  yyssp = yyss;
+  yyvsp = yyvs;
+
   goto yysetstate;
 
 /*------------------------------------------------------------.
@@ -2413,9 +2585,7 @@ yybackup:
   yychar = YYEMPTY;
 
   yystate = yyn;
-  YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   *++yyvsp = yylval;
-  YY_IGNORE_MAYBE_UNINITIALIZED_END
 
   goto yynewstate;
 
@@ -2452,7 +2622,8 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 89 "aq/parser/SQL92_Grm.y"
     {
 												*(aq::tnode**)ppNode = (yyval);
@@ -2461,7 +2632,8 @@ yyreduce:
     break;
 
   case 3:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 93 "aq/parser/SQL92_Grm.y"
     {
 												*(aq::tnode**)ppNode = (yyval);
@@ -2470,7 +2642,8 @@ yyreduce:
     break;
 
   case 4:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 97 "aq/parser/SQL92_Grm.y"
     {
 												*(aq::tnode**)ppNode = (yyval);
@@ -2479,7 +2652,8 @@ yyreduce:
     break;
 
   case 5:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 101 "aq/parser/SQL92_Grm.y"
     {
 												*(aq::tnode**)ppNode = (yyval);
@@ -2488,7 +2662,8 @@ yyreduce:
     break;
 
   case 6:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 105 "aq/parser/SQL92_Grm.y"
     {
 												*(aq::tnode**)ppNode = (yyval);
@@ -2497,7 +2672,8 @@ yyreduce:
     break;
 
   case 7:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 109 "aq/parser/SQL92_Grm.y"
     {
 												*(aq::tnode**)ppNode = (yyval);
@@ -2506,7 +2682,8 @@ yyreduce:
     break;
 
   case 8:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 113 "aq/parser/SQL92_Grm.y"
     {
 												*(aq::tnode**)ppNode = (yyval);
@@ -2515,7 +2692,8 @@ yyreduce:
     break;
 
   case 9:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 117 "aq/parser/SQL92_Grm.y"
     {
 												*(aq::tnode**)ppNode = (yyval);
@@ -2524,7 +2702,8 @@ yyreduce:
     break;
 
   case 11:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 132 "aq/parser/SQL92_Grm.y"
     {	aq::tnode *pNode;
 												(yyval) = (yyvsp[(1) - (4)]);
@@ -2540,25 +2719,29 @@ yyreduce:
     break;
 
   case 12:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 145 "aq/parser/SQL92_Grm.y"
     { (yyval) = (yyvsp[(2) - (3)]); }
     break;
 
   case 16:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 154 "aq/parser/SQL92_Grm.y"
     { (yyval) = nullptr; }
     break;
 
   case 17:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 157 "aq/parser/SQL92_Grm.y"
     { (yyval) = (yyvsp[(1) - (1)]); (yyval)->setTag(K_STAR); }
     break;
 
   case 20:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 162 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left		= (yyvsp[(1) - (3)]);
@@ -2570,7 +2753,8 @@ yyreduce:
     break;
 
   case 22:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 172 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left		= (yyvsp[(1) - (3)]);
@@ -2580,7 +2764,8 @@ yyreduce:
     break;
 
   case 24:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 180 "aq/parser/SQL92_Grm.y"
     {
 														/* $2.tag == K_AS */
@@ -2593,7 +2778,8 @@ yyreduce:
     break;
 
   case 26:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 189 "aq/parser/SQL92_Grm.y"
     {
 														/* $2.tag == K_AS */
@@ -2606,7 +2792,8 @@ yyreduce:
     break;
 
   case 27:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 199 "aq/parser/SQL92_Grm.y"
     { 
 														(yyvsp[(1) - (8)])->left = (yyvsp[(3) - (8)]);
@@ -2618,7 +2805,8 @@ yyreduce:
     break;
 
   case 28:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 206 "aq/parser/SQL92_Grm.y"
     { 
 														(yyvsp[(1) - (8)])->left = (yyvsp[(3) - (8)]);
@@ -2630,7 +2818,8 @@ yyreduce:
     break;
 
   case 29:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 213 "aq/parser/SQL92_Grm.y"
     { 
 														(yyvsp[(1) - (8)])->left = (yyvsp[(3) - (8)]);
@@ -2642,7 +2831,8 @@ yyreduce:
     break;
 
   case 30:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 222 "aq/parser/SQL92_Grm.y"
     {
 														aq::tnode *pNode = new tnode( K_AS );
@@ -2663,7 +2853,8 @@ yyreduce:
     break;
 
   case 31:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 238 "aq/parser/SQL92_Grm.y"
     {
 														#ifdef USE_TSELRESULT_FOR_GENERATED_TABLE
@@ -2688,7 +2879,8 @@ yyreduce:
     break;
 
   case 32:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 265 "aq/parser/SQL92_Grm.y"
     {
 														aq::tnode *pNode;
@@ -2714,7 +2906,8 @@ yyreduce:
     break;
 
   case 33:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 288 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (2)])->left = (yyvsp[(2) - (2)]);
@@ -2723,7 +2916,8 @@ yyreduce:
     break;
 
   case 35:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 295 "aq/parser/SQL92_Grm.y"
     {	/* K_COMMA table_reference */
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -2733,7 +2927,8 @@ yyreduce:
     break;
 
   case 37:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 303 "aq/parser/SQL92_Grm.y"
     {
 														aq::tnode *pNode;
@@ -2745,7 +2940,8 @@ yyreduce:
     break;
 
   case 38:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 310 "aq/parser/SQL92_Grm.y"
     {
 														aq::tnode *pNode;
@@ -2759,7 +2955,8 @@ yyreduce:
     break;
 
   case 39:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 322 "aq/parser/SQL92_Grm.y"
     {	
 														(yyvsp[(1) - (2)])->left	= (yyvsp[(2) - (2)]); 
@@ -2768,7 +2965,8 @@ yyreduce:
     break;
 
   case 40:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 326 "aq/parser/SQL92_Grm.y"
     {	
 														(yyvsp[(1) - (2)])->left	= (yyvsp[(2) - (2)]); 
@@ -2777,7 +2975,8 @@ yyreduce:
     break;
 
   case 41:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 330 "aq/parser/SQL92_Grm.y"
     {	
 														(yyvsp[(1) - (3)])->left	= (yyvsp[(2) - (3)]); 
@@ -2787,7 +2986,8 @@ yyreduce:
     break;
 
   case 42:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 335 "aq/parser/SQL92_Grm.y"
     {	
 														(yyvsp[(1) - (2)])->left	= (yyvsp[(2) - (2)]); 
@@ -2796,7 +2996,8 @@ yyreduce:
     break;
 
   case 43:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 339 "aq/parser/SQL92_Grm.y"
     {	
 														(yyvsp[(1) - (3)])->left	= (yyvsp[(2) - (3)]); 
@@ -2806,7 +3007,8 @@ yyreduce:
     break;
 
   case 44:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 344 "aq/parser/SQL92_Grm.y"
     {	
 														(yyvsp[(1) - (2)])->left	= (yyvsp[(2) - (2)]); 
@@ -2815,7 +3017,8 @@ yyreduce:
     break;
 
   case 45:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 348 "aq/parser/SQL92_Grm.y"
     {	
 														(yyvsp[(1) - (3)])->left	= (yyvsp[(2) - (3)]); 
@@ -2825,7 +3028,8 @@ yyreduce:
     break;
 
   case 47:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 356 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (2)])->left	= (yyvsp[(2) - (2)]);
@@ -2834,13 +3038,15 @@ yyreduce:
     break;
 
   case 48:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 360 "aq/parser/SQL92_Grm.y"
     {	(yyval) = nullptr; }
     break;
 
   case 49:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 363 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (3)])->left = (yyvsp[(3) - (3)]);
@@ -2849,13 +3055,15 @@ yyreduce:
     break;
 
   case 50:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 367 "aq/parser/SQL92_Grm.y"
     {	(yyval) = nullptr; }
     break;
 
   case 51:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 370 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (2)])->left = (yyvsp[(2) - (2)]);
@@ -2864,13 +3072,15 @@ yyreduce:
     break;
 
   case 52:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 374 "aq/parser/SQL92_Grm.y"
     {	(yyval) = nullptr; }
     break;
 
   case 53:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 377 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (3)])->left = (yyvsp[(3) - (3)]);
@@ -2879,13 +3089,15 @@ yyreduce:
     break;
 
   case 54:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 381 "aq/parser/SQL92_Grm.y"
     {	(yyval) = nullptr; }
     break;
 
   case 56:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 386 "aq/parser/SQL92_Grm.y"
     {
 														aq::tnode *pNode;
@@ -2898,7 +3110,8 @@ yyreduce:
     break;
 
   case 57:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 394 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left = (yyvsp[(1) - (3)]);
@@ -2908,7 +3121,8 @@ yyreduce:
     break;
 
   case 59:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 400 "aq/parser/SQL92_Grm.y"
     {
 														aq::tnode *pNode;
@@ -2921,7 +3135,8 @@ yyreduce:
     break;
 
   case 60:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 408 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left = (yyvsp[(1) - (3)]);
@@ -2931,7 +3146,8 @@ yyreduce:
     break;
 
   case 66:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 428 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -2941,7 +3157,8 @@ yyreduce:
     break;
 
   case 69:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 439 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -2951,7 +3168,8 @@ yyreduce:
     break;
 
   case 70:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 446 "aq/parser/SQL92_Grm.y"
     {
 														if ( (yyvsp[(2) - (2)]) != nullptr ) {
@@ -2964,7 +3182,8 @@ yyreduce:
     break;
 
   case 71:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 456 "aq/parser/SQL92_Grm.y"
     {
 														#ifdef USE_TSELRESULT_FOR_GENERATED_TABLE
@@ -2986,13 +3205,15 @@ yyreduce:
     break;
 
   case 74:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 477 "aq/parser/SQL92_Grm.y"
     { (yyval) = nullptr; }
     break;
 
   case 84:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 500 "aq/parser/SQL92_Grm.y"
     {
 														(yyval) = (yyvsp[(1) - (4)]);
@@ -3001,7 +3222,8 @@ yyreduce:
     break;
 
   case 87:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 509 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (6)])->left	= (yyvsp[(3) - (6)]);
@@ -3011,7 +3233,8 @@ yyreduce:
     break;
 
   case 88:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 514 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (4)])->left	= (yyvsp[(3) - (4)]);
@@ -3020,7 +3243,8 @@ yyreduce:
     break;
 
   case 89:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 520 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (4)])->left	= (yyvsp[(3) - (4)]);
@@ -3029,7 +3253,8 @@ yyreduce:
     break;
 
   case 90:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 525 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (6)])->left	= (yyvsp[(3) - (6)]);
@@ -3039,7 +3264,8 @@ yyreduce:
     break;
 
   case 91:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 530 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (4)])->left	= (yyvsp[(3) - (4)]);
@@ -3048,7 +3274,8 @@ yyreduce:
     break;
 
   case 93:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 538 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -3058,7 +3285,8 @@ yyreduce:
     break;
 
   case 94:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 543 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -3068,7 +3296,8 @@ yyreduce:
     break;
 
   case 96:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 551 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -3078,7 +3307,8 @@ yyreduce:
     break;
 
   case 97:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 556 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -3088,7 +3318,8 @@ yyreduce:
     break;
 
   case 99:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 564 "aq/parser/SQL92_Grm.y"
     {	
 														(yyvsp[(1) - (2)])->setTag(K_UMINUS);
@@ -3098,7 +3329,8 @@ yyreduce:
     break;
 
   case 114:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 597 "aq/parser/SQL92_Grm.y"
     {
 														(yyval) = (yyvsp[(2) - (3)]);
@@ -3106,7 +3338,8 @@ yyreduce:
     break;
 
   case 119:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 606 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -3117,7 +3350,8 @@ yyreduce:
     break;
 
   case 120:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 612 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (1)])->setTag(K_COLUMN);
@@ -3126,7 +3360,8 @@ yyreduce:
     break;
 
   case 124:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 627 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (4)])->left	= (yyvsp[(3) - (4)]);
@@ -3136,7 +3371,8 @@ yyreduce:
     break;
 
   case 125:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 632 "aq/parser/SQL92_Grm.y"
     {
 														if ( (yyvsp[(3) - (5)]) != nullptr ) {
@@ -3150,7 +3386,8 @@ yyreduce:
     break;
 
   case 126:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 647 "aq/parser/SQL92_Grm.y"
     {
 														if ( (yyvsp[(3) - (5)]) != nullptr ) {
@@ -3164,7 +3401,8 @@ yyreduce:
     break;
 
   case 134:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 687 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (5)])->left		= (yyvsp[(2) - (5)]);
@@ -3182,7 +3420,8 @@ yyreduce:
     break;
 
   case 135:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 712 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (4)])->left	= (yyvsp[(2) - (4)]);
@@ -3200,7 +3439,8 @@ yyreduce:
     break;
 
   case 137:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 728 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (2)])->next	= (yyvsp[(2) - (2)]);
@@ -3209,7 +3449,8 @@ yyreduce:
     break;
 
   case 138:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 734 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (4)])->left	= (yyvsp[(2) - (4)]);
@@ -3220,7 +3461,8 @@ yyreduce:
     break;
 
   case 140:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 743 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (2)])->next	= (yyvsp[(2) - (2)]);
@@ -3229,7 +3471,8 @@ yyreduce:
     break;
 
   case 141:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 749 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (4)])->left	= (yyvsp[(2) - (4)]);
@@ -3240,7 +3483,8 @@ yyreduce:
     break;
 
   case 142:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 757 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (2)])->left	= (yyvsp[(2) - (2)]);
@@ -3249,13 +3493,15 @@ yyreduce:
     break;
 
   case 143:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 761 "aq/parser/SQL92_Grm.y"
     {	(yyval) = nullptr; }
     break;
 
   case 152:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 788 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -3265,7 +3511,8 @@ yyreduce:
     break;
 
   case 162:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 812 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -3275,7 +3522,8 @@ yyreduce:
     break;
 
   case 164:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 820 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -3285,7 +3533,8 @@ yyreduce:
     break;
 
   case 165:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 827 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (2)])->left	= (yyvsp[(2) - (2)]);
@@ -3294,7 +3543,8 @@ yyreduce:
     break;
 
   case 167:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 834 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (4)])->left	= (yyvsp[(1) - (4)]);
@@ -3305,7 +3555,8 @@ yyreduce:
     break;
 
   case 168:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 840 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -3315,13 +3566,15 @@ yyreduce:
     break;
 
   case 174:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 854 "aq/parser/SQL92_Grm.y"
     { (yyval) = (yyvsp[(2) - (3)]); }
     break;
 
   case 181:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 874 "aq/parser/SQL92_Grm.y"
     {
 // K_PERIOD
@@ -3364,7 +3617,8 @@ yyreduce:
     break;
 
   case 182:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 912 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (4)])->left	= (yyvsp[(1) - (4)]);
@@ -3375,7 +3629,8 @@ yyreduce:
     break;
 
   case 183:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 918 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (4)])->left	= (yyvsp[(1) - (4)]);
@@ -3386,7 +3641,8 @@ yyreduce:
     break;
 
   case 184:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 924 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (4)])->left	= (yyvsp[(1) - (4)]);
@@ -3397,7 +3653,8 @@ yyreduce:
     break;
 
   case 191:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 942 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(3) - (6)])->left	 = (yyvsp[(1) - (6)]);
@@ -3410,7 +3667,8 @@ yyreduce:
     break;
 
   case 192:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 951 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (5)])->left	= (yyvsp[(1) - (5)]);
@@ -3422,7 +3680,8 @@ yyreduce:
     break;
 
   case 193:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 961 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (4)])->left	= (yyvsp[(3) - (4)]);
@@ -3433,7 +3692,8 @@ yyreduce:
     break;
 
   case 194:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 967 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -3443,13 +3703,15 @@ yyreduce:
     break;
 
   case 195:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 974 "aq/parser/SQL92_Grm.y"
     { (yyval) = (yyvsp[(2) - (3)]); }
     break;
 
   case 198:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 979 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -3459,7 +3721,8 @@ yyreduce:
     break;
 
   case 199:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 988 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(3) - (4)])->left	 = (yyvsp[(1) - (4)]);
@@ -3470,7 +3733,8 @@ yyreduce:
     break;
 
   case 200:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 994 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(3) - (6)])->left	= (yyvsp[(1) - (6)]);
@@ -3483,7 +3747,8 @@ yyreduce:
     break;
 
   case 201:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1003 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(3) - (4)])->left	= (yyvsp[(1) - (4)]);
@@ -3494,7 +3759,8 @@ yyreduce:
     break;
 
   case 202:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1009 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(3) - (6)])->left	 = (yyvsp[(1) - (6)]);
@@ -3507,7 +3773,8 @@ yyreduce:
     break;
 
   case 203:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1018 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -3517,7 +3784,8 @@ yyreduce:
     break;
 
   case 204:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1023 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (5)])->left	= (yyvsp[(1) - (5)]);
@@ -3529,7 +3797,8 @@ yyreduce:
     break;
 
   case 207:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1044 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (4)])->left	= (yyvsp[(1) - (4)]);
@@ -3540,7 +3809,8 @@ yyreduce:
     break;
 
   case 208:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1050 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -3550,7 +3820,8 @@ yyreduce:
     break;
 
   case 209:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1057 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (2)])->left = (yyvsp[(2) - (2)]);
@@ -3559,7 +3830,8 @@ yyreduce:
     break;
 
   case 212:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1067 "aq/parser/SQL92_Grm.y"
     {
 														(yyval) = (yyvsp[(2) - (3)]);
@@ -3567,7 +3839,8 @@ yyreduce:
     break;
 
   case 215:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1074 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -3577,7 +3850,8 @@ yyreduce:
     break;
 
   case 220:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1093 "aq/parser/SQL92_Grm.y"
     {
 														delete (yyvsp[(2) - (3)]);
@@ -3587,7 +3861,8 @@ yyreduce:
     break;
 
   case 222:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1102 "aq/parser/SQL92_Grm.y"
     { 
 														(yyval)	= (yyvsp[(1) - (1)]);
@@ -3595,7 +3870,8 @@ yyreduce:
     break;
 
   case 223:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1106 "aq/parser/SQL92_Grm.y"
     { 
 														(yyval)	= (yyvsp[(1) - (1)]); 
@@ -3603,7 +3879,8 @@ yyreduce:
     break;
 
   case 224:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1109 "aq/parser/SQL92_Grm.y"
     { 
 														(yyval)	= (yyvsp[(1) - (1)]); 
@@ -3611,7 +3888,8 @@ yyreduce:
     break;
 
   case 225:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1123 "aq/parser/SQL92_Grm.y"
     {
 														if( (yyvsp[(3) - (5)]) != nullptr )
@@ -3631,7 +3909,8 @@ yyreduce:
     break;
 
   case 229:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1147 "aq/parser/SQL92_Grm.y"
     {
 														if( (yyvsp[(3) - (3)]) != nullptr )
@@ -3650,13 +3929,15 @@ yyreduce:
     break;
 
   case 230:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1161 "aq/parser/SQL92_Grm.y"
     {	(yyval) = nullptr; }
     break;
 
   case 232:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1167 "aq/parser/SQL92_Grm.y"
     {
 														(yyval)	= (yyvsp[(2) - (2)]);
@@ -3664,13 +3945,15 @@ yyreduce:
     break;
 
   case 233:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1170 "aq/parser/SQL92_Grm.y"
     {	(yyval) = nullptr; }
     break;
 
   case 235:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1181 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (4)])->left	= (yyvsp[(3) - (4)]);
@@ -3679,19 +3962,22 @@ yyreduce:
     break;
 
   case 238:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1192 "aq/parser/SQL92_Grm.y"
     {	(yyval)	= (yyvsp[(1) - (1)]);	}
     break;
 
   case 242:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1201 "aq/parser/SQL92_Grm.y"
     { (yyval) = (yyvsp[(2) - (3)]); }
     break;
 
   case 243:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1207 "aq/parser/SQL92_Grm.y"
     {
 														if( (yyvsp[(2) - (3)]) != nullptr )
@@ -3719,7 +4005,8 @@ yyreduce:
     break;
 
   case 244:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1237 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (3)])->left	= (yyvsp[(2) - (3)]);
@@ -3729,13 +4016,15 @@ yyreduce:
     break;
 
   case 245:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1242 "aq/parser/SQL92_Grm.y"
     {	(yyval)	= nullptr; }
     break;
 
   case 247:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1247 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -3745,7 +4034,8 @@ yyreduce:
     break;
 
   case 250:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1262 "aq/parser/SQL92_Grm.y"
     {
 														aq::tnode *pNode;
@@ -3757,13 +4047,15 @@ yyreduce:
     break;
 
   case 251:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1269 "aq/parser/SQL92_Grm.y"
     {	(yyval) = nullptr; }
     break;
 
   case 256:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1277 "aq/parser/SQL92_Grm.y"
     {	
 														(yyvsp[(2) - (2)])->left	= (yyvsp[(1) - (2)]);
@@ -3772,13 +4064,15 @@ yyreduce:
     break;
 
   case 258:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1282 "aq/parser/SQL92_Grm.y"
     {	(yyval) = (yyvsp[(1) - (2)]);	}
     break;
 
   case 259:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1285 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (2)])->left	= (yyvsp[(1) - (2)]);
@@ -3787,7 +4081,8 @@ yyreduce:
     break;
 
   case 260:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1290 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(3) - (4)])->left	= (yyvsp[(2) - (4)]);
@@ -3797,7 +4092,8 @@ yyreduce:
     break;
 
   case 264:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1298 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (2)])->left	= (yyvsp[(1) - (2)]);
@@ -3806,7 +4102,8 @@ yyreduce:
     break;
 
   case 266:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1305 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (2)])->left	= (yyvsp[(1) - (2)]);
@@ -3815,7 +4112,8 @@ yyreduce:
     break;
 
   case 267:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1318 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (6)])->left	= (yyvsp[(3) - (6)]);
@@ -3825,7 +4123,8 @@ yyreduce:
     break;
 
   case 273:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1334 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (6)])->left	= (yyvsp[(3) - (6)]);
@@ -3835,7 +4134,8 @@ yyreduce:
     break;
 
   case 274:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1341 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (4)])->left	= (yyvsp[(3) - (4)]);
@@ -3844,7 +4144,8 @@ yyreduce:
     break;
 
   case 275:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1347 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (4)])->left	= (yyvsp[(3) - (4)]);
@@ -3853,7 +4154,8 @@ yyreduce:
     break;
 
   case 276:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1353 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (4)])->left	= (yyvsp[(3) - (4)]);
@@ -3862,7 +4164,8 @@ yyreduce:
     break;
 
   case 277:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1359 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (4)])->left	= (yyvsp[(3) - (4)]);
@@ -3871,7 +4174,8 @@ yyreduce:
     break;
 
   case 278:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1365 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (4)])->left	= (yyvsp[(3) - (4)]);
@@ -3880,7 +4184,8 @@ yyreduce:
     break;
 
   case 279:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1371 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (4)])->left	= (yyvsp[(3) - (4)]);
@@ -3889,7 +4194,8 @@ yyreduce:
     break;
 
   case 281:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1378 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -3899,7 +4205,8 @@ yyreduce:
     break;
 
   case 282:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1387 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(4) - (6)])->left		= (yyvsp[(3) - (6)]);
@@ -3910,7 +4217,8 @@ yyreduce:
     break;
 
   case 283:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1394 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(4) - (8)])->left			= (yyvsp[(3) - (8)]);
@@ -3924,7 +4232,8 @@ yyreduce:
     break;
 
   case 290:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1419 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (5)])->left	= (yyvsp[(3) - (5)]);
@@ -3934,7 +4243,8 @@ yyreduce:
     break;
 
   case 291:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1427 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (10)])->left		= (yyvsp[(3) - (10)]);
@@ -3948,7 +4258,8 @@ yyreduce:
     break;
 
   case 292:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1437 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (7)])->left		= (yyvsp[(3) - (7)]);
@@ -3962,7 +4273,8 @@ yyreduce:
     break;
 
   case 294:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1449 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -3972,7 +4284,8 @@ yyreduce:
     break;
 
   case 299:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1465 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (5)])->left = (yyvsp[(2) - (5)]);
@@ -3985,7 +4298,8 @@ yyreduce:
     break;
 
   case 300:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1475 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (10)])->left		= (yyvsp[(2) - (10)]);
@@ -4001,7 +4315,8 @@ yyreduce:
     break;
 
   case 302:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1489 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -4011,7 +4326,8 @@ yyreduce:
     break;
 
   case 303:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1496 "aq/parser/SQL92_Grm.y"
     {
 														(yyval)			= (yyvsp[(2) - (3)]);
@@ -4021,7 +4337,8 @@ yyreduce:
     break;
 
   case 304:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1505 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (5)])->left		= (yyvsp[(3) - (5)]);
@@ -4031,7 +4348,8 @@ yyreduce:
     break;
 
   case 305:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1511 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (9)])->left		= (yyvsp[(3) - (9)]);
@@ -4043,7 +4361,8 @@ yyreduce:
     break;
 
   case 306:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1521 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (3)])->left		= (yyvsp[(3) - (3)]);
@@ -4052,7 +4371,8 @@ yyreduce:
     break;
 
   case 307:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1529 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (6)])->left	= (yyvsp[(3) - (6)]);
@@ -4062,7 +4382,8 @@ yyreduce:
     break;
 
   case 310:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1540 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -4072,7 +4393,8 @@ yyreduce:
     break;
 
   case 312:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1548 "aq/parser/SQL92_Grm.y"
     {
 																		(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -4082,7 +4404,8 @@ yyreduce:
     break;
 
   case 313:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1555 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -4092,7 +4415,8 @@ yyreduce:
     break;
 
   case 316:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1568 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -4102,7 +4426,8 @@ yyreduce:
     break;
 
   case 317:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1573 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -4112,7 +4437,8 @@ yyreduce:
     break;
 
   case 318:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1578 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (4)])->left	= (yyvsp[(1) - (4)]);
@@ -4123,7 +4449,8 @@ yyreduce:
     break;
 
   case 319:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1584 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -4133,7 +4460,8 @@ yyreduce:
     break;
 
   case 320:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1589 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -4143,7 +4471,8 @@ yyreduce:
     break;
 
   case 321:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1594 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (4)])->left	= (yyvsp[(1) - (4)]);
@@ -4154,7 +4483,8 @@ yyreduce:
     break;
 
   case 322:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1605 "aq/parser/SQL92_Grm.y"
     {
 														aq::tnode *pNode1;
@@ -4174,13 +4504,15 @@ yyreduce:
     break;
 
   case 324:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1623 "aq/parser/SQL92_Grm.y"
     {	(yyval)	= nullptr; }
     break;
 
   case 325:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1626 "aq/parser/SQL92_Grm.y"
     {
 														(yyval)	= (yyvsp[(4) - (4)]);
@@ -4188,13 +4520,15 @@ yyreduce:
     break;
 
   case 326:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1629 "aq/parser/SQL92_Grm.y"
     {	(yyval)	= nullptr; }
     break;
 
   case 327:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1633 "aq/parser/SQL92_Grm.y"
     {
 														(yyval)	= (yyvsp[(5) - (6)]);
@@ -4202,25 +4536,29 @@ yyreduce:
     break;
 
   case 328:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1636 "aq/parser/SQL92_Grm.y"
     {	(yyval)	= nullptr; }
     break;
 
   case 329:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1639 "aq/parser/SQL92_Grm.y"
     {	(yyval)	= nullptr; }
     break;
 
   case 330:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1640 "aq/parser/SQL92_Grm.y"
     {	(yyval)	= nullptr; }
     break;
 
   case 331:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1644 "aq/parser/SQL92_Grm.y"
     {
 														(yyval)	= (yyvsp[(7) - (7)]);
@@ -4228,13 +4566,15 @@ yyreduce:
     break;
 
   case 332:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1647 "aq/parser/SQL92_Grm.y"
     {	(yyval)	= nullptr; }
     break;
 
   case 333:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1650 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (3)])->left		= (yyvsp[(3) - (3)]);
@@ -4243,7 +4583,8 @@ yyreduce:
     break;
 
   case 335:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1658 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(1) - (8)])->left		= (yyvsp[(3) - (8)]);
@@ -4253,7 +4594,8 @@ yyreduce:
     break;
 
   case 337:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1666 "aq/parser/SQL92_Grm.y"
     {
 														(yyvsp[(2) - (3)])->left	= (yyvsp[(1) - (3)]);
@@ -4263,7 +4605,8 @@ yyreduce:
     break;
 
   case 338:
-/* Line 1792 of yacc.c  */
+
+/* Line 1806 of yacc.c  */
 #line 1673 "aq/parser/SQL92_Grm.y"
     {
 														(yyval)			= (yyvsp[(2) - (3)]);
@@ -4273,8 +4616,9 @@ yyreduce:
     break;
 
 
-/* Line 1792 of yacc.c  */
-#line 4278 "aq/parser/sql92_grm_tab.cpp"
+
+/* Line 1806 of yacc.c  */
+#line 4622 "aq/parser/sql92_grm_tab.cpp"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -4437,9 +4781,7 @@ yyerrlab1:
       YY_STACK_PRINT (yyss, yyssp);
     }
 
-  YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   *++yyvsp = yylval;
-  YY_IGNORE_MAYBE_UNINITIALIZED_END
 
 
   /* Shift the error token.  */
@@ -4463,7 +4805,7 @@ yyabortlab:
   yyresult = 1;
   goto yyreturn;
 
-#if !defined yyoverflow || YYERROR_VERBOSE
+#if !defined(yyoverflow) || YYERROR_VERBOSE
 /*-------------------------------------------------.
 | yyexhaustedlab -- memory exhaustion comes here.  |
 `-------------------------------------------------*/
@@ -4505,7 +4847,8 @@ yyreturn:
 }
 
 
-/* Line 2055 of yacc.c  */
+
+/* Line 2067 of yacc.c  */
 #line 1680 "aq/parser/SQL92_Grm.y"
 
 
@@ -4537,3 +4880,4 @@ int yywrap( void ) {
 	// return 0;		// To allow multi file ( ^Z - EOF )
 	return 1;		// To allow only one file ( EOF -> Exit )
 }
+

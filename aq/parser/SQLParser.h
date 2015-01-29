@@ -18,14 +18,14 @@ class tnode;
 
 /// \brief Parse SQL query
 /// \param query the sql query string representation
-/// \pnode pNode the 
+/// \pnode pNode the
 /// \return 0 on success, 1 on error
 int SQLParse(const char * query, aq::tnode *& pNode); // define in sql92_Grm.y
 
 /// \brief structure to hold sql query
 ///
 /// structure holding the sql query after bison/flex parsing
-class tnode 
+class tnode
 {
 public:
   static std::string indentStep;
@@ -50,11 +50,11 @@ public:
   tnode * parent; ///< parent (must be generated)
 	int inf; ///< used by Verbs to exchange information, \todo use a callback interface \deprecated
 	tag_t tag; ///< tag's node (see bison parser tag)
-  
+
   /// \name getter/setter
   /// use to set/get/update value of current node
   /// \{
-  
+
   void setTag(tag_t _tag) { this->tag = _tag; }
   tag_t getTag() const { return tag; }
   tnodeDataType getDataType() const { return eNodeDataType; }
@@ -67,24 +67,24 @@ public:
   void set_int_data(llong nVal);
   void set_double_data(double dVal);
   void set_data(const data_holder_t data, ColumnType type);
-  
+
   /// \}
 
   /// \brief Compare the value of n2 with this. Children are not compared.
   bool cmp(const tnode * n2) const;
-  
+
   /// \brief clone to a new tnode tree
   tnode * clone_subtree() const;
-  
+
   /// \brief Get a list of tnode separate by tag
   /// \param nodes the output list of tnodes
   /// \param tag the matching tag
   void treeListToNodeArray(std::vector<tnode*>& nodes, tag_t tag) const;
-  
+
   /// \brief Get a list of join tnode
   /// \param nodes the output list of tnodes
   void joinlistToNodeArray(std::vector<tnode*>& nodes) const;
-   
+
   /// \brief Deep First Search
   /// \param cmp
   /// \param withNext
@@ -130,7 +130,7 @@ public:
   /// \param nodes the list of all matching nodes
   /// if nodes is not empty before the call, nodes are added to the end)
   void find_nodes(tag_t tag, std::vector<tnode*>& nodes);
-  
+
   const tnode * find_main(tag_t tag) const { return const_cast<tnode*>(this)->find_main(tag); }
   const tnode * find_first(tag_t tag) const { return const_cast<tnode*>(this)->find_first(tag); }
   const tnode * find_first(const std::string& name) const { return const_cast<tnode*>(this)->find_first(name); }
@@ -139,7 +139,7 @@ public:
   void find_nodes(tag_t tag, std::vector<const tnode*>& nodes) const;
 
   /// \brief check is node represent a column
-  /// \return return true is node refer to a column 
+  /// \return return true is node refer to a column
   bool isColumnReference() const;
 
   /// \brief dump tree. debug purpose
@@ -156,7 +156,7 @@ public:
   /// \param nodes the stl container to proceed
   /// \param tag the join tag
   /// \return the tree node list
-  template <class C> 
+  template <class C>
   static tnode* nodeArrayToTreeList(const C& nodes, tag_t tag);
 
   /// \brief check if tree is valid
@@ -199,14 +199,14 @@ tnode * tnode::find_DFS(CMP& cmp, bool withNext)
 {
   if ((cmp)(this))
 		return this;
-  
+
+  tnode * pNodeFound = nullptr;
+
  	if ((this->left != nullptr) && ((pNodeFound = this->left->find_DFS(cmp)) != nullptr))
  		return pNodeFound;
 
  	if ((this->right != nullptr) && ((pNodeFound = this->right->find_DFS(cmp)) != nullptr))
 		return pNodeFound;
-  
-  tnode * pNodeFound = nullptr;
 
  	if (withNext && (this->next != nullptr) && ((pNodeFound = this->next->find_DFS(cmp)) != nullptr))
 		return pNodeFound;
@@ -219,7 +219,7 @@ tnode * tnode::find_BFS(CMP& cmp, bool withNext)
 {
   if ((cmp)(this))
 		return this;
-  
+
   tnode * pNodeFound = nullptr;
 
  	if ((this->left != nullptr) && ((pNodeFound = this->left->find_BFS(cmp)) != nullptr))
@@ -227,7 +227,7 @@ tnode * tnode::find_BFS(CMP& cmp, bool withNext)
 
  	if ((this->right != nullptr) && ((pNodeFound = this->right->find_BFS(cmp)) != nullptr))
 		return pNodeFound;
-  
+
  	if (withNext && (this->next != nullptr) && ((pNodeFound = this->next->find_BFS(cmp)) != nullptr))
 		return pNodeFound;
 

@@ -1,5 +1,6 @@
 #include "Database.h"
 #include "Exceptions.h"
+#include "Utilities.h"
 #include <fstream>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string/replace.hpp>
@@ -7,7 +8,7 @@
 namespace aq
 {
 
-Database::Database(const std::string& _path) 
+Database::Database(const std::string& _path)
   : path(_path)
 {
   boost::replace_all(path, "\\", "/");
@@ -41,7 +42,7 @@ bool Database::isValid() const
 
 void Database::create(aq::base_t& base)
 {
-  boost::filesystem::path paths[] = 
+  boost::filesystem::path paths[] =
   {
     boost::filesystem::path(this->path),
     boost::filesystem::path(this->path + "base_struct"),
@@ -95,7 +96,7 @@ int Database::load()
   int rc = 0;
   std::string bdFname = this->getBaseDescFile();
   std::ifstream fin(bdFname.c_str(), std::ios::in);
-  if (!fin.is_open()) 
+  if (!fin.is_open())
     return -1;
   if (bdFname.find(".aqb") != std::string::npos)
     aq::base_t::build_base_from_raw(fin, baseDesc);
@@ -183,7 +184,7 @@ std::string Database::getDataFileName(const char * path, size_t tIdx, size_t cId
 		sprintf(szFN, "B001T%.4luC%.4luV01P%.12lu.%s", tIdx, cIdx, pIdx, ext);
 	return szFN;
 }
- 
+
 // static
 std::string Database::getTemporaryFileName(size_t tableIdx, size_t columnIdx, size_t partIdx, const char * type, size_t size)
 {
