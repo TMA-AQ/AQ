@@ -90,7 +90,7 @@ namespace
 
   template <typename T>
   aq::tnode* create_in_subtree(const std::vector<aq::ColumnItem<T> >& items, const aq::ColumnType type, size_t nLevel = 0)
-  {	
+  {  
     aq::tnode *pNode = new aq::tnode(K_IN);
 
     if (items.empty())
@@ -260,8 +260,8 @@ private:
   aq::tnode * pNodeColumnRef;
   aq::tnode * pNodeStr;
   aq::tnode * pNodeRes;
-  bool	     bLeftColumnRef;
-  short	     op_tag;
+  bool       bLeftColumnRef;
+  short       op_tag;
   bool reverseOp;
 };
 
@@ -276,11 +276,11 @@ public:
   void success(aq::tnode * node);
 private:
   const aq::Base::Ptr baseDesc;
-	aq::tnode * pNodeTmp;
-	aq::tnode * pNodeColumnRef;
-	aq::tnode * pNodeLeftBound;
-	aq::tnode * pNodeRightBound;
-	aq::tnode * pNodeRes;
+  aq::tnode * pNodeTmp;
+  aq::tnode * pNodeColumnRef;
+  aq::tnode * pNodeLeftBound;
+  aq::tnode * pNodeRightBound;
+  aq::tnode * pNodeRes;
   aq::ColumnItem<T> leftBound;
   aq::ColumnItem<T> rightBound;
   bool bNotBetween;
@@ -297,18 +297,18 @@ public:
   void success(aq::tnode * node);
 private:
   const aq::Base::Ptr baseDesc;
-	aq::tnode * pNodeTmp;
-	aq::tnode * pNodeColumnRef;
-	aq::tnode * pNodeStr;
-	aq::tnode * pNodeRes;
-	ColumnType cType;
+  aq::tnode * pNodeTmp;
+  aq::tnode * pNodeColumnRef;
+  aq::tnode * pNodeStr;
+  aq::tnode * pNodeRes;
+  ColumnType cType;
   bool bNotLike;
   
-	// TPatternDescription	patternDesc;
+  // TPatternDescription  patternDesc;
   boost::regex rgx;
-	mutable char szTmpBuf[100];
-	mutable const char * pszVal;
-	// int cEscape;
+  mutable char szTmpBuf[100];
+  mutable const char * pszVal;
+  // int cEscape;
 };
 
 // ----------------------------------------------------------------------
@@ -413,7 +413,7 @@ void check_cmp_op<T>::success(aq::tnode * node)
   if (node->tag != K_FALSE) 
   {
     // Move the column reference subtree into the newly created subtree !
-    node->left = this->pNodeColumnRef;	// which can be pNode->left or right !
+    node->left = this->pNodeColumnRef;  // which can be pNode->left or right !
     // Remove reference from the original subtree which will be deleted !
     if (this->bLeftColumnRef)
       this->pNode->left = nullptr;
@@ -469,7 +469,7 @@ void check_between<T>::success(aq::tnode * node)
   if (node->tag != K_FALSE) 
   {
     // Move the column reference subtree into the newly created subtree !
-    node->left = pNodeColumnRef;	// which is pNodeTmp->left; !
+    node->left = pNodeColumnRef;  // which is pNodeTmp->left; !
     // Remove reference from the original subtree which will be deleted !
     pNodeTmp->left = nullptr;
   }
@@ -520,7 +520,7 @@ void check_like<T>::success(aq::tnode * node)
   if (node->tag != K_FALSE) 
   {
     // Move the column reference subtree into the newly created subtree !
-    node->left = pNodeColumnRef;	// which is pNodeTmp->left; !
+    node->left = pNodeColumnRef;  // which is pNodeTmp->left; !
     // Remove reference from the original subtree which will be deleted !
     pNodeTmp->left = nullptr;
   }
@@ -557,7 +557,7 @@ aq::tnode * ExpressionTransform::transform(aq::tnode * pNode)
     pNode = this->transform<char*, M>(pNode, tt);
     break;
   }
-	// delete_subtree(pNode); // FIXME
+  // delete_subtree(pNode); // FIXME
 
   //// Call recursively
   //if (pNode->next != nullptr)
@@ -574,7 +574,7 @@ aq::tnode * ExpressionTransform::transform(aq::tnode * pNode)
   //  pNode->right = this->transform<M>(pNode->right);
   //}
 
-	return pNode;
+  return pNode;
 }
 
 template <typename T, typename M> 
@@ -670,14 +670,14 @@ aq::tnode * ExpressionTransform::transform(CMP& cmp)
     std::merge(resultTmp1.begin(), resultTmp1.end(), resultTmp2.begin(), resultTmp2.end(), std::back_inserter(result), column_cmp);
     pNodeRes = ::getResult(result, cType);
   }
-	if (pNodeRes == nullptr) 
+  if (pNodeRes == nullptr) 
   {
     throw aq::generic_error(aq::generic_error::INVALID_QUERY, "");
-	}
+  }
 
   cmp.success(pNodeRes);
 
-	return pNodeRes;
+  return pNodeRes;
 }
 
 /// \brief tree node transformation expression

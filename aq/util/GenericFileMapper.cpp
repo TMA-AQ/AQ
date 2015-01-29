@@ -7,7 +7,7 @@
 using namespace aq;
 
 GenericFileMapper::GenericFileMapper(const char * _filename, const mode_t _mode)
-	: m_filename(_filename), mode(_mode)
+  : m_filename(_filename), mode(_mode)
 {
   if (_mode == mode_t::READ)
   {

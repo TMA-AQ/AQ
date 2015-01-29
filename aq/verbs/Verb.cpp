@@ -9,9 +9,9 @@ namespace verb {
 
 //------------------------------------------------------------------------------
 verb_error::verb_error( EType type, int verbTag ):
-	generic_error( type, "" )
+  generic_error( type, "" )
 {
-	this->Message +=  id_to_string( verbTag );
+  this->Message +=  id_to_string( verbTag );
 }
 
 //------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ Verb::~Verb()
 ////------------------------------------------------------------------------------
 //void Verb::accept(VerbVisitor* visitor)
 //{
-//	visitor->visit(this);
+//  visitor->visit(this);
 //}
 
 }

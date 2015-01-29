@@ -13,8 +13,8 @@
 #include <stack>
 #include <boost/algorithm/string.hpp>
 
-#define STR_BUF_SIZE_ROUND_UP	4096
-#define EXIT_ON_MEM_ERROR		1
+#define STR_BUF_SIZE_ROUND_UP  4096
+#define EXIT_ON_MEM_ERROR    1
 
 int yyerror(const char *pszMsg)
 {
@@ -54,20 +54,20 @@ tnode::tnode(const tnode& source)
   eNodeDataType(NODE_DATA_INT),
   nStrBufCb(0)
 {
-	switch(source.eNodeDataType)
-	{
-	case NODE_DATA_STRING:
-		set_string_data(source.data.val_str);
-		break;
-	case NODE_DATA_INT:
-		set_int_data(source.data.val_int);
-		break;
-	case NODE_DATA_NUMBER:
-		set_double_data(source.data.val_number);
-		break;
-	default:
-		assert( 0 );
-	}
+  switch(source.eNodeDataType)
+  {
+  case NODE_DATA_STRING:
+    set_string_data(source.data.val_str);
+    break;
+  case NODE_DATA_INT:
+    set_int_data(source.data.val_int);
+    break;
+  case NODE_DATA_NUMBER:
+    set_double_data(source.data.val_number);
+    break;
+  default:
+    assert( 0 );
+  }
 }
 
 tnode::~tnode()
@@ -110,12 +110,12 @@ void tnode::set_string_data(const char* pszStr)
     {
       free( this->data.val_str );
       this->data.val_str = nullptr;
-      this->nStrBufCb	= 0;
+      this->nStrBufCb  = 0;
     }
   }
   else
   {
-    nLen = strlen( pszStr ) + 1;		/* Include terminating nullptr char */
+    nLen = strlen( pszStr ) + 1;    /* Include terminating nullptr char */
 
     if ((this->eNodeDataType != NODE_DATA_STRING) || (this->nStrBufCb < nLen)) 
     {
@@ -133,8 +133,8 @@ void tnode::set_string_data(const char* pszStr)
       {
         throw aq::generic_error(aq::generic_error::GENERIC, "Not enough memory [%u]", EXIT_ON_MEM_ERROR);
       }
-      this->nStrBufCb = nLen;				/* Set Buffer Len */
-      this->eNodeDataType	= NODE_DATA_STRING; /* Set Correct Data Type */
+      this->nStrBufCb = nLen;        /* Set Buffer Len */
+      this->eNodeDataType  = NODE_DATA_STRING; /* Set Correct Data Type */
     }
 
     strcpy(this->data.val_str, pszStr);
@@ -152,18 +152,18 @@ void tnode::append_string_data(char* pszStr)
     return;
   }
 
-  nLen = strlen(this->data.val_str);	
-  if ( nLen == 0 )	/* Empty String */
+  nLen = strlen(this->data.val_str);  
+  if ( nLen == 0 )  /* Empty String */
   {
     this->set_string_data(pszStr);
     return;
   }
 
   nLen1 = strlen( pszStr );
-  if ( nLen1 == 0 )	/* Empty String */
-    return;	/* Nothing to do ! */
+  if ( nLen1 == 0 )  /* Empty String */
+    return;  /* Nothing to do ! */
 
-  nLen += nLen1 + 1;	/* Include terminating nullptr char */
+  nLen += nLen1 + 1;  /* Include terminating nullptr char */
 
   if (this->nStrBufCb < nLen) 
   {
@@ -179,12 +179,12 @@ void tnode::append_string_data(char* pszStr)
       throw aq::generic_error(aq::generic_error::GENERIC, "Not enough memory [%u]", EXIT_ON_MEM_ERROR);
     }
 
-    strcpy( pszBuf, this->data.val_str );	/* Keep the old string */
-    set_string_data( nullptr );	/* Free Old Buffer - avoid realloc */
-    this->data.val_str = pszBuf;	/* Set the new buffer */
+    strcpy( pszBuf, this->data.val_str );  /* Keep the old string */
+    set_string_data( nullptr );  /* Free Old Buffer - avoid realloc */
+    this->data.val_str = pszBuf;  /* Set the new buffer */
 
-    this->nStrBufCb		= nLen;				/* Set Buffer Len */
-    this->eNodeDataType	= NODE_DATA_STRING; /* Set Correct Data Type */
+    this->nStrBufCb    = nLen;        /* Set Buffer Len */
+    this->eNodeDataType  = NODE_DATA_STRING; /* Set Correct Data Type */
   }
 
   /* Append the new string */
@@ -196,9 +196,9 @@ void tnode::append_string_data(char* pszStr)
 void tnode::set_int_data( llong nVal ) 
 {
   if ( this->eNodeDataType == NODE_DATA_STRING )
-			set_string_data( nullptr );		/* Free the String Buffer */
+      set_string_data( nullptr );    /* Free the String Buffer */
 
-  this->data.val_int	 = nVal;
+  this->data.val_int   = nVal;
   this->eNodeDataType = NODE_DATA_INT;
   this->nStrBufCb = 0;
 }
@@ -207,60 +207,60 @@ void tnode::set_int_data( llong nVal )
 void tnode::set_double_data( double dVal ) 
 {
   if ( this->eNodeDataType == NODE_DATA_STRING )
-    set_string_data( nullptr );		/* Free the String Buffer */
+    set_string_data( nullptr );    /* Free the String Buffer */
 
-  this->data.val_number	= dVal;
-  this->eNodeDataType	= NODE_DATA_NUMBER;
+  this->data.val_number  = dVal;
+  this->eNodeDataType  = NODE_DATA_NUMBER;
   this->nStrBufCb = 0;
 }
 
 //------------------------------------------------------------------------------
 void tnode::set_data( const data_holder_t data, ColumnType type )
 {
-	switch (type)
-	{
-	case COL_TYPE_INT:
-	case COL_TYPE_BIG_INT:
-	case COL_TYPE_DATE:
-		this->tag = K_INTEGER;
-		this->set_int_data( (llong) data.val_int );
-		break;
-	case COL_TYPE_DOUBLE:
-		this->tag = K_REAL;
-		this->set_double_data( data.val_number );
-		break;
-	case COL_TYPE_VARCHAR:
-		this->tag = K_STRING;
-		this->set_string_data( data.val_str );
-		break;
-	default:
-		break;
-	}
+  switch (type)
+  {
+  case COL_TYPE_INT:
+  case COL_TYPE_BIG_INT:
+  case COL_TYPE_DATE:
+    this->tag = K_INTEGER;
+    this->set_int_data( (llong) data.val_int );
+    break;
+  case COL_TYPE_DOUBLE:
+    this->tag = K_REAL;
+    this->set_double_data( data.val_number );
+    break;
+  case COL_TYPE_VARCHAR:
+    this->tag = K_STRING;
+    this->set_string_data( data.val_str );
+    break;
+  default:
+    break;
+  }
 }
 
 //------------------------------------------------------------------------------
 std::string tnode::to_string() const
 {
-	char szBuffer[STR_BUF_SIZE]; // tma: FIXME
-	memset(szBuffer, 0, STR_BUF_SIZE);
-	switch( this->eNodeDataType )
-	{
-	case NODE_DATA_INT: 
-		sprintf(szBuffer, "%lld", this->data.val_int);
-		return szBuffer;
-		break;
-	case NODE_DATA_NUMBER: 
-		util::doubleToString( szBuffer, this->data.val_number );
-		return szBuffer;
-		break;
-	case NODE_DATA_STRING:
+  char szBuffer[STR_BUF_SIZE]; // tma: FIXME
+  memset(szBuffer, 0, STR_BUF_SIZE);
+  switch( this->eNodeDataType )
+  {
+  case NODE_DATA_INT: 
+    sprintf(szBuffer, "%lld", this->data.val_int);
+    return szBuffer;
+    break;
+  case NODE_DATA_NUMBER: 
+    util::doubleToString( szBuffer, this->data.val_number );
+    return szBuffer;
+    break;
+  case NODE_DATA_STRING:
     assert(this->data.val_str);
-		return this->data.val_str;
-		break;
-	default:
-		assert( 0 );
-	}
-	return "";
+    return this->data.val_str;
+    break;
+  default:
+    assert( 0 );
+  }
+  return "";
 }
 
 //------------------------------------------------------------------------------
@@ -294,50 +294,50 @@ bool tnode::cmp(const tnode * n2) const
 //------------------------------------------------------------------------------
 tnode* tnode::clone_subtree() const
 {
-	stack<const tnode*> nodes;
-	nodes.push(this);
-	tnode* pClone = new tnode(*this);
-	stack<tnode*> clones;
-	clones.push( pClone );
-	while( !nodes.empty() )
-	{
-		const tnode* nodeIdx = nodes.top();
-		tnode* cloneIdx = clones.top();
-		nodes.pop();
-		clones.pop();
-		if( nodeIdx->next )
-		{
-			cloneIdx->next = new tnode( *nodeIdx->next );
-			nodes.push( nodeIdx->next );
-			clones.push( cloneIdx->next );
-		}
-		if( nodeIdx->right )
-		{
-			cloneIdx->right = new tnode( *nodeIdx->right );
-			nodes.push( nodeIdx->right );
-			clones.push( cloneIdx->right );
-		}
-		if( nodeIdx->left )
-		{
-			cloneIdx->left = new tnode( *nodeIdx->left );
-			nodes.push( nodeIdx->left );
-			clones.push( cloneIdx->left );
-		}
-	}
-	return pClone;
+  stack<const tnode*> nodes;
+  nodes.push(this);
+  tnode* pClone = new tnode(*this);
+  stack<tnode*> clones;
+  clones.push( pClone );
+  while( !nodes.empty() )
+  {
+    const tnode* nodeIdx = nodes.top();
+    tnode* cloneIdx = clones.top();
+    nodes.pop();
+    clones.pop();
+    if( nodeIdx->next )
+    {
+      cloneIdx->next = new tnode( *nodeIdx->next );
+      nodes.push( nodeIdx->next );
+      clones.push( cloneIdx->next );
+    }
+    if( nodeIdx->right )
+    {
+      cloneIdx->right = new tnode( *nodeIdx->right );
+      nodes.push( nodeIdx->right );
+      clones.push( cloneIdx->right );
+    }
+    if( nodeIdx->left )
+    {
+      cloneIdx->left = new tnode( *nodeIdx->left );
+      nodes.push( nodeIdx->left );
+      clones.push( cloneIdx->left );
+    }
+  }
+  return pClone;
 }
 
 //------------------------------------------------------------------------------
 void tnode::treeListToNodeArray(std::vector<tnode*>& nodes, tag_t tag) const
 {
-	if (this->getTag() == tag)
-	{
-		this->right->treeListToNodeArray(nodes, tag);
-		this->left->treeListToNodeArray(nodes, tag);
-	}
-	else
+  if (this->getTag() == tag)
   {
-		nodes.push_back(this->clone_subtree());
+    this->right->treeListToNodeArray(nodes, tag);
+    this->left->treeListToNodeArray(nodes, tag);
+  }
+  else
+  {
+    nodes.push_back(this->clone_subtree());
   }
 }
 
@@ -388,75 +388,75 @@ void tnode::find_nodes(tag_t tag, std::vector<const tnode*>& l) const
 //------------------------------------------------------------------------------
 tnode * tnode::find_main(tag_t tag)
 {
-	if (this->getTag() == tag)
-		return this;
-	if (this->next != nullptr) 
+  if (this->getTag() == tag)
+    return this;
+  if (this->next != nullptr) 
     return this->next->find_main(tag);
-	return nullptr;
+  return nullptr;
 }
 
 //------------------------------------------------------------------------------
 tnode * tnode::find_first(tag_t tag)
-{	
+{  
   tnode * pNodeFound = nullptr;
-	if (this->getTag() == tag)
-		return this;
+  if (this->getTag() == tag)
+    return this;
 
- 	if ((this->left != nullptr) && ((pNodeFound = this->left->find_first(tag)) != nullptr))
- 		return pNodeFound;
+   if ((this->left != nullptr) && ((pNodeFound = this->left->find_first(tag)) != nullptr))
+     return pNodeFound;
 
- 	if ((this->right != nullptr) && ((pNodeFound = this->right->find_first(tag)) != nullptr))
-		return pNodeFound;
+   if ((this->right != nullptr) && ((pNodeFound = this->right->find_first(tag)) != nullptr))
+    return pNodeFound;
 
-	return nullptr;
+  return nullptr;
 }
 //------------------------------------------------------------------------------
 tnode * tnode::find_first(const std::string& name)
-{	
+{  
   tnode * pNodeFound = nullptr;
 
-	if ((this->getTag() == K_COLUMN || this->getTag() == K_IDENT) && this->getData().val_str == name)
-		return this;
+  if ((this->getTag() == K_COLUMN || this->getTag() == K_IDENT) && this->getData().val_str == name)
+    return this;
 
- 	if ((this->left != nullptr) && ((pNodeFound = this->left->find_first(name)) != nullptr))
- 		return pNodeFound;
+   if ((this->left != nullptr) && ((pNodeFound = this->left->find_first(name)) != nullptr))
+     return pNodeFound;
 
- 	if ((this->right != nullptr) && ((pNodeFound = this->right->find_first(name)) != nullptr))
-		return pNodeFound;
+   if ((this->right != nullptr) && ((pNodeFound = this->right->find_first(name)) != nullptr))
+    return pNodeFound;
 
-	return nullptr;
+  return nullptr;
 }
 //------------------------------------------------------------------------------
 tnode * tnode::find_first(tag_t tag, tnode::tag_t diffTag)
-{	
+{  
   tnode * pNodeFound = nullptr;
   
   if (this->getTag() == tag && this->parent && (this->parent->getTag() != diffTag))
-		return this;
+    return this;
 
- 	if ((this->left != nullptr) && ((pNodeFound = this->left->find_first(tag, diffTag)) != nullptr))
- 		return pNodeFound;
+   if ((this->left != nullptr) && ((pNodeFound = this->left->find_first(tag, diffTag)) != nullptr))
+     return pNodeFound;
 
- 	if ((this->right != nullptr) && ((pNodeFound = this->right->find_first(tag, diffTag)) != nullptr))
-		return pNodeFound;
+   if ((this->right != nullptr) && ((pNodeFound = this->right->find_first(tag, diffTag)) != nullptr))
+    return pNodeFound;
 
-	return nullptr;
+  return nullptr;
 }
 //------------------------------------------------------------------------------
 tnode * tnode::find_deeper(tag_t tag)
 {
-	tnode * pNodeFound = nullptr;
+  tnode * pNodeFound = nullptr;
 
- 	if ((this->left != nullptr) && ((pNodeFound = this->left->find_deeper(tag)) != nullptr))
- 		return pNodeFound;
+   if ((this->left != nullptr) && ((pNodeFound = this->left->find_deeper(tag)) != nullptr))
+     return pNodeFound;
 
- 	if ((this->right != nullptr) && ((pNodeFound = this->right->find_deeper(tag)) != nullptr))
-		return pNodeFound;
+   if ((this->right != nullptr) && ((pNodeFound = this->right->find_deeper(tag)) != nullptr))
+    return pNodeFound;
 
-	if (this->getTag() == tag)
-		return this;
+  if (this->getTag() == tag)
+    return this;
 
-	return nullptr;
+  return nullptr;
 }
 
 //------------------------------------------------------------------------------
@@ -468,8 +468,8 @@ bool tnode::isColumnReference() const
        (this->left->tag == K_IDENT) && (this->right->tag == K_COLUMN)))
   {
     return true;
-	}
-	return false;
+  }
+  return false;
 }
 
 //------------------------------------------------------------------------------
@@ -481,7 +481,7 @@ void tnode::dump(std::ostream& os, std::string indent) const
       return;
   }
 
-	os << "[address:" << this << "] " << indent << id_to_kstring(this->getTag()) << " [" << this->getTag() << "] : " << this->to_string() << std::endl;
+  os << "[address:" << this << "] " << indent << id_to_kstring(this->getTag()) << " [" << this->getTag() << "] : " << this->to_string() << std::endl;
 
   if ((this->left != nullptr) || (this->right != nullptr))
   {
@@ -495,12 +495,12 @@ void tnode::dump(std::ostream& os, std::string indent) const
     else
       os << "[address:" << (void*)0 << "] " << indent << tnode::indentStep << "[EMPTY RIGHT]" << std::endl;
   }
-	
-	if (this->next != nullptr) 
-	{
-		os << "[address:" << this->next << "] " << indent << "NEXT ->" << std::endl;
-		this->next->dump(os, indent);
-	}
+  
+  if (this->next != nullptr) 
+  {
+    os << "[address:" << this->next << "] " << indent << "NEXT ->" << std::endl;
+    this->next->dump(os, indent);
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -511,13 +511,13 @@ void tnode::dump(std::ostream& os, std::string indent) const
 //------------------------------------------------------------------------------
 tnode* tnode::get_leftmost_child(tnode * pNode) 
 {
-	if (pNode == nullptr)
-		return nullptr;
-	if (pNode->left != nullptr)
-		return get_leftmost_child(pNode->left);
-	else if (pNode->right != nullptr)
-		return get_leftmost_child(pNode->right);
-	return pNode;
+  if (pNode == nullptr)
+    return nullptr;
+  if (pNode->left != nullptr)
+    return get_leftmost_child(pNode->left);
+  else if (pNode->right != nullptr)
+    return get_leftmost_child(pNode->right);
+  return pNode;
 }
 
 //------------------------------------------------------------------------------
@@ -564,25 +564,25 @@ void tnode::delete_subtree(tnode *& pNode)
 {
   if (pNode == nullptr)
     return;
-	deque<tnode*> nodes;
-	nodes.push_back(pNode);
-	size_t idx = 0;
-	while( idx < nodes.size() )
-	{
-		pNode = nodes[idx];
-		if ( pNode->left )
-			nodes.push_back( pNode->left );
-		if ( pNode->right )
-			nodes.push_back( pNode->right );
-		if ( pNode->next )
-			nodes.push_back( pNode->next );
-		++idx;
-	}
-	for( idx = 0; idx < nodes.size(); ++idx )
-	{
-		nodes[idx]->set_string_data(nullptr);	/* Delete String Buffer if any */
-		delete nodes[idx];
-	}
+  deque<tnode*> nodes;
+  nodes.push_back(pNode);
+  size_t idx = 0;
+  while( idx < nodes.size() )
+  {
+    pNode = nodes[idx];
+    if ( pNode->left )
+      nodes.push_back( pNode->left );
+    if ( pNode->right )
+      nodes.push_back( pNode->right );
+    if ( pNode->next )
+      nodes.push_back( pNode->next );
+    ++idx;
+  }
+  for( idx = 0; idx < nodes.size(); ++idx )
+  {
+    nodes[idx]->set_string_data(nullptr);  /* Delete String Buffer if any */
+    delete nodes[idx];
+  }
   pNode = nullptr;
 }
 

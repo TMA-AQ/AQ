@@ -15,11 +15,11 @@ bool CurrentDateVerb::changeQuery(aq::tnode* pStart,
                                   VerbResult::Ptr resRight, 
                                   VerbResult::Ptr resNext )
 {
-	Scalar<uint64_t>::Ptr scalar = new Scalar<uint64_t>(COL_TYPE_DATE, 8, ColumnItem<uint64_t>(DateConversion::currentDate()));
-	pNode->tag = K_DATE_VALUE;
-	pNode->set_data(scalar->getValue(), scalar->Type);
-	this->Result = scalar;
-	return true;
+  Scalar<uint64_t>::Ptr scalar = new Scalar<uint64_t>(COL_TYPE_DATE, 8, ColumnItem<uint64_t>(DateConversion::currentDate()));
+  pNode->tag = K_DATE_VALUE;
+  pNode->set_data(scalar->getValue(), scalar->Type);
+  this->Result = scalar;
+  return true;
 }
 
 //------------------------------------------------------------------------------

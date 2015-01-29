@@ -12,22 +12,22 @@ template <typename T>
 class TemporaryColumnMapper : public ColumnMapper_Intf<T>
 {
 public:
-	TemporaryColumnMapper(const char * _path, size_t _tableId, size_t _columnId, aq::ColumnType itemType, size_t _itemSize, size_t _packetSize);
-	~TemporaryColumnMapper();
-	int loadValue(size_t index,T& value);
-	int setValue(size_t index, T value);
+  TemporaryColumnMapper(const char * _path, size_t _tableId, size_t _columnId, aq::ColumnType itemType, size_t _itemSize, size_t _packetSize);
+  ~TemporaryColumnMapper();
+  int loadValue(size_t index,T& value);
+  int setValue(size_t index, T value);
   int append(T value);
 private:
   uint64_t nbRemap;
   const std::string path;
-	size_t tableId;
+  size_t tableId;
   size_t columnId;
   size_t itemSize;
   aq::ColumnType itemType;
   size_t packetSize;
   size_t currentPacket;
-	boost::shared_ptr<aq::FileMapper> tmpMapper;
-	std::vector<boost::shared_ptr<aq::FileMapper> > tmpMappers;
+  boost::shared_ptr<aq::FileMapper> tmpMapper;
+  std::vector<boost::shared_ptr<aq::FileMapper> > tmpMappers;
   std::vector<std::string> temporaryFiles;
 };
 
@@ -48,17 +48,17 @@ TemporaryColumnMapper<T>::TemporaryColumnMapper(const char * _path, size_t _tabl
   switch (itemType)
   {
   case COL_TYPE_VARCHAR: strcpy(type_str, "CHA"); break;
-	case COL_TYPE_INT: strcpy(type_str, "INT"); break;
-	case COL_TYPE_DOUBLE: strcpy(type_str, "DOU"); break;
-	case COL_TYPE_BIG_INT:
-	case COL_TYPE_DATE:
+  case COL_TYPE_INT: strcpy(type_str, "INT"); break;
+  case COL_TYPE_DOUBLE: strcpy(type_str, "DOU"); break;
+  case COL_TYPE_BIG_INT:
+  case COL_TYPE_DATE:
     strcpy(type_str, "LON"); 
     break;
   }
   sprintf( prefix, "B001TMP%.4uC%.4u%s%.4uP", tableId, columnId, type_str, itemSize );
-	getFileNames(path.c_str(), this->temporaryFiles, prefix );
+  getFileNames(path.c_str(), this->temporaryFiles, prefix );
   assert(!this->temporaryFiles.empty());
-	this->tmpMapper.reset(new aq::FileMapper(this->temporaryFiles[this->currentPacket].c_str()));
+  this->tmpMapper.reset(new aq::FileMapper(this->temporaryFiles[this->currentPacket].c_str()));
   tmpMappers.resize(temporaryFiles.size());
 }
 

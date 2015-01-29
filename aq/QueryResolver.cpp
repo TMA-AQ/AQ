@@ -62,10 +62,10 @@ QueryResolver::QueryResolver(
   Base::Ptr  _baseDesc,
   unsigned int& _id,
   unsigned int _level)
-	:	settings(_settings),
-		baseDesc(_baseDesc),
+  :  settings(_settings),
+    baseDesc(_baseDesc),
     aqEngine(_aqEngine),
-		sqlStatement(_sqlStatement),
+    sqlStatement(_sqlStatement),
     originalSqlStatement(nullptr),
     outerSelect(nullptr),
     id_generator(_id),
@@ -81,7 +81,7 @@ QueryResolver::QueryResolver(
 {
   this->sqlStatement->to_upper();
   this->originalSqlStatement = this->sqlStatement->clone_subtree();
-	memset(szBuffer, 0, STR_BUF_SIZE);
+  memset(szBuffer, 0, STR_BUF_SIZE);
   timer.start();
 }
 
@@ -90,7 +90,7 @@ QueryResolver::~QueryResolver()
 {
   aq::tnode::delete_subtree(this->originalSqlStatement);
   for (auto& v : this->aliases) { aq::tnode::delete_subtree(v.second); }
-	aq::Logger::getInstance().log(AQ_INFO, "Query Resolver: Time elapsed = %s\n", aq::Timer::getString(timer.getTimeElapsed()).c_str());
+  aq::Logger::getInstance().log(AQ_INFO, "Query Resolver: Time elapsed = %s\n", aq::Timer::getString(timer.getTimeElapsed()).c_str());
 }
 
 //-------------------------------------------------------------------------------
@@ -98,13 +98,13 @@ Table::Ptr QueryResolver::solve(boost::shared_ptr<aq::RowWritter_Intf> rowWritte
 {
   this->resultHandler = rowWritter;
   this->preProcess();
-	this->solveNested(this->sqlStatement, this->level, nullptr, false, false);
+  this->solveNested(this->sqlStatement, this->level, nullptr, false, false);
   aq::verb::VerbNode::Ptr spTree = this->postProcess();
   if (spTree != nullptr)
   {
     this->resolve(spTree);
   }
-	return this->result;
+  return this->result;
 }
 
 //-------------------------------------------------------------------------------
@@ -112,7 +112,7 @@ void QueryResolver::preProcess()
 {
   if (!this->sqlStatement || (this->sqlStatement->tag != K_SELECT))
   {
-		throw aq::generic_error(aq::generic_error::INVALID_QUERY, "");
+    throw aq::generic_error(aq::generic_error::INVALID_QUERY, "");
   }
 
   // post processing before solving nested queries
@@ -125,8 +125,8 @@ void QueryResolver::preProcess()
   std::cout << aq::syntax_tree_to_sql_form(this->sqlStatement, sql_query) << std::endl;
 #endif
 
-	this->hasGroupBy = this->sqlStatement->find_main( K_GROUP) != nullptr;
-	this->hasOrderBy = this->sqlStatement->find_main(K_ORDER) != nullptr;
+  this->hasGroupBy = this->sqlStatement->find_main( K_GROUP) != nullptr;
+  this->hasOrderBy = this->sqlStatement->find_main(K_ORDER) != nullptr;
 
   std::list<tnode*> columns;
   aq::util::toNodeListToStdList(this->sqlStatement, columns);
@@ -170,7 +170,7 @@ void QueryResolver::preProcess()
   }
 
   std::vector<tnode*> partitionsNodes;
-	this->sqlStatement->left->find_nodes(K_PARTITION, partitionsNodes);
+  this->sqlStatement->left->find_nodes(K_PARTITION, partitionsNodes);
   if (!partitionsNodes.empty())
   {
     // to solve a partition by we must perform an order on result
@@ -218,10 +218,10 @@ aq::verb::VerbNode::Ptr QueryResolver::postProcess()
 {
   aq::verb::VerbNode::Ptr spTree;
 
-	aq::util::solveIdentRequest(this->sqlStatement, this->baseDesc);
+  aq::util::solveIdentRequest(this->sqlStatement, this->baseDesc);
 
 #if defined(AQ_TRACE)
-	sql_query = "";
+  sql_query = "";
   std::cout << *this->sqlStatement << std::endl;
   std::cout << aq::multiline_query(aq::syntax_tree_to_sql_form(this->sqlStatement, sql_query)) << std::endl;
 #endif
@@ -230,7 +230,7 @@ aq::verb::VerbNode::Ptr QueryResolver::postProcess()
   aq::util::transformExpression(this->baseDesc, this->settings, this->sqlStatement);
 
 #if defined(AQ_TRACE)
-	sql_query = "";
+  sql_query = "";
   std::cout << *this->sqlStatement << std::endl;
   std::cout << aq::multiline_query(aq::syntax_tree_to_sql_form(this->sqlStatement, sql_query)) << std::endl;
 #endif
@@ -242,18 +242,18 @@ aq::verb::VerbNode::Ptr QueryResolver::postProcess()
     return spTree;
   }
 
-	//
-	// Query Pre Processing (TODO : optimize tree by detecting identical subtrees)
-	timer.start();
+  //
+  // Query Pre Processing (TODO : optimize tree by detecting identical subtrees)
+  timer.start();
   boost::array<uint32_t, 6> categories_order =  { { K_FROM, K_WHERE, K_SELECT, K_GROUP, K_HAVING, K_ORDER } };
-	spTree = aq::verb::VerbNode::BuildVerbsTree(this->sqlStatement, categories_order, this->baseDesc, this->settings);
+  spTree = aq::verb::VerbNode::BuildVerbsTree(this->sqlStatement, categories_order, this->baseDesc, this->settings);
 
 #if defined(AQ_TRACE)
   sql_query = "";
   std::cout << aq::multiline_query(aq::syntax_tree_to_sql_form(this->sqlStatement, sql_query)) << std::endl;
 #endif
 
-	// spTree->changeQuery();
+  // spTree->changeQuery();
 
 #if defined(AQ_TRACE)
   sql_query = "";
@@ -262,13 +262,13 @@ aq::verb::VerbNode::Ptr QueryResolver::postProcess()
 #endif
 
   aq::tnode::checkTree(this->sqlStatement);
-	aq::util::cleanQuery(this->sqlStatement);
-	aq::Logger::getInstance().log(AQ_INFO, "Query Preprocessing: Time elapsed = %s\n", aq::Timer::getString(timer.getTimeElapsed()).c_str());
+  aq::util::cleanQuery(this->sqlStatement);
+  aq::Logger::getInstance().log(AQ_INFO, "Query Preprocessing: Time elapsed = %s\n", aq::Timer::getString(timer.getTimeElapsed()).c_str());
 
-	//
-	// Solve Optimal Min/Max : FIXME
-	timer.start();
-	this->result = solveOptimalMinMax(spTree, this->baseDesc, this->settings);
+  //
+  // Solve Optimal Min/Max : FIXME
+  timer.start();
+  this->result = solveOptimalMinMax(spTree, this->baseDesc, this->settings);
   if (this->result)
   {
     aq::Logger::getInstance().log(AQ_INFO, "Solve Optimal Min/Max: Time elapsed = %s\n", aq::Timer::getString(timer.getTimeElapsed()).c_str());
@@ -396,28 +396,28 @@ void QueryResolver::solveNested()
 //------------------------------------------------------------------------------
 void QueryResolver::solveNested(aq::tnode*& pNode, unsigned int nSelectLevel, aq::tnode* pLastSelect, bool inFrom, bool inIn)
 {
-	if((pNode == nullptr) || (pNode->tag == K_DELETED))
-		return;
+  if((pNode == nullptr) || (pNode->tag == K_DELETED))
+    return;
 
-	aq::tnode* pNewLastSelect = pLastSelect;
-	bool newInFrom = inFrom;
-	bool newInIn = inIn;
-	switch( pNode->tag )
-	{
-	case K_SELECT:
-		pNewLastSelect = pNode;
-		newInFrom = false;
-		newInIn = false;
-		break;
-	case K_FROM:
-		newInFrom = true;
-		break;
-	case K_IN:
-		newInIn = true;
-		break;
-	default:
+  aq::tnode* pNewLastSelect = pLastSelect;
+  bool newInFrom = inFrom;
+  bool newInIn = inIn;
+  switch( pNode->tag )
+  {
+  case K_SELECT:
+    pNewLastSelect = pNode;
+    newInFrom = false;
+    newInIn = false;
     break;
-	}
+  case K_FROM:
+    newInFrom = true;
+    break;
+  case K_IN:
+    newInIn = true;
+    break;
+  default:
+    break;
+  }
 
   if ((pNode->tag == K_SELECT) && (nSelectLevel > this->level))
   {
@@ -599,22 +599,22 @@ void getSelectVerbs(aq::verb::VerbNode::Ptr spTree, std::vector<aq::verb::VerbNo
 //------------------------------------------------------------------------------
 void QueryResolver::solveAQMatrix(aq::verb::VerbNode::Ptr spTree)
 {
-	aq::Timer timer;
+  aq::Timer timer;
 
-	// Prepare Columns
-	std::vector<Column::Ptr> columnTypes;
-	aq::util::getColumnTypes(this->sqlStatement, columnTypes, this->baseDesc);
+  // Prepare Columns
+  std::vector<Column::Ptr> columnTypes;
+  aq::util::getColumnTypes(this->sqlStatement, columnTypes, this->baseDesc);
 
   // build process to apply on each row
   boost::shared_ptr<aq::RowProcesses> processes(new aq::RowProcesses);
 
   assert(!(this->hasGroupBy && this->hasPartitionBy));
   std::vector<aq::tnode*> columnNodes;
-	if (this->hasGroupBy)
-	{
-		aq::tnode * nodeGroup = this->sqlStatement->find_main(K_GROUP);
-		aq::util::getAllColumnNodes(nodeGroup, columnNodes);
-	}
+  if (this->hasGroupBy)
+  {
+    aq::tnode * nodeGroup = this->sqlStatement->find_main(K_GROUP);
+    aq::util::getAllColumnNodes(nodeGroup, columnNodes);
+  }
   else if (this->hasPartitionBy)
   {
     std::copy(this->partitions[0].begin(), this->partitions[0].end(), std::back_inserter(columnNodes));
@@ -627,13 +627,13 @@ void QueryResolver::solveAQMatrix(aq::verb::VerbNode::Ptr spTree)
   std::vector<aq::verb::VerbNode::Ptr> aggregateVerbs;
   getSelectVerbs(spTree, aggregateVerbs);
   boost::shared_ptr<aq::RowVerbProcess> aggregateVerbProcess(new aq::RowVerbProcess(spTree, aggregateVerbs));
-	processes->addProcess(aggregateVerbProcess);
+  processes->addProcess(aggregateVerbProcess);
 
   //
   // Algebric Verbs Processing
   std::vector<aq::verb::VerbNode::Ptr> algebricVerbs;
   boost::shared_ptr<aq::RowVerbProcess> algebricVerbProcess(new aq::RowVerbProcess(spTree, algebricVerbs));
-	processes->addProcess(algebricVerbProcess);
+  processes->addProcess(algebricVerbProcess);
 
   ////
   //// Output Processing
@@ -794,10 +794,10 @@ void QueryResolver::renameResultTable()
   }
 
 
-	// copy WHERE's conditions to outer select WHERE
-	aq::tnode* whereNode = this->sqlStatement->find_main(K_WHERE);
-	if (whereNode)
-	{
+  // copy WHERE's conditions to outer select WHERE
+  aq::tnode* whereNode = this->sqlStatement->find_main(K_WHERE);
+  if (whereNode)
+  {
     // keep only join
     aq::tnode * joinNode = whereNode->left->clone_subtree(); // FIXME : possible memory leak
     joinNode = aq::util::getJoin(joinNode);
@@ -822,8 +822,8 @@ void QueryResolver::renameResultTable()
 
       aq::util::addConditionsToWhere(joinNode, this->outerSelect);
     }
-	}
-	// aq::addInnerOuterNodes(whereNode->left, K_INNER, K_INNER);
+  }
+  // aq::addInnerOuterNodes(whereNode->left, K_INNER, K_INNER);
 }
 
 //------------------------------------------------------------------------------
@@ -1098,10 +1098,10 @@ std::string QueryResolver::getOriginalColumn(const std::string& alias) const
 // -------------------------------------------------------------------------------------------------
 int QueryResolver::prepareQuery(const std::string& query, const std::string & ident, aq::Settings::Ptr settings, bool force)
 {
-	//
-	// generate ident and ini file
+  //
+  // generate ident and ini file
   std::string queryIdent = ident;
-	if (queryIdent == "")
+  if (queryIdent == "")
   {
     boost::uuids::uuid qi = boost::uuids::random_generator()();
     std::ostringstream oss;
@@ -1110,31 +1110,31 @@ int QueryResolver::prepareQuery(const std::string& query, const std::string & id
   }
   settings->changeIdent(queryIdent);
 
-	//
-	// create directories
-	std::list<fs::path> lpaths;
-	lpaths.push_back(fs::path(settings->rootPath + "calculus/" + queryIdent));
-	lpaths.push_back(fs::path(settings->tmpPath));
-	lpaths.push_back(fs::path(settings->dpyPath));
-	for (std::list<fs::path>::const_iterator dir = lpaths.begin(); dir != lpaths.end(); ++dir)
-	{
-		if (fs::exists(*dir))
-		{
+  //
+  // create directories
+  std::list<fs::path> lpaths;
+  lpaths.push_back(fs::path(settings->rootPath + "calculus/" + queryIdent));
+  lpaths.push_back(fs::path(settings->tmpPath));
+  lpaths.push_back(fs::path(settings->dpyPath));
+  for (std::list<fs::path>::const_iterator dir = lpaths.begin(); dir != lpaths.end(); ++dir)
+  {
+    if (fs::exists(*dir))
+    {
       aq::Logger::getInstance().log(AQ_WARNING, "directory already exist '%s'\n", (*dir).string().c_str());
       if (!force)
       {
         return EXIT_FAILURE;
       }
-		}
-		else if (!fs::create_directory(*dir))
-		{
-			aq::Logger::getInstance().log(AQ_WARNING, "cannot create directory '%s'\n", (*dir).string().c_str());
+    }
+    else if (!fs::create_directory(*dir))
+    {
+      aq::Logger::getInstance().log(AQ_WARNING, "cannot create directory '%s'\n", (*dir).string().c_str());
       if (!force)
       {
         return EXIT_FAILURE;
       }
-		}
-	}
+    }
+  }
 
   //
   // write request file
@@ -1143,13 +1143,13 @@ int QueryResolver::prepareQuery(const std::string& query, const std::string & id
   queryFile << query;
   queryFile.close();
 
-	//
-	// write ini file (it is needed for now by AQEngine)
-	std::ofstream iniFile(settings->iniFile.c_str());
-	settings->writeAQEngineIni(iniFile);
-	iniFile.close();
+  //
+  // write ini file (it is needed for now by AQEngine)
+  std::ofstream iniFile(settings->iniFile.c_str());
+  settings->writeAQEngineIni(iniFile);
+  iniFile.close();
 
-	return EXIT_SUCCESS;
+  return EXIT_SUCCESS;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -1162,34 +1162,34 @@ int QueryResolver::processQuery(const std::string& query,
 {
   int rc = EXIT_SUCCESS;
 
-	try
-	{
+  try
+  {
 
-		aq::Logger::getInstance().log(AQ_INFO, "processing sql query\n");
+    aq::Logger::getInstance().log(AQ_INFO, "processing sql query\n");
 
-		aq::tnode	*pNode  = nullptr;
-		int	nRet;
+    aq::tnode  *pNode  = nullptr;
+    int  nRet;
 
-		//
-		// Parse SQL request
-		{
+    //
+    // Parse SQL request
+    {
 
-			boost::mutex::scoped_lock lock(parserMutex);
-			aq::Logger::getInstance().log(AQ_INFO, "parse sql query %s\n", query.c_str());
-			if ((nRet = SQLParse(query.c_str(), pNode)) != 0 )
-			{
-				aq::Logger::getInstance().log(AQ_ERROR, "error parsing sql request '%s'\n", query.c_str());
-				return EXIT_FAILURE;
-			}
+      boost::mutex::scoped_lock lock(parserMutex);
+      aq::Logger::getInstance().log(AQ_INFO, "parse sql query %s\n", query.c_str());
+      if ((nRet = SQLParse(query.c_str(), pNode)) != 0 )
+      {
+        aq::Logger::getInstance().log(AQ_ERROR, "error parsing sql request '%s'\n", query.c_str());
+        return EXIT_FAILURE;
+      }
 
 #if defined(_DEBUG) && defined(_TRACE)
-			std::cout << *pNode << std::endl;
+      std::cout << *pNode << std::endl;
 #endif
 
     }
 
     //
-		// Transform SQL request in prefix form,
+    // Transform SQL request in prefix form,
     if (pNode->tag == K_SELECT)
     {
       unsigned int id_generator = 1;
@@ -1213,23 +1213,23 @@ int QueryResolver::processQuery(const std::string& query,
       aq::Logger::getInstance().log(AQ_INFO, "[%s] is not supported", aq::id_to_string(pNode->tag));
     }
 
-		delete pNode;
-	}
-	catch (const aq::generic_error& ge)
-	{
-		aq::Logger::getInstance().log(AQ_ERROR, "%s\n", ge.what());
-		rc = EXIT_FAILURE;
-	}
-	catch (const std::exception& ex)
-	{
-		aq::Logger::getInstance().log(AQ_ERROR, "%s\n", ex.what());
-		rc = EXIT_FAILURE;
-	}
-	catch (...)
-	{
-		aq::Logger::getInstance().log(AQ_ERROR, "unknown exception\n");
-		rc = EXIT_FAILURE;
-	}
+    delete pNode;
+  }
+  catch (const aq::generic_error& ge)
+  {
+    aq::Logger::getInstance().log(AQ_ERROR, "%s\n", ge.what());
+    rc = EXIT_FAILURE;
+  }
+  catch (const std::exception& ex)
+  {
+    aq::Logger::getInstance().log(AQ_ERROR, "%s\n", ex.what());
+    rc = EXIT_FAILURE;
+  }
+  catch (...)
+  {
+    aq::Logger::getInstance().log(AQ_ERROR, "unknown exception\n");
+    rc = EXIT_FAILURE;
+  }
 
   if (!keepFiles)
   {
@@ -1239,7 +1239,7 @@ int QueryResolver::processQuery(const std::string& query,
     aq::util::DeleteFolder(settings->workingPath.c_str());
   }
 
-	return rc;
+  return rc;
 }
 
 }

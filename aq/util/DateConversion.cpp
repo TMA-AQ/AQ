@@ -80,18 +80,18 @@ long long DateConversion::dateToBigInt(const char * strval)
 std::string DateConversion::bigIntToDate(long long intval)
 {
   char str[128]; // FIXME
-	int year = (int)(intval / YEAR);
-	intval %= YEAR;
-	int month = (int)(intval / MONTH);
-	intval %= MONTH;
-	int day = (int)(intval / DAY);
-	intval %= DAY;
-	int hour = (int)(intval / HOUR);
-	intval %= HOUR;
-	int minute = (int)(intval / MINUTE);
-	intval %= MINUTE;
-	int second = (int)(intval / SECOND);
-	intval %= SECOND;
+  int year = (int)(intval / YEAR);
+  intval %= YEAR;
+  int month = (int)(intval / MONTH);
+  intval %= MONTH;
+  int day = (int)(intval / DAY);
+  intval %= DAY;
+  int hour = (int)(intval / HOUR);
+  intval %= HOUR;
+  int minute = (int)(intval / MINUTE);
+  intval %= MINUTE;
+  int second = (int)(intval / SECOND);
+  intval %= SECOND;
   
   if( sprintf( str, "%.4d-%.2d-%.2d %.2d:%.2d:%.2d", year, month, day, hour, minute, second ) < 0 )
   {
@@ -110,17 +110,17 @@ std::string DateConversion::bigIntToDate(long long intval)
 //------------------------------------------------------------------------------
 long long DateConversion::currentDate()
 {
-	time_t currentTime_t = time(nullptr);
-	struct tm *currentTime = localtime( &currentTime_t );
-	int year = currentTime->tm_year + 1900;
-	int month = currentTime->tm_mon + 1;
-	int day = currentTime->tm_mday;
-	int hour = currentTime->tm_hour;
-	int minute = currentTime->tm_min;
-	int second = currentTime->tm_sec;
-	long long intval = year * YEAR + month * MONTH + day * DAY + 
-		hour * HOUR + minute * MINUTE + SECOND * second;
-	return intval;
+  time_t currentTime_t = time(nullptr);
+  struct tm *currentTime = localtime( &currentTime_t );
+  int year = currentTime->tm_year + 1900;
+  int month = currentTime->tm_mon + 1;
+  int day = currentTime->tm_mday;
+  int hour = currentTime->tm_hour;
+  int minute = currentTime->tm_min;
+  int second = currentTime->tm_sec;
+  long long intval = year * YEAR + month * MONTH + day * DAY + 
+    hour * HOUR + minute * MINUTE + SECOND * second;
+  return intval;
 }
 
 }

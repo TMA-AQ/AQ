@@ -69,10 +69,10 @@ void AQEngineBasic::renameResult(unsigned int id, std::vector<std::pair<std::str
 
 aq::engine::AQMatrix::Ptr AQEngineBasic::getAQMatrix()
 {
-	return this->matrix;
+  return this->matrix;
 }
 
 const std::vector<llong>& AQEngineBasic::getTablesIDs() const
 {
-	return this->tableIDs;
+  return this->tableIDs;
 }

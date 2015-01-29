@@ -16,7 +16,7 @@
 namespace aq
 {
   
-/// Solve Select Statement	
+/// Solve Select Statement  
 class QueryResolver
 {
 public:
@@ -52,17 +52,17 @@ public:
     bool keepFiles);
 
 public:
-	QueryResolver(
+  QueryResolver(
     aq::tnode * _sqlStatement, 
     Settings::Ptr _settings, 
     aq::engine::AQEngine_Intf::Ptr _aqEngine, 
     Base::Ptr _baseDesc, 
     unsigned int& _id, 
     unsigned int _level = 1);
-	~QueryResolver();
+  ~QueryResolver();
 
   /// main entry
-	Table::Ptr solve(boost::shared_ptr<aq::RowWritter_Intf> rowWritter = boost::shared_ptr<aq::RowWritter_Intf>());
+  Table::Ptr solve(boost::shared_ptr<aq::RowWritter_Intf> rowWritter = boost::shared_ptr<aq::RowWritter_Intf>());
 
   /// 
   void preProcess();
@@ -74,7 +74,7 @@ public:
   /// There is three case:
 
   /// 1: parse the full aq matrix and apply some verb
-	void solveAQMatrix(aq::verb::VerbNode::Ptr spTree);
+  void solveAQMatrix(aq::verb::VerbNode::Ptr spTree);
 
   /// 2: apply some rules on the result and generate a TEMPORARY table based on REGULAR/BASE table
   void generateTemporaryTable();
@@ -85,7 +85,7 @@ public:
   /// \}
 
   size_t getNbRows();
-	Table::Ptr getResult() { return this->result; }
+  Table::Ptr getResult() { return this->result; }
   const std::vector<Column::Ptr> getColumns() const { return this->columns; }
 
   void setResultName(const char * value, const char * base) { 
@@ -104,7 +104,7 @@ public:
 private:
   /// solve all selects found in the main select
   void solveNested();
-	void solveNested(aq::tnode*& pNode, unsigned int nSelectLevel, aq::tnode* pLastSelect, bool inFrom, bool inIn);
+  void solveNested(aq::tnode*& pNode, unsigned int nSelectLevel, aq::tnode* pLastSelect, bool inFrom, bool inIn);
   void updateTableName();
   void changeTemporaryTableName(aq::tnode * pNode);
   void updateBaseDesc();
@@ -117,25 +117,25 @@ private:
 
   ////////////////////////////////////////////////////////////////////////////
 
-	Settings::Ptr settings;
-	Base::Ptr baseDesc;
-	boost::shared_ptr<aq::engine::AQEngine_Intf> aqEngine;
+  Settings::Ptr settings;
+  Base::Ptr baseDesc;
+  boost::shared_ptr<aq::engine::AQEngine_Intf> aqEngine;
 
   // helper
-	aq::Timer timer;
-	char szBuffer[STR_BUF_SIZE];
+  aq::Timer timer;
+  char szBuffer[STR_BUF_SIZE];
   
   // query
-	aq::tnode * sqlStatement;
-	aq::tnode * originalSqlStatement;
-	aq::tnode * outerSelect;
+  aq::tnode * sqlStatement;
+  aq::tnode * originalSqlStatement;
+  aq::tnode * outerSelect;
   std::vector<Column::Ptr> columns;
   std::vector<std::vector<tnode*> > partitions;
   std::vector<tnode*> groupBy;
   std::vector<tnode*> orderBy;
   std::map<std::string, tnode*> aliases;
   std::vector<std::pair<std::string, std::string> > resultTables;
-	Table::Ptr result;
+  Table::Ptr result;
   std::map<size_t, aq::tnode*> values;
   std::map<std::string, boost::shared_ptr<QueryResolver> > nestedTables;
   boost::shared_ptr<aq::RowWritter_Intf> resultHandler;
@@ -143,11 +143,11 @@ private:
   const unsigned int id;
   unsigned int nestedId;
   unsigned int level;
-	bool nested;
+  bool nested;
   bool inWhereClause;
-	bool hasGroupBy;
-	bool hasOrderBy;
-	bool hasPartitionBy;
+  bool hasGroupBy;
+  bool hasOrderBy;
+  bool hasPartitionBy;
   boost::tribool compressable;
 };
 

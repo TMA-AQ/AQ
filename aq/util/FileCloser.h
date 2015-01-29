@@ -10,12 +10,12 @@ namespace aq {
 class FileCloser
 {
 public:
-	FileCloser(FILE *& pFile): pFile(pFile){};
-	~FileCloser() { if( pFile ) fclose(pFile); };
+  FileCloser(FILE *& pFile): pFile(pFile){};
+  ~FileCloser() { if( pFile ) fclose(pFile); };
 private:
   FileCloser(const FileCloser& o);
   FileCloser& operator=(const FileCloser& o);
-	FILE *& pFile;
+  FILE *& pFile;
 };
 
 }

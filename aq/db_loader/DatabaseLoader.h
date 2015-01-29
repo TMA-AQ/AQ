@@ -77,7 +77,7 @@ protected:
   bool endOfField(unsigned char c) const;
 
 private:
-	const aq::base_t my_base;
+  const aq::base_t my_base;
   mutable aq::DateConversion dateConverter;
   std::string k_rep_racine;
   std::string k_rep_param;

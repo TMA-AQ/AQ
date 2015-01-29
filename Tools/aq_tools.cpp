@@ -85,7 +85,7 @@ int processSQLQueries(const std::string       & query,
     aq::Logger::getInstance().log(AQ_NOTICE, "Query Time elapsed: %s\n", aq::Timer::getString(timer.getTimeElapsed()).c_str());
   }
 
-	return EXIT_SUCCESS;
+  return EXIT_SUCCESS;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -190,43 +190,43 @@ int parse_queries(const std::string & aqHome,
 int main(int argc, char**argv)
 {
 
-	try
-	{
+  try
+  {
 
-		// Settings
-		aq::Settings::Ptr settings(new aq::Settings);
+    // Settings
+    aq::Settings::Ptr settings(new aq::Settings);
     settings->outputFile = "stdout";
 
-		// log options
-		std::string mode;
-		std::string ident;
-		unsigned int level;
-		bool lock_mode = false;
-		bool date_mode = false;
-		bool pid_mode = false;
+    // log options
+    std::string mode;
+    std::string ident;
+    unsigned int level;
+    bool lock_mode = false;
+    bool date_mode = false;
+    bool pid_mode = false;
 
-		// aq options
+    // aq options
     std::string aqHome;
     std::string aqName;
-		std::string propertiesFile;
-		std::string queryIdent;
-		std::string sqlQuery;
-		std::string sqlQueriesFile;
-		std::string baseDescr;
+    std::string propertiesFile;
+    std::string queryIdent;
+    std::string sqlQuery;
+    std::string sqlQueriesFile;
+    std::string baseDescr;
     std::string DLLFunction;
-		unsigned int worker;
-		bool keepFiles = false;
+    unsigned int worker;
+    bool keepFiles = false;
     bool displayCount = false;
     bool trace = false;
-		bool loadDatabase = false;
+    bool loadDatabase = false;
     bool force = false;
     bool useTextAQMatrix = false;
 
     // testing purpose options
-		std::string aqMatrixFileName;
-		bool transform = false;
+    std::string aqMatrixFileName;
+    bool transform = false;
     bool checkDatabase = false;
-		bool simulateAQEngine = false;
+    bool simulateAQEngine = false;
     bool basicAQEngine = false;
     bool testPlugins = false;
 
@@ -278,19 +278,19 @@ int main(int argc, char**argv)
     //
     // command line arguments are prior to settings file
     po::options_description all("Allowed options");
-		all.add_options()
-			("help,h", "produce help message")
+    all.add_options()
+      ("help,h", "produce help message")
       ;
 
     po::options_description log_options("Logging");
     log_options.add_options()
-			("log-output", po::value<std::string>(&mode)->default_value("STDOUT"), "[STDOUT|LOCALFILE|SYSLOG]")
-			("log-level,v", po::value<unsigned int>(&level)->default_value(AQ_LOG_WARNING), "CRITICAL(2), ERROR(3), WARNING(4), NOTICE(5), INFO(6), DEBUG(7)")
-			("log-lock", po::bool_switch(&lock_mode), "for multithread program")
-			("log-date", po::bool_switch(&date_mode), "add date to log")
-			("log-pid", po::bool_switch(&pid_mode), "add thread id to log")
-			("log-ident", po::value<std::string>(&ident)->default_value("aq_query_resolver"), "")
-			;
+      ("log-output", po::value<std::string>(&mode)->default_value("STDOUT"), "[STDOUT|LOCALFILE|SYSLOG]")
+      ("log-level,v", po::value<unsigned int>(&level)->default_value(AQ_LOG_WARNING), "CRITICAL(2), ERROR(3), WARNING(4), NOTICE(5), INFO(6), DEBUG(7)")
+      ("log-lock", po::bool_switch(&lock_mode), "for multithread program")
+      ("log-date", po::bool_switch(&date_mode), "add date to log")
+      ("log-pid", po::bool_switch(&pid_mode), "add thread id to log")
+      ("log-ident", po::value<std::string>(&ident)->default_value("aq_query_resolver"), "")
+      ;
 
     po::options_description engine("Engine");
     engine.add_options()
@@ -298,14 +298,14 @@ int main(int argc, char**argv)
       ("aq-engine,e", po::value<std::string>(&settings->aqEngine))
       ("aq-home,r", po::value<std::string>(&aqHome)->default_value(aqHome), "set AQ Home (AQ_HOME environment variable)")
       ("aq-name,n", po::value<std::string>(&aqName), "")
-			("query-ident,i", po::value<std::string>(&queryIdent), "")
+      ("query-ident,i", po::value<std::string>(&queryIdent), "")
       ("queries-file,f", po::value<std::string>(&sqlQueriesFile), "")
-			("output,o", po::value<std::string>(&settings->outputFile), "")
-			("worker,w", po::value<unsigned int>(&worker), "number of thread assigned to resolve the bunch of sql queries")
-			("parralellize,p", po::value<size_t>(&settings->process_thread)->default_value(settings->process_thread), "number of thread assigned resolve one sql queries")
-			("display-count", po::bool_switch(&displayCount), "")
+      ("output,o", po::value<std::string>(&settings->outputFile), "")
+      ("worker,w", po::value<unsigned int>(&worker), "number of thread assigned to resolve the bunch of sql queries")
+      ("parralellize,p", po::value<size_t>(&settings->process_thread)->default_value(settings->process_thread), "number of thread assigned resolve one sql queries")
+      ("display-count", po::bool_switch(&displayCount), "")
       ("force", po::bool_switch(&force), "force use of directory if it already exists")
-			("keep-file,k", po::bool_switch(&keepFiles), "")
+      ("keep-file,k", po::bool_switch(&keepFiles), "")
       ("trace,t", po::bool_switch(&trace), "")
       ;
 
@@ -316,9 +316,9 @@ int main(int argc, char**argv)
     testing.add_options()
       ("simulate-aq-engine,z", po::bool_switch(&simulateAQEngine), "")
       ("basic-aq-engine", po::bool_switch(&basicAQEngine), "")
-			("transform", po::bool_switch(&transform), "")
-			("skip-nested-query", po::value<bool>(&settings->skipNestedQuery), "")
-			("aq-matrix", po::value<std::string>(&aqMatrixFileName), "")
+      ("transform", po::bool_switch(&transform), "")
+      ("skip-nested-query", po::value<bool>(&settings->skipNestedQuery), "")
+      ("aq-matrix", po::value<std::string>(&aqMatrixFileName), "")
       ("check-database", po::bool_switch(&checkDatabase), "")
       ("test-plugins", po::bool_switch(&testPlugins), "")
       ;
@@ -332,30 +332,30 @@ int main(int argc, char**argv)
     po::options_description loader("Loader");
     loader.add_options()
       ("aq-loader,l", po::value<std::string>(&settings->aqLoader))
-			("load-db", po::bool_switch(&loadDatabase), "")
+      ("load-db", po::bool_switch(&loadDatabase), "")
       ("load-table", po::value<std::string>(&tableNameToLoad), "")
-			;
+      ;
 
     po::options_description genTmpTable("GenerateTmpTable [TESTING PURPOSE]");
     genTmpTable.add_options()
       ("gen-tmp-table", po::bool_switch(&generateTmpTable), "")
-			("nb-values", po::value<unsigned int>(&nbValues), "")
+      ("nb-values", po::value<unsigned int>(&nbValues), "")
       ("min-value", po::value<unsigned int>(&minValue), "")
       ("max-value", po::value<unsigned int>(&maxValue), "")
       ("nb-tables", po::value<unsigned int>(&nbTables), "")
-			;
+      ;
 
     all.add(log_options).add(engine).add(testing).add(external).add(loader).add(genTmpTable);
 
-		po::variables_map vm;
-		po::store(po::command_line_parser(argc, argv).options(all).positional(positionalOptions).run(), vm);
-		po::notify(vm);
+    po::variables_map vm;
+    po::store(po::command_line_parser(argc, argv).options(all).positional(positionalOptions).run(), vm);
+    po::notify(vm);
 
-		if (vm.count("help"))
-		{
-			std::cout << all << "\n";
-			return 1;
-		}
+    if (vm.count("help"))
+    {
+      std::cout << all << "\n";
+      return 1;
+    }
 
     // parse positional options
     if (vm.count("aq-name"))
@@ -389,22 +389,22 @@ int main(int argc, char**argv)
       settings->initPath(aqHome + aqName);
     }
 
-		//
-		// Initialize Logger
-		aq::Logger::getInstance(ident.c_str(), mode == "STDOUT" ? STDOUT : mode == "LOCALFILE" ? LOCALFILE : mode == "SYSLOG" ? SYSLOG : STDOUT);
-		aq::Logger::getInstance().setLevel(level);
-		aq::Logger::getInstance().setLockMode(lock_mode);
-		aq::Logger::getInstance().setDateMode(date_mode);
-		aq::Logger::getInstance().setPidMode(pid_mode);
+    //
+    // Initialize Logger
+    aq::Logger::getInstance(ident.c_str(), mode == "STDOUT" ? STDOUT : mode == "LOCALFILE" ? LOCALFILE : mode == "SYSLOG" ? SYSLOG : STDOUT);
+    aq::Logger::getInstance().setLevel(level);
+    aq::Logger::getInstance().setLockMode(lock_mode);
+    aq::Logger::getInstance().setDateMode(date_mode);
+    aq::Logger::getInstance().setPidMode(pid_mode);
 
-		//
-		// print Project Settings
+    //
+    // print Project Settings
     aq::Logger::getInstance().log(AQ_DEBUG, "Settings:\n%s\n", settings->to_string().c_str());
 
-		//
-		// If Load database is invoked
-		if (loadDatabase)
-		{
+    //
+    // If Load database is invoked
+    if (loadDatabase)
+    {
       aq::base_t bd;
       if (aq::base_t::build_base_from_raw(settings->dbDesc.c_str(), bd) != -1)
       {
@@ -416,7 +416,7 @@ int main(int argc, char**argv)
         return EXIT_FAILURE;
       }
       assert(false);
-		}
+    }
 
     //
     // Check Database
@@ -462,23 +462,23 @@ int main(int argc, char**argv)
       transform, simulateAQEngine, basicAQEngine, keepFiles, force);
 
   }
-	catch (const aq::generic_error& error)
-	{
+  catch (const aq::generic_error& error)
+  {
     aq::Logger::getInstance().log(AQ_CRITICAL, error.what());
-		std::cerr << "generic error: " << error.what() << std::endl;
-		return error.getType();
-	}
-	catch (const std::exception& ex)
-	{
-		std::cerr << "standard exception" << ex.what() << std::endl;
-		return EXIT_FAILURE;
-	}
-	catch (...)
-	{
-		std::cerr << "UNHANDLE EXCEPTION" << std::endl;
-		return EXIT_FAILURE;
-	}
+    std::cerr << "generic error: " << error.what() << std::endl;
+    return error.getType();
+  }
+  catch (const std::exception& ex)
+  {
+    std::cerr << "standard exception" << ex.what() << std::endl;
+    return EXIT_FAILURE;
+  }
+  catch (...)
+  {
+    std::cerr << "UNHANDLE EXCEPTION" << std::endl;
+    return EXIT_FAILURE;
+  }
 
   if (failedQueries) return EXIT_FAILURE;
-	return EXIT_SUCCESS;
+  return EXIT_SUCCESS;
 }

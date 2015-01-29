@@ -196,7 +196,7 @@ namespace util {
   /// \param item
   template <typename T> aq::tnode * GetNode(const aq::ColumnItem<T>& item)
   {
-    aq::tnode	* n = new aq::tnode(K_INTEGER);
+    aq::tnode  * n = new aq::tnode(K_INTEGER);
     n->set_int_data(item.getValue());
     return n;
   }

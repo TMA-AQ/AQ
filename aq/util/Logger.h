@@ -16,9 +16,9 @@
 
 #define LOG_FILE  -1
 
-#define SYSLOG		0x01
-#define LOCALFILE	0x02
-#define STDOUT		0x04
+#define SYSLOG    0x01
+#define LOCALFILE  0x02
+#define STDOUT    0x04
 
 #define LOGBUFFER 8192
 
@@ -36,7 +36,7 @@ namespace aq
     ~Logger();
 
     void redirectToStream(std::ostream& os) { this->out = &os; }
-		void setLocalFile(const char *);
+    void setLocalFile(const char *);
 
     void setLockMode(bool value)      { this->lockMode = value; }
     void setColorMode(bool value)     { this->colorLog = value; }

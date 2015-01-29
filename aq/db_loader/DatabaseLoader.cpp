@@ -116,8 +116,8 @@ DatabaseLoader::DatabaseLoader(const aq::base_t bd, const std::string& _path, co
   csv_format(_csv_format)
 {
   base_desc_file = this->k_rep_racine + "base_desc/base.aqb";
-	rep_source = k_rep_racine + "data_orga/tables/";
-	rep_cible = k_rep_racine + "data_orga/vdg/data/";
+  rep_source = k_rep_racine + "data_orga/tables/";
+  rep_cible = k_rep_racine + "data_orga/vdg/data/";
   ini_filename = this->k_rep_racine + "loader.ini";
 }
 
@@ -134,69 +134,69 @@ DatabaseLoader::DatabaseLoader(const aq::base_t bd, const std::string& _loader, 
   csv_format(_csv_format)
 {
   base_desc_file = this->k_rep_racine + "base_desc/base.aqb";
-	rep_source = k_rep_racine + "data_orga/tables/";
-	rep_cible = k_rep_racine + "data_orga/columns/";
+  rep_source = k_rep_racine + "data_orga/tables/";
+  rep_cible = k_rep_racine + "data_orga/columns/";
   ini_filename = this->k_rep_racine + "loader.ini";
 }
 
 //-------------------------------------------------------------------------------
 void DatabaseLoader::generate_ini()
 {
-	FILE * fini = fopen(ini_filename.c_str(), "w");
-	if (!fini)
-	{
-	  throw aq::generic_error(aq::generic_error::INVALID_FILE, "cannot create file %s\n", ini_filename.c_str());
-	}
+  FILE * fini = fopen(ini_filename.c_str(), "w");
+  if (!fini)
+  {
+    throw aq::generic_error(aq::generic_error::INVALID_FILE, "cannot create file %s\n", ini_filename.c_str());
+  }
 
-	fwrite("export.filename.final=", 1, 22, fini);
-	fwrite(k_rep_racine.c_str(), 1, k_rep_racine.size(), fini);
-	fwrite("base_struct/base.aqb", 1, 20, fini);
-	fwrite("\n", 1, 1, fini);
-	fwrite("step1.field.separator=", 1, 22, fini);
-	fwrite(&end_of_field_c, 1, 1, fini);
-	fwrite("\n", 1, 1, fini);
-	fwrite("k_rep_racine=", 1, 13, fini);
-	fwrite(k_rep_racine.c_str(), 1, k_rep_racine.size(), fini);
-	fwrite("\n", 1, 1, fini);
-	fwrite("k_rep_racine_tmp=", 1, 17, fini);
-	fwrite(k_rep_racine.c_str(), 1, k_rep_racine.size(), fini);
-	fwrite("\n", 1, 1, fini);
+  fwrite("export.filename.final=", 1, 22, fini);
+  fwrite(k_rep_racine.c_str(), 1, k_rep_racine.size(), fini);
+  fwrite("base_struct/base.aqb", 1, 20, fini);
+  fwrite("\n", 1, 1, fini);
+  fwrite("step1.field.separator=", 1, 22, fini);
+  fwrite(&end_of_field_c, 1, 1, fini);
+  fwrite("\n", 1, 1, fini);
+  fwrite("k_rep_racine=", 1, 13, fini);
+  fwrite(k_rep_racine.c_str(), 1, k_rep_racine.size(), fini);
+  fwrite("\n", 1, 1, fini);
+  fwrite("k_rep_racine_tmp=", 1, 17, fini);
+  fwrite(k_rep_racine.c_str(), 1, k_rep_racine.size(), fini);
+  fwrite("\n", 1, 1, fini);
   fwrite("k_taille_nom_fichier=1024", 1, 25, fini);
-	fwrite("\n", 1, 1, fini);
-	fclose(fini);
+  fwrite("\n", 1, 1, fini);
+  fclose(fini);
 }
 
 //-------------------------------------------------------------------------------
 void DatabaseLoader::load() 
-{	
-	time_t t = time (nullptr);
-	struct tm * tb = localtime(&t);
-	aq::Logger::getInstance().log(AQ_INFO, "Start loading database [%s] on  %d/%02d/%02d H %02d:%02d:%02d\n",
+{  
+  time_t t = time (nullptr);
+  struct tm * tb = localtime(&t);
+  aq::Logger::getInstance().log(AQ_INFO, "Start loading database [%s] on  %d/%02d/%02d H %02d:%02d:%02d\n",
     this->my_base.name.c_str(),
     tb->tm_year +1900, tb->tm_mon +1 ,tb->tm_mday, tb->tm_hour, tb->tm_min, tb->tm_sec);
   
   boost::thread_group grp;
-	for (auto& table : my_base.table)
-	{
+  for (auto& table : my_base.table)
+  {
     std::string filename = table.name;
     boost::trim_if(filename, boost::is_any_of(" \""));
     filename = rep_source + filename + ".txt";
     grp.create_thread(boost::bind(&DatabaseLoader::loadTable, this, boost::cref(table), filename));
-	}
+  }
   grp.join_all();
 
-	// end time
-	t = time ( nullptr );
-	tb = localtime( &t );
-	aq::Logger::getInstance().log(AQ_INFO, "End on %d/%02d/%02d H %02d:%02d:%02d\n", 
+  // end time
+  t = time ( nullptr );
+  tb = localtime( &t );
+  aq::Logger::getInstance().log(AQ_INFO, "End on %d/%02d/%02d H %02d:%02d:%02d\n", 
     tb->tm_year +1900, tb->tm_mon +1 ,tb->tm_mday, tb->tm_hour, tb->tm_min, tb->tm_sec);
 }
 
 //-------------------------------------------------------------------------------
 void DatabaseLoader::load(const size_t table_id) 
 {
-	for (auto& table : my_base.table)
-	{
+  for (auto& table : my_base.table)
+  {
     if (table.id != static_cast<int>(table_id))
       continue;
     
@@ -204,7 +204,7 @@ void DatabaseLoader::load(const size_t table_id)
     boost::trim_if(filename, boost::is_any_of(" \""));
     filename = rep_source + filename + ".txt";
     this->loadTable(table, filename);
-	}
+  }
 }
 
 // --------------------------------------------------------------------------------------------
@@ -212,16 +212,16 @@ void DatabaseLoader::loadTable(const aq::base_t::table_t& table, const std::stri
 {
   aq::Logger::getInstance().log(AQ_INFO, "Table : %u\n", table.name.c_str());
   
-	FILE * fd_table;
+  FILE * fd_table;
   FileCloser fcloser(fd_table);
 
-	int total_nb_enreg =0;
-	char my_record[k_record_size_max]; 
-	char my_col[k_file_name_size_max];
+  int total_nb_enreg =0;
+  char my_record[k_record_size_max]; 
+  char my_col[k_file_name_size_max];
 
-	// initialisation des composants de nom de fichiers
-	int n_base = 1;
-	int n_paquet = 0;
+  // initialisation des composants de nom de fichiers
+  int n_base = 1;
+  int n_paquet = 0;
 
   // open source file and check if opened
   if( (fd_table = aq::util::fopenUTF8(filename.c_str(), "r")) == nullptr )
@@ -326,12 +326,12 @@ void DatabaseLoader::loadColumn(const size_t table_id, const size_t column_id) c
 void DatabaseLoader::writeRecord(std::vector<struct column_info_t>& columns_infos, const char * record) const
 {
   
-	size_t len_rec = strlen(record);
-	int cur_col = 0;
+  size_t len_rec = strlen(record);
+  int cur_col = 0;
   bool end_of_field = false;
   
-	int indice_car;
-	char field[k_field_size_max]; 
+  int indice_car;
+  char field[k_field_size_max]; 
 
   // for each field in record
   size_t i = 0;
@@ -471,23 +471,23 @@ void DatabaseLoader::runLoader(size_t table, column_info_t& ci, size_t packet) c
 //-------------------------------------------------------------------------------
 void DatabaseLoader::FileWriteEnreg(column_info_t& ci, char * field) const
 {
-	switch (ci.col.type)
-	{
-	case aq::t_int:
+  switch (ci.col.type)
+  {
+  case aq::t_int:
     helper::write_record<int>(field, ci.col.size, ci);
-		break;
+    break;
 
-	case aq::t_long_long:
+  case aq::t_long_long:
     helper::write_record<long long>(field, ci.col.size, ci);
-		break;
+    break;
 
-	case aq::t_double:
+  case aq::t_double:
     util::ChangeChar(field, ',', '.');
     helper::write_record<double>(field, ci.col.size, ci);
-		break;
+    break;
 
-	case aq::t_date1:
-	case aq::t_date2:
+  case aq::t_date1:
+  case aq::t_date2:
   case aq::t_date3:
     if ((strcmp(field, "nullptr") != 0) || (strcmp(field, "") != 0))  
     {
@@ -496,20 +496,20 @@ void DatabaseLoader::FileWriteEnreg(column_info_t& ci, char * field) const
     helper::write_record<long long>(field, 1, ci);
     break;
 
-	case aq::t_char:
-		if ((int)strlen(field) >= ci.col.size) 
+  case aq::t_char:
+    if ((int)strlen(field) >= ci.col.size) 
     {
       aq::Logger::getInstance().log(AQ_WARNING, "column size is too small\n");
       field[ci.col.size] = 0 ;
     }
     aq::util::removeCharAtEnd(field, ' ');
     helper::write_record<char*>(field, strlen(field) + 1, ci);
-		break;
+    break;
 
-	default:
+  default:
     throw aq::generic_error(aq::generic_error::TYPE_MISMATCH, "type de colonne non traite [%s]\n", aq::util::symbole_to_char(ci.col.type));
-		break;
-	}
+    break;
+  }
 }
 
 //-------------------------------------------------------------------------------

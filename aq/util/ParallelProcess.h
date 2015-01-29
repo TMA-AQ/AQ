@@ -76,7 +76,7 @@ int ParallelProcess(T v[], boost::uint64_t size, boost::function<void (T, unsign
   boost::uint64_t begin = 0;
   boost::uint64_t chunk = size / nbProc;
   for (boost::uint64_t i = 0; (i < nbProc); i++)
-  {	
+  {  
     typename ::Process<T> p(v + begin, chunk, cb, (unsigned)i);
     boost::thread * t = new boost::thread(p);
     grp.add_thread(t);
@@ -100,7 +100,7 @@ int ParallelProcess(std::vector<T>& v, boost::function<void (T, unsigned)> cb, u
   typename std::vector<T>::const_iterator b = v.begin();
   typename std::vector<T>::const_iterator e = v.begin();
   for (boost::uint64_t i = 0; (i < nbProc) && (e != v.end()); i++)
-  {	
+  {  
     std::advance(e, v.size() / (unsigned int)nbProc);
     typename ::ProcessVector<T> pv(b, e, cb, (unsigned)i);
     boost::thread * t = new boost::thread(pv);

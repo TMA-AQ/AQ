@@ -70,32 +70,32 @@ Base& Base::operator=(const Base& source)
 //------------------------------------------------------------------------------
 Table::Ptr Base::getTable(size_t id)
 {
-	for( size_t i = 0; i < this->Tables.size(); ++i )
-		if( id == this->Tables[i]->getID() )
-			return this->Tables[i];
-	throw generic_error(generic_error::INVALID_TABLE, "cannot find table %u", id);
+  for( size_t i = 0; i < this->Tables.size(); ++i )
+    if( id == this->Tables[i]->getID() )
+      return this->Tables[i];
+  throw generic_error(generic_error::INVALID_TABLE, "cannot find table %u", id);
 }
 
 //------------------------------------------------------------------------------
 const Table::Ptr Base::getTable(size_t id) const
 {
-	return const_cast<Base*>(this)->getTable(id);
+  return const_cast<Base*>(this)->getTable(id);
 }
 
 //------------------------------------------------------------------------------
 Table::Ptr Base::getTable( const std::string& name )
 {
-	std::string auxName = name;
-	boost::to_upper(auxName);
-	boost::trim(auxName);
-	for (const auto& table : this->Tables)
+  std::string auxName = name;
+  boost::to_upper(auxName);
+  boost::trim(auxName);
+  for (const auto& table : this->Tables)
   {
-		if ((auxName == table->getName()) || (auxName == table->getOriginalName()))
+    if ((auxName == table->getName()) || (auxName == table->getOriginalName()))
     {
       return table;
     }
   }
-	throw generic_error(generic_error::INVALID_TABLE, "cannot find table %s", name.c_str());
+  throw generic_error(generic_error::INVALID_TABLE, "cannot find table %s", name.c_str());
 }
 
 //------------------------------------------------------------------------------
@@ -118,7 +118,7 @@ void Base::loadFromBaseDesc(const aq::base_t& base)
   this->Name = base.name;
   for (const auto& table : base.table)
   {
-		Table::Ptr pTD(new Table(table.name, table.id, table.nb_record));
+    Table::Ptr pTD(new Table(table.name, table.id, table.nb_record));
     for (const auto& column : table.colonne)
     {
       aq::ColumnType type = aq::util::symbole_to_column_type(column.type);
@@ -138,7 +138,7 @@ void Base::loadFromBaseDesc(const aq::base_t& base)
       Column::Ptr col(new Column(column.name, column.id, size, type));
       pTD->Columns.push_back(col);
     }
-		this->Tables.push_back(pTD);
+    this->Tables.push_back(pTD);
   }
 }
 

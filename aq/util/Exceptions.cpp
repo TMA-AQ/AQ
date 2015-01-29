@@ -8,7 +8,7 @@ using namespace aq;
 //------------------------------------------------------------------------------
 std::string generic_error::to_message(const char * format, ...)
 {
-	char buf[1024];
+  char buf[1024];
   va_list ap;
   va_start(ap, format);
   vsnprintf(buf, sizeof(buf), format, ap);
@@ -18,17 +18,17 @@ std::string generic_error::to_message(const char * format, ...)
 //------------------------------------------------------------------------------
 generic_error::generic_error( EType type, const std::string& msg )
 {
-	this->Message = "[" + typeToString(type) + "] " + msg;
+  this->Message = "[" + typeToString(type) + "] " + msg;
 }
 
 //------------------------------------------------------------------------------
 generic_error::generic_error( EType type, const char * format, ... )
 {
-	char buf[1024];
+  char buf[1024];
   va_list ap;
   va_start(ap, format);
   vsnprintf(buf, sizeof(buf), format, ap);
-	this->Message = "[" + typeToString(type) + "] " + std::string(buf);
+  this->Message = "[" + typeToString(type) + "] " + std::string(buf);
 }
 
 //------------------------------------------------------------------------------
@@ -53,5 +53,5 @@ std::string generic_error::typeToString(generic_error::EType type)
     case aq::generic_error::INVALID_FILE: return "INVALID_FILE"; break;
     case aq::generic_error::INVALID_DATE_FORMAT: return "INVALID_DATE_FORMAT"; break;
   }
-	return "UNKNOWN_EXCEPTION";
+  return "UNKNOWN_EXCEPTION";
 }

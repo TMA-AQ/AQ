@@ -31,7 +31,7 @@ public:
   /// \param _filename the filename to map
   /// \param mode open mode [READ|WRITE|READ_WRITE]
   WIN32FileMapper(const char * _filename, const WIN32FileMapper::mode_t mode = WIN32FileMapper::mode_t::READ);
-	~WIN32FileMapper();
+  ~WIN32FileMapper();
 
   /// \brief read part of the file mapped into memory
   ///
@@ -41,7 +41,7 @@ public:
   /// \param offset start of the part to copy
   /// \param len size of the part to copy
   /// \return 0 if succeed, -1 if mapped failed, -2 if offset is beyond the end of file
-	int read(void * buffer, size_t offset, size_t len);
+  int read(void * buffer, size_t offset, size_t len);
   
   /// \brief write new content into mapped file
   ///
@@ -76,24 +76,24 @@ public:
   size_t size() { return (size_t)this->cbFile; }
 
 private:
-	WIN32FileMapper(const WIN32FileMapper&);
-	WIN32FileMapper& operator=(const WIN32FileMapper&);
+  WIN32FileMapper(const WIN32FileMapper&);
+  WIN32FileMapper& operator=(const WIN32FileMapper&);
   
   void resize(size_t len);
-	void remap(unsigned long long offset);
+  void remap(unsigned long long offset);
 
-	const std::string filename;
+  const std::string filename;
 
-	DWORD cbView;
+  DWORD cbView;
   HANDLE hfile;
-	HANDLE hmap;
-	char * pView;
+  HANDLE hmap;
+  char * pView;
 
-	unsigned long long cbFile;
-	unsigned long long windowOffset;
+  unsigned long long cbFile;
+  unsigned long long windowOffset;
   mode_t mode;
 
-	unsigned nbRemap;
+  unsigned nbRemap;
 };
 
 }

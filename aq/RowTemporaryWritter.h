@@ -22,9 +22,9 @@ public:
   ~RowTemporaryWritter();
   
   const std::vector<Column::Ptr>& getColumns() const { return this->columns; }
-	void setColumn(std::vector<Column::Ptr> _columns) { this->columns = _columns; }
+  void setColumn(std::vector<Column::Ptr> _columns) { this->columns = _columns; }
   unsigned int getTotalCount() const { return this->totalCount; }
-	int process(std::vector<Row>& rows);
+  int process(std::vector<Row>& rows);
   
   RowProcess_Intf * clone()
   {
@@ -39,7 +39,7 @@ private:
   unsigned int tableId;
   unsigned int packetSize;
   unsigned int totalCount;
-	std::vector<Column::Ptr> columns;
+  std::vector<Column::Ptr> columns;
   std::vector<boost::shared_ptr<ColumnTemporaryWritter> > columnsWritter;
 };
 

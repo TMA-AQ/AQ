@@ -14,82 +14,82 @@ void DumpVisitor::visit(AggregateVerb* v)
 
 void DumpVisitor::visit(AvgVerb*)
 {
-	this->query += " AVG ";
+  this->query += " AVG ";
 }
 
 void DumpVisitor::visit(CountVerb*)
 {
-	this->query += " COUNT ";
+  this->query += " COUNT ";
 }
 
 void DumpVisitor::visit(MaxVerb*)
 {
-	this->query += " MAX ";
+  this->query += " MAX ";
 }
 
 void DumpVisitor::visit(MinVerb*)
 {
-	this->query += " MIN ";
+  this->query += " MIN ";
 }
 
 
 void DumpVisitor::visit(SumVerb*)
 {
-	this->query += " SUM ";
+  this->query += " SUM ";
 }
 
 
 // Arithmetics Verbs
 void DumpVisitor::visit(BinaryVerb*)
 {
-	assert(false);
+  assert(false);
 }
 
 void DumpVisitor::visit(DivideVerb*)
 {
-	this->query += " / ";
+  this->query += " / ";
 }
 
 void DumpVisitor::visit(MinusVerb*)
 {
-	this->query += " - ";
+  this->query += " - ";
 }
 
 void DumpVisitor::visit(MultiplyVerb*)
 {
-	this->query += " x ";
+  this->query += " x ";
 }
 
 void DumpVisitor::visit(PlusVerb*)
 {
-	this->query += " + ";
+  this->query += " + ";
 }
 
 
 // Auxiliary Verbs
 void DumpVisitor::visit(AndVerb*)
 {
-	this->query += " and ";
+  this->query += " and ";
 }
 
 void DumpVisitor::visit(AscVerb*)
 {
-	this->query += " asc ";
+  this->query += " asc ";
 }
 
 void DumpVisitor::visit(AsteriskVerb*)
 {
-	this->query += " * ";
+  this->query += " * ";
 }
 
 void DumpVisitor::visit(AsVerb* as)
 {
-	this->query += " as " + as->getIdent();
+  this->query += " as " + as->getIdent();
 }
 
 void DumpVisitor::visit(ColumnVerb* c)
 {
-	this->query += c->getTableName() + "." + c->getColumnOnlyName();
+  this->query += c->getTableName() + "." + c->getColumnOnlyName();
 }
 
 void DumpVisitor::visit(CommaVerb* cv)
@@ -104,22 +104,22 @@ void DumpVisitor::visit(CommaVerb* cv)
 
 void DumpVisitor::visit(DoubleValueVerb*)
 {
-	this->query += " DoubleValue ";
+  this->query += " DoubleValue ";
 }
 
 void DumpVisitor::visit(IntValueVerb*)
 {
-	this->query += " IntValue ";
+  this->query += " IntValue ";
 }
 
 void DumpVisitor::visit(InVerb*)
 {
-	this->query += " in ";
+  this->query += " in ";
 }
 
 void DumpVisitor::visit(StringValueVerb*)
 {
-	this->query += " StringValue ";
+  this->query += " StringValue ";
 }
 
 
@@ -140,87 +140,87 @@ void DumpVisitor::visit(WhenVerb*)
 // Comparison Verbs
 void DumpVisitor::visit(BetweenVerb*)
 {
-	this->query += " between ";
+  this->query += " between ";
 }
 
 void DumpVisitor::visit(ComparisonVerb*)
 {
-	assert(false);
+  assert(false);
 }
 
 void DumpVisitor::visit(EqVerb*)
 {
-	this->query += " = ";
+  this->query += " = ";
 }
 
 void DumpVisitor::visit(GeqVerb*)
 {
-	this->query += " >= ";
+  this->query += " >= ";
 }
 
 void DumpVisitor::visit(GtVerb*)
 {
-	this->query += " > ";
+  this->query += " > ";
 }
 
 void DumpVisitor::visit(JeqVerb*)
 {
-	this->query += " = ";
+  this->query += " = ";
 }
 
 void DumpVisitor::visit(JieqVerb*)
 {
-	this->query += " JIeq ";
+  this->query += " JIeq ";
 }
 
 void DumpVisitor::visit(JinfVerb*)
 {
-	this->query += " < ";
+  this->query += " < ";
 }
 
 void DumpVisitor::visit(JneqVerb*)
 {
-	this->query += " != ";
+  this->query += " != ";
 }
 
 void DumpVisitor::visit(JseqVerb*)
 {
-	this->query += " JSeq ";
+  this->query += " JSeq ";
 }
 
 void DumpVisitor::visit(JsupVerb*)
 {
-	this->query += " > ";
+  this->query += " > ";
 }
 
 void DumpVisitor::visit(LeqVerb*)
 {
-	this->query += " <= ";
+  this->query += " <= ";
 }
 
 void DumpVisitor::visit(LikeVerb*)
 {
-	this->query += " like ";
+  this->query += " like ";
 }
 
 void DumpVisitor::visit(LtVerb*)
 {
-	this->query += " < ";
+  this->query += " < ";
 }
 
 void DumpVisitor::visit(NeqVerb*)
 {
-	this->query += " != ";
+  this->query += " != ";
 }
 
 void DumpVisitor::visit(NotBetweenVerb*)
 {
-	this->query += " between ";
+  this->query += " between ";
 }
 
 void DumpVisitor::visit(NotLikeVerb*)
 {
-	this->query += " not like ";
+  this->query += " not like ";
 }
 
 

@@ -4,28 +4,28 @@
 using namespace aq;
 
 RowWritter::RowWritter(const std::string& _filePath)
-	: totalCount(0), filePath(_filePath), firstRow(true)
+  : totalCount(0), filePath(_filePath), firstRow(true)
 {
-	value = static_cast<char*>(malloc(128 * sizeof(char)));
-	if (filePath == "stdout")
-		pFOut = stdout;
-	else
-		pFOut = fopen( filePath.c_str(), "wt" );
+  value = static_cast<char*>(malloc(128 * sizeof(char)));
+  if (filePath == "stdout")
+    pFOut = stdout;
+  else
+    pFOut = fopen( filePath.c_str(), "wt" );
 }
 
 RowWritter::RowWritter(const RowWritter& o)
-	: 
+  : 
   totalCount(o.totalCount), 
   pFOut(o.pFOut),
   filePath(o.filePath),
   firstRow(o.firstRow)
 {
-	value = static_cast<char*>(malloc(128 * sizeof(char)));
+  value = static_cast<char*>(malloc(128 * sizeof(char)));
 }
 
 RowWritter::~RowWritter()
 {
-	free(value);
+  free(value);
   if (pFOut && (pFOut != stdout))
     fclose(pFOut);
 }
@@ -64,9 +64,9 @@ void RowWritter::write_value(const aq::row_item_t& row_item) const
 
 int RowWritter::process(Row& row)
 {
-	if (this->firstRow)
-	{
-		//write column names
+  if (this->firstRow)
+  {
+    //write column names
     bool first = true;
     for (Row::row_t::const_reverse_iterator it = row.computedRow.rbegin(); it != row.computedRow.rend(); ++it)
     {
@@ -88,9 +88,9 @@ int RowWritter::process(Row& row)
         first = false;
         widths.push_back(std::max(size, (size_t)8));
       }
-		}
-		fputc('\n', pFOut);
-		for (size_t w = 0; w < this->widths.size(); w++)
+    }
+    fputc('\n', pFOut);
+    for (size_t w = 0; w < this->widths.size(); w++)
     {
       for (size_t i = 0; i < (this->widths[w] + 1); i++)
         fputs("-", pFOut);
@@ -100,9 +100,9 @@ int RowWritter::process(Row& row)
         fputs("-", pFOut);
       }
     }
-		fputc('\n', pFOut);
+    fputc('\n', pFOut);
     this->firstRow = false;
-	}
+  }
 
   // write values
   if (row.completed)
@@ -136,5 +136,5 @@ int RowWritter::process(Row& row)
     fputc('\n', pFOut);
     fflush(pFOut);
   }
-	return 0;
+  return 0;
 }

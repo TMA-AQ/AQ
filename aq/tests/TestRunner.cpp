@@ -33,25 +33,25 @@ namespace helper
 }
 
 TestCase::opt_t::opt_t()
-	: 
-	generator_filename("queries.gen"),
-	nb_tables(2),
-	nb_rows(10),
-	min_value(1000),
-	max_value(1100),
-	point_mode(DatabaseGenerator::point_mode_t::FULL),
-	gen_mode(DatabaseGenerator::gen_mode_t::ALL),
-	value_mode(DatabaseGenerator::value_mode_t::ALL_UNIQUE),
-	aq_path(""),
-	aq_name("algoquest"),
-	aq_engine("aq-engine"),
-	aq_loader("aq-loader"),
-	mysql_host("localhost"),
-	mysql_user("algoquest"),
-	mysql_pass("algoquest"),
-	mysql_name("algoquest"),
-	stop_on_error(false),
-	check_result(true)
+  : 
+  generator_filename("queries.gen"),
+  nb_tables(2),
+  nb_rows(10),
+  min_value(1000),
+  max_value(1100),
+  point_mode(DatabaseGenerator::point_mode_t::FULL),
+  gen_mode(DatabaseGenerator::gen_mode_t::ALL),
+  value_mode(DatabaseGenerator::value_mode_t::ALL_UNIQUE),
+  aq_path(""),
+  aq_name("algoquest"),
+  aq_engine("aq-engine"),
+  aq_loader("aq-loader"),
+  mysql_host("localhost"),
+  mysql_user("algoquest"),
+  mysql_pass("algoquest"),
+  mysql_name("algoquest"),
+  stop_on_error(false),
+  check_result(true)
 {
 }
 
@@ -62,8 +62,8 @@ void TestCase::opt_t::parse(std::istream& is)
     boost::property_tree::ptree pt;
     boost::property_tree::ini_parser::read_ini(is, pt);
 
-	this->stop_on_error = helper::get_opt_value(pt, "stop-on-error", this->stop_on_error);
-	this->check_result = helper::get_opt_value(pt, "check-result", this->check_result);
+  this->stop_on_error = helper::get_opt_value(pt, "stop-on-error", this->stop_on_error);
+  this->check_result = helper::get_opt_value(pt, "check-result", this->check_result);
 
     // algoquest options
     this->aq_name = helper::get_opt_value(pt, "algoquest.db-name", this->aq_name);
@@ -149,21 +149,21 @@ bool TestCase::execute(const aq::core::SelectStatement& ss, aq::DatabaseIntf::re
   ++it;
   for (;it != this->databases.end(); ++it)
   {
-	auto begin = std::chrono::system_clock::now();
+  auto begin = std::chrono::system_clock::now();
     (*it)->execute(ss, r2);
     auto end = std::chrono::system_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
-	report->time_exec((*it)->get_name(), duration);
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+  report->time_exec((*it)->get_name(), duration);
 
 
     nb_result += std::max(r1.size(), r2.size());
     // std::cout << nb_result << std::endl;
     if (false && !this->compare(r1, r2))
     {
-	  // std::cout << std::endl;
-	  dump_result(r1);
-	  // std::cout << std::endl;
-	  dump_result(r2);
+    // std::cout << std::endl;
+    dump_result(r1);
+    // std::cout << std::endl;
+    dump_result(r2);
       nb_failure += 1;
       return false;
     }
@@ -175,7 +175,7 @@ bool TestCase::execute(const aq::core::SelectStatement& ss, aq::DatabaseIntf::re
 bool TestCase::compare(const DatabaseIntf::result_t& result1, const DatabaseIntf::result_t& result2)
 {
   if (result1.size() != result2.size())
-	  return false;
+    return false;
   if (result1.empty())
     return true;
 
@@ -203,23 +203,23 @@ bool TestCase::compare(const DatabaseIntf::result_t& result1, const DatabaseIntf
 
 void TestCase::dump_result(const DatabaseIntf::result_t& result)
 {
-	// std::ostream& os = report->report;
-	report->report << "<results size=\"" << result.size() << "\">" << std::endl;
-	for (auto it1 = result.begin(); it1 != result.end();)
-	{
-		report->report << "(";
-		for (auto it2 = (*it1).begin(); it2 != (*it1).end();)
-		{
-			report->report << *it2;
-			++it2;
-			if (it2 != (*it1).end())
-				report->report << ", ";
-		}
-		report->report << ")";
-		++it1;
-		if (it1 != result.end())
-			report->report << ", ";
-	}
-	report->report << std::endl;
-	report->report << "</results>" << std::endl;
+  // std::ostream& os = report->report;
+  report->report << "<results size=\"" << result.size() << "\">" << std::endl;
+  for (auto it1 = result.begin(); it1 != result.end();)
+  {
+    report->report << "(";
+    for (auto it2 = (*it1).begin(); it2 != (*it1).end();)
+    {
+      report->report << *it2;
+      ++it2;
+      if (it2 != (*it1).end())
+        report->report << ", ";
+    }
+    report->report << ")";
+    ++it1;
+    if (it1 != result.end())
+      report->report << ", ";
+  }
+  report->report << std::endl;
+  report->report << "</results>" << std::endl;
 }

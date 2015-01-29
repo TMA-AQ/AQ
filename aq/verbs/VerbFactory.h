@@ -24,15 +24,15 @@ class VerbFactory
 {
 public:
   void setBuilder(boost::shared_ptr<const Builder_Intf> _builder) { builder = _builder; }
-	VerbNode::Ptr getVerb( int verbType ) const;
-	static VerbFactory& GetInstance();
+  VerbNode::Ptr getVerb( int verbType ) const;
+  static VerbFactory& GetInstance();
 private:
-	VerbFactory(){};
-	VerbFactory(const VerbFactory& source);
-	~VerbFactory();
-	VerbFactory& operator=( const VerbFactory& source );
+  VerbFactory(){};
+  VerbFactory(const VerbFactory& source);
+  ~VerbFactory();
+  VerbFactory& operator=( const VerbFactory& source );
 
-	boost::shared_ptr<const Builder_Intf> builder;
+  boost::shared_ptr<const Builder_Intf> builder;
 };
 
 }

@@ -15,85 +15,85 @@ namespace verb {
 //------------------------------------------------------------------------------
 bool SelectVerb::preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal )
 {
-	assert( pStartOriginal->tag == pNode->tag );
-	vector<aq::tnode*> columns;
-	columns.clear();
-	aq::util::getColumnsList( pStartOriginal->left, columns );
-	for( size_t idx = 0; idx < columns.size(); ++idx )
-	{
-		std::string name;
-		aq::util::extractName( columns[idx], name );
-		this->ColumnsDisplay.push_back( name );
-	}
-	return false;
+  assert( pStartOriginal->tag == pNode->tag );
+  vector<aq::tnode*> columns;
+  columns.clear();
+  aq::util::getColumnsList( pStartOriginal->left, columns );
+  for( size_t idx = 0; idx < columns.size(); ++idx )
+  {
+    std::string name;
+    aq::util::extractName( columns[idx], name );
+    this->ColumnsDisplay.push_back( name );
+  }
+  return false;
 }
 
 //------------------------------------------------------------------------------
-bool SelectVerb::changeQuery(	aq::tnode* pStart, aq::tnode* pNode,
-								VerbResult::Ptr resLeft, 
-								VerbResult::Ptr resRight, 
-								VerbResult::Ptr resNext )
+bool SelectVerb::changeQuery(  aq::tnode* pStart, aq::tnode* pNode,
+                VerbResult::Ptr resLeft, 
+                VerbResult::Ptr resRight, 
+                VerbResult::Ptr resNext )
 {
 
-	if( resLeft && resLeft->getType() == VerbResult::ASTERISK )
-	{
-		this->Columns.clear();
-		aq::util::solveSelectStar( pNode, this->m_baseDesc, this->Columns, this->ColumnsDisplay );
-		return false;
-	}
-	vector<aq::tnode*> columns;
-	aq::util::getColumnsList( pNode->left, columns );
-	for( size_t idx = 0; idx < columns.size(); ++idx )
-	{
-		std::string name;
-		if( columns[idx]->tag == K_PERIOD )
-		{
-			name += columns[idx]->left->getData().val_str;
-			name += ".";
-			name += columns[idx]->right->getData().val_str;
-		}
-		else
-		{
-			if( columns[idx]->tag == K_AS && columns[idx]->left->tag == K_PERIOD )
-			{
-				name += columns[idx]->left->left->getData().val_str;
-				name += ".";
-				name += columns[idx]->left->right->getData().val_str;
-			}
-			columns[idx]->tag = K_DELETED;
-			columns[idx] = nullptr;
-		}
-		this->Columns.push_back( name );
-	}
+  if( resLeft && resLeft->getType() == VerbResult::ASTERISK )
+  {
+    this->Columns.clear();
+    aq::util::solveSelectStar( pNode, this->m_baseDesc, this->Columns, this->ColumnsDisplay );
+    return false;
+  }
+  vector<aq::tnode*> columns;
+  aq::util::getColumnsList( pNode->left, columns );
+  for( size_t idx = 0; idx < columns.size(); ++idx )
+  {
+    std::string name;
+    if( columns[idx]->tag == K_PERIOD )
+    {
+      name += columns[idx]->left->getData().val_str;
+      name += ".";
+      name += columns[idx]->right->getData().val_str;
+    }
+    else
+    {
+      if( columns[idx]->tag == K_AS && columns[idx]->left->tag == K_PERIOD )
+      {
+        name += columns[idx]->left->left->getData().val_str;
+        name += ".";
+        name += columns[idx]->left->right->getData().val_str;
+      }
+      columns[idx]->tag = K_DELETED;
+      columns[idx] = nullptr;
+    }
+    this->Columns.push_back( name );
+  }
 
-	assert( this->Columns.size() == this->ColumnsDisplay.size() );
-	aq::util::getAllColumns( pNode, columns );
+  assert( this->Columns.size() == this->ColumnsDisplay.size() );
+  aq::util::getAllColumns( pNode, columns );
 
-	//add extra columns
-	if( this->Columns.size() == columns.size() )
-		return false; //no extra columns
-		
-	if( pNode->left->tag == K_COMMA )
-	{
-		pNode = pNode->left;
-		while( pNode->left && pNode->left->tag == K_COMMA )
-			pNode = pNode->left;
-	}
-	
-	aq::tnode* pAuxNode = pNode->left;
-	pNode->left = new aq::tnode( K_COMMA );
-	pNode = pNode->left;
-	pNode->right = pAuxNode;
-	
-	for( size_t idx = this->Columns.size(); idx < columns.size() - 1; ++idx )
-	{
-		pNode->left = new aq::tnode( K_COMMA );
-		pNode = pNode->left;
-		pNode->right = columns[idx];
-	}
-	pNode->left = columns[columns.size() - 1];
+  //add extra columns
+  if( this->Columns.size() == columns.size() )
+    return false; //no extra columns
+    
+  if( pNode->left->tag == K_COMMA )
+  {
+    pNode = pNode->left;
+    while( pNode->left && pNode->left->tag == K_COMMA )
+      pNode = pNode->left;
+  }
+  
+  aq::tnode* pAuxNode = pNode->left;
+  pNode->left = new aq::tnode( K_COMMA );
+  pNode = pNode->left;
+  pNode->right = pAuxNode;
+  
+  for( size_t idx = this->Columns.size(); idx < columns.size() - 1; ++idx )
+  {
+    pNode->left = new aq::tnode( K_COMMA );
+    pNode = pNode->left;
+    pNode->right = columns[idx];
+  }
+  pNode->left = columns[columns.size() - 1];
 
-	return false;
+  return false;
 }
 
 //------------------------------------------------------------------------------
@@ -107,86 +107,86 @@ void SelectVerb::changeResult(Table::Ptr table,
 
 void SelectVerb::accept(VerbVisitor* visitor)
 {
-	visitor->visit(this);
+  visitor->visit(this);
 }
 
 //------------------------------------------------------------------------------
 bool WhereVerb::preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal )
 {
-	// eliminate K_NOT
-	aq::util::processNot(pNode->left, false);
-	return false;
+  // eliminate K_NOT
+  aq::util::processNot(pNode->left, false);
+  return false;
 }
 
 //------------------------------------------------------------------------------
 bool WhereVerb::changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-	VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+  VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
-	aq::util::addInnerOuterNodes( pNode->left, K_INNER, K_INNER );
-	return false;
+  aq::util::addInnerOuterNodes( pNode->left, K_INNER, K_INNER );
+  return false;
 }
 
 //------------------------------------------------------------------------------
 void WhereVerb::changeResult( Table::Ptr table, 
-	VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+  VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
-	assert(false);
+  assert(false);
 }
 
 void WhereVerb::accept(VerbVisitor* visitor)
 {
-	visitor->visit(this);
+  visitor->visit(this);
 }
 
 //------------------------------------------------------------------------------
 bool OrderVerb::preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal )
 {
-	vector<aq::tnode*> columns;
-	aq::util::getColumnsList( pNode->left->left, columns );
-	vector<aq::tnode*> selectColumns;
-	aq::util::getColumnsList( pStart->left, selectColumns );
-	for( size_t idx = 0; idx < columns.size(); ++idx )
+  vector<aq::tnode*> columns;
+  aq::util::getColumnsList( pNode->left->left, columns );
+  vector<aq::tnode*> selectColumns;
+  aq::util::getColumnsList( pStart->left, selectColumns );
+  for( size_t idx = 0; idx < columns.size(); ++idx )
   {
-		if( columns[idx]->tag == K_IDENT || 
-			columns[idx]->tag == K_COLUMN )
-		{
-			int colIdx = -1;
-			for( size_t idx2 = 0; idx2 < selectColumns.size(); ++idx2 )
+    if( columns[idx]->tag == K_IDENT || 
+      columns[idx]->tag == K_COLUMN )
+    {
+      int colIdx = -1;
+      for( size_t idx2 = 0; idx2 < selectColumns.size(); ++idx2 )
       {
-				if( selectColumns[idx2] &&
-					selectColumns[idx2]->tag == K_AS &&
-					strcmp( selectColumns[idx2]->right->getData().val_str,
-						columns[idx]->getData().val_str ) == 0
-					)
-				{
-					colIdx = (int) idx2;
-					break;
-				}
+        if( selectColumns[idx2] &&
+          selectColumns[idx2]->tag == K_AS &&
+          strcmp( selectColumns[idx2]->right->getData().val_str,
+            columns[idx]->getData().val_str ) == 0
+          )
+        {
+          colIdx = (int) idx2;
+          break;
+        }
       }
-			if( colIdx < 0 )
+      if( colIdx < 0 )
       {
-				throw verb_error(generic_error::INVALID_QUERY, this->getVerbType());
+        throw verb_error(generic_error::INVALID_QUERY, this->getVerbType());
       }
-			columns[idx]->tag = K_INTEGER;
-			columns[idx]->set_int_data( colIdx + 1 );
-		}
+      columns[idx]->tag = K_INTEGER;
+      columns[idx]->set_int_data( colIdx + 1 );
+    }
   }
-	return false;
+  return false;
 }
 
 //------------------------------------------------------------------------------
-bool OrderVerb::changeQuery(	aq::tnode* pStart, aq::tnode* pNode,
-								VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+bool OrderVerb::changeQuery(  aq::tnode* pStart, aq::tnode* pNode,
+                VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
-	// pNode->tag = K_DELETED;
-	return false;
+  // pNode->tag = K_DELETED;
+  return false;
 }
 
 //------------------------------------------------------------------------------
-void OrderVerb::changeResult(	Table::Ptr table, 
-								VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+void OrderVerb::changeResult(  Table::Ptr table, 
+                VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
-	assert(false);
+  assert(false);
 }
 
 //------------------------------------------------------------------------------
@@ -197,22 +197,22 @@ void OrderVerb::accept(VerbVisitor* visitor)
 
 //------------------------------------------------------------------------------
 bool ByVerb::changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-							VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+              VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
-	return false;
+  return false;
 }
 
 //------------------------------------------------------------------------------
-void ByVerb::changeResult(	Table::Ptr table, 
-							VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+void ByVerb::changeResult(  Table::Ptr table, 
+              VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
-	assert(false);
+  assert(false);
 }
 
 //------------------------------------------------------------------------------
 void ByVerb::accept(VerbVisitor* visitor)
 {
-	visitor->visit(this);
+  visitor->visit(this);
 }
 
 //------------------------------------------------------------------------------
@@ -220,25 +220,25 @@ bool FromVerb::preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* 
 {
   if (enforce_qualified_column_reference(pStart, *this->m_baseDesc) != 0)
   {
-		throw generic_error(generic_error::INVALID_QUERY, "Error : No or bad tables specified in SQL SELECT ... FROM Statement");
+    throw generic_error(generic_error::INVALID_QUERY, "Error : No or bad tables specified in SQL SELECT ... FROM Statement");
   }
   aq::util::getTablesList(pNode, this->tables);
-	return false;
+  return false;
 }
 
 //------------------------------------------------------------------------------
 bool FromVerb::changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-	VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+  VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
-	aq::util::solveOneTableInFrom( pStart, this->m_baseDesc );
-	aq::util::moveFromJoinToWhere( pStart, this->m_baseDesc );
-	return false;
+  aq::util::solveOneTableInFrom( pStart, this->m_baseDesc );
+  aq::util::moveFromJoinToWhere( pStart, this->m_baseDesc );
+  return false;
 }
 
 //------------------------------------------------------------------------------
 void FromVerb::accept(VerbVisitor* visitor)
 {
-	visitor->visit(this);
+  visitor->visit(this);
 }
 
 //------------------------------------------------------------------------------
@@ -253,12 +253,12 @@ bool GroupVerb::changeQuery(aq::tnode* pStart, aq::tnode* pNode,
                             VerbResult::Ptr resRight, 
                             VerbResult::Ptr resNext )
 {
-	pNode->tag = K_DELETED;
-	return false;
+  pNode->tag = K_DELETED;
+  return false;
 }
 
 //------------------------------------------------------------------------------
-void GroupVerb::changeResult(	Table::Ptr table, 
+void GroupVerb::changeResult(  Table::Ptr table, 
                              VerbResult::Ptr resLeft, 
                              VerbResult::Ptr resRight, 
                              VerbResult::Ptr resNext )
@@ -416,23 +416,23 @@ void GroupVerb::addResult(aq::Row& row)
 //------------------------------------------------------------------------------
 void GroupVerb::accept(VerbVisitor* visitor)
 {
-	visitor->visit(this);
+  visitor->visit(this);
 }
 
 //------------------------------------------------------------------------------
-bool HavingVerb::preprocessQuery(	aq::tnode* pStart, aq::tnode* pNode, 
-									aq::tnode* pStartOriginal )
+bool HavingVerb::preprocessQuery(  aq::tnode* pStart, aq::tnode* pNode, 
+                  aq::tnode* pStartOriginal )
 {
-	//eliminate K_NOT
-	aq::util::processNot( pNode->left, false );
-	return false;
+  //eliminate K_NOT
+  aq::util::processNot( pNode->left, false );
+  return false;
 }
 
 //------------------------------------------------------------------------------
-void HavingVerb::changeResult(	Table::Ptr table, 
-								VerbResult::Ptr resLeft, 
-								VerbResult::Ptr resRight, 
-								VerbResult::Ptr resNext )
+void HavingVerb::changeResult(  Table::Ptr table, 
+                VerbResult::Ptr resLeft, 
+                VerbResult::Ptr resRight, 
+                VerbResult::Ptr resNext )
 {
   assert(false);
 }

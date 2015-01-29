@@ -44,12 +44,12 @@ public:
   ~tnode();
   tnode& operator=(const tnode& source);
 
-	tnode * left; ///< left child
-	tnode * right; ///< right child
-	tnode * next; ///< next child
+  tnode * left; ///< left child
+  tnode * right; ///< right child
+  tnode * next; ///< next child
   tnode * parent; ///< parent (must be generated)
-	int inf; ///< used by Verbs to exchange information, \todo use a callback interface \deprecated
-	tag_t tag; ///< tag's node (see bison parser tag)
+  int inf; ///< used by Verbs to exchange information, \todo use a callback interface \deprecated
+  tag_t tag; ///< tag's node (see bison parser tag)
 
   /// \name getter/setter
   /// use to set/get/update value of current node
@@ -175,9 +175,9 @@ public:
   /// \}
 
 private:
-	tnodeDataType	eNodeDataType; ///< data type of the node
-	data_holder_t data; ///< data of the node
-	size_t nStrBufCb; ///< string Buffer (data.val_str) allocated bytes
+  tnodeDataType  eNodeDataType; ///< data type of the node
+  data_holder_t data; ///< data of the node
+  size_t nStrBufCb; ///< string Buffer (data.val_str) allocated bytes
 } ;
 
 struct node_cmp_t
@@ -190,48 +190,48 @@ struct node_cmp_t
 
 inline std::ostream& operator<<(std::ostream& os, const tnode& pNode)
 {
-	pNode.dump(os);
-	return os;
+  pNode.dump(os);
+  return os;
 }
 
 template <class CMP>
 tnode * tnode::find_DFS(CMP& cmp, bool withNext)
 {
   if ((cmp)(this))
-		return this;
+    return this;
 
   tnode * pNodeFound = nullptr;
 
- 	if ((this->left != nullptr) && ((pNodeFound = this->left->find_DFS(cmp)) != nullptr))
- 		return pNodeFound;
+   if ((this->left != nullptr) && ((pNodeFound = this->left->find_DFS(cmp)) != nullptr))
+     return pNodeFound;
 
- 	if ((this->right != nullptr) && ((pNodeFound = this->right->find_DFS(cmp)) != nullptr))
-		return pNodeFound;
+   if ((this->right != nullptr) && ((pNodeFound = this->right->find_DFS(cmp)) != nullptr))
+    return pNodeFound;
 
- 	if (withNext && (this->next != nullptr) && ((pNodeFound = this->next->find_DFS(cmp)) != nullptr))
-		return pNodeFound;
+   if (withNext && (this->next != nullptr) && ((pNodeFound = this->next->find_DFS(cmp)) != nullptr))
+    return pNodeFound;
 
-	return nullptr;
+  return nullptr;
 }
 
 template <class CMP>
 tnode * tnode::find_BFS(CMP& cmp, bool withNext)
 {
   if ((cmp)(this))
-		return this;
+    return this;
 
   tnode * pNodeFound = nullptr;
 
- 	if ((this->left != nullptr) && ((pNodeFound = this->left->find_BFS(cmp)) != nullptr))
- 		return pNodeFound;
+   if ((this->left != nullptr) && ((pNodeFound = this->left->find_BFS(cmp)) != nullptr))
+     return pNodeFound;
 
- 	if ((this->right != nullptr) && ((pNodeFound = this->right->find_BFS(cmp)) != nullptr))
-		return pNodeFound;
+   if ((this->right != nullptr) && ((pNodeFound = this->right->find_BFS(cmp)) != nullptr))
+    return pNodeFound;
 
- 	if (withNext && (this->next != nullptr) && ((pNodeFound = this->next->find_BFS(cmp)) != nullptr))
-		return pNodeFound;
+   if (withNext && (this->next != nullptr) && ((pNodeFound = this->next->find_BFS(cmp)) != nullptr))
+    return pNodeFound;
 
-	return nullptr;
+  return nullptr;
 }
 
 struct node_cmp_tag_t
@@ -270,22 +270,22 @@ struct node_cmp_diff_tag_t
 template <class C>
 tnode* tnode::nodeArrayToTreeList(const C& nodes, tag_t tag)
 {
-	if (nodes.empty())
-		return nullptr;
-	if( nodes.size() == 1 )
-		return *nodes.begin();
+  if (nodes.empty())
+    return nullptr;
+  if( nodes.size() == 1 )
+    return *nodes.begin();
 
-	tnode * pNode = new tnode(tag);
-	tnode * pStart = pNode;
-	for (size_t idx = nodes.size() - 1; idx > 1; --idx)
-	{
-		pNode->left = new tnode(tag);
-		pNode->right = nodes[idx];
-		pNode = pNode->left;
-	}
-	pNode->left = nodes[0];
-	pNode->right = nodes[1];
-	return pStart;
+  tnode * pNode = new tnode(tag);
+  tnode * pStart = pNode;
+  for (size_t idx = nodes.size() - 1; idx > 1; --idx)
+  {
+    pNode->left = new tnode(tag);
+    pNode->right = nodes[idx];
+    pNode = pNode->left;
+  }
+  pNode->left = nodes[0];
+  pNode->right = nodes[1];
+  return pStart;
 }
 
 }

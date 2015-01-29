@@ -11,52 +11,52 @@ template <class T>
 class Object
 {
 private:
-	unsigned int RefCount;
+  unsigned int RefCount;
 
 public:
   typedef boost::intrusive_ptr<T> Ptr;
-	
+  
   Object() : RefCount(0)
   {
   }
-	
+  
   Object(const Object&) : RefCount(0)
   {
   }
-	
+  
   virtual ~Object()
   { 
     assert( RefCount == 0 ); 
   }
-	
+  
   Object& operator=(const Object &source)
   { 
     return *this; 
   }
-	
+  
   inline void addRef() 
   { 
     RefCount++; 
   }
-	
+  
   inline void releaseRef()
-	{
-		assert( RefCount );
-		RefCount--;
-		if( RefCount == 0 )
-			delete this;
-	}
+  {
+    assert( RefCount );
+    RefCount--;
+    if( RefCount == 0 )
+      delete this;
+  }
 };
 
 template <class T>
-inline void	intrusive_ptr_add_ref(Object<T> * pObj)
+inline void  intrusive_ptr_add_ref(Object<T> * pObj)
 {
   if (pObj) 
     pObj->addRef();
 }
 
 template <class T>
-inline void	intrusive_ptr_release(Object<T> * pObj)
+inline void  intrusive_ptr_release(Object<T> * pObj)
 {
   if (pObj)
     pObj->releaseRef();

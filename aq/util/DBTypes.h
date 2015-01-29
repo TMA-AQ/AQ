@@ -18,19 +18,19 @@ enum aggregate_function_t // FIXME : not at the right place
 //------------------------------------------------------------------------------
 enum ColumnType
 {
-	COL_TYPE_VARCHAR	= 0,
-	COL_TYPE_INT,
-	COL_TYPE_BIG_INT,
-	COL_TYPE_DOUBLE,
-	COL_TYPE_DATE,
+  COL_TYPE_VARCHAR  = 0,
+  COL_TYPE_INT,
+  COL_TYPE_BIG_INT,
+  COL_TYPE_DOUBLE,
+  COL_TYPE_DATE,
 };
-	
+  
 //------------------------------------------------------------------------------
 union data_holder_t 
 {
-	char      *val_str;    // chaine
-	long long	 val_int;    // entier
-	double     val_number; // réel
+  char      *val_str;    // chaine
+  long long   val_int;    // entier
+  double     val_number; // réel
 };
 
 //------------------------------------------------------------------------------

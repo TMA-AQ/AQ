@@ -76,10 +76,10 @@ int main(int argc, char ** argv)
       return 0;
     }
 
-		//
-		// Initialize Logger
-		aq::Logger::getInstance(argv[0], logMode == "STDOUT" ? STDOUT : logMode == "LOCALFILE" ? LOCALFILE : logMode == "SYSLOG" ? SYSLOG : STDOUT);
-		aq::Logger::getInstance().setLevel(logLevel);
+    //
+    // Initialize Logger
+    aq::Logger::getInstance(argv[0], logMode == "STDOUT" ? STDOUT : logMode == "LOCALFILE" ? LOCALFILE : logMode == "SYSLOG" ? SYSLOG : STDOUT);
+    aq::Logger::getInstance().setLevel(logLevel);
 
     o.dbPath = rootPath + "/" + dbName + "/";
 

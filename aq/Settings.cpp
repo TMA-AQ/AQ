@@ -16,29 +16,29 @@ namespace aq
 
 Settings::Settings()
   : 
-	iniFile(""),
+  iniFile(""),
   queryIdent(""),
-	outputFile(""),
-	answerFile(""),
-	dbDesc(""),
-	aqEngine("aq-engine"),
+  outputFile(""),
+  answerFile(""),
+  dbDesc(""),
+  aqEngine("aq-engine"),
   aqLoader("aq-loader"),
   aqHome(""),
   aqName(""),
-	rootPath(""),
+  rootPath(""),
   workingPath(""),
   tmpRootPath(""),
   dataPath(""),
-	tmpPath(""),
-	dpyPath(""),
+  tmpPath(""),
+  dpyPath(""),
   fieldSeparator(';'),
-	worker(1),
-	group_by_process_size(100000),
+  worker(1),
+  group_by_process_size(100000),
   process_thread(1),
   packSize(aq::packet_size), 
   computeAnswer(true),
-	csvFormat(true),
-	skipNestedQuery(false),
+  csvFormat(true),
+  skipNestedQuery(false),
   useBinAQMatrix(true),
   displayCount(false),
   cmdLine(false),
@@ -47,29 +47,29 @@ Settings::Settings()
 }
 
 Settings::Settings(const Settings& obj)
-	:
-	iniFile(obj.iniFile),
+  :
+  iniFile(obj.iniFile),
   queryIdent(obj.queryIdent),
-	outputFile(obj.outputFile),
-	answerFile(obj.answerFile),
-	dbDesc(obj.dbDesc),
-	aqEngine(obj.aqEngine),
+  outputFile(obj.outputFile),
+  answerFile(obj.answerFile),
+  dbDesc(obj.dbDesc),
+  aqEngine(obj.aqEngine),
   aqLoader(obj.aqLoader),
   aqHome(obj.aqHome),
   aqName(obj.aqName),
-	rootPath(obj.rootPath),
+  rootPath(obj.rootPath),
   workingPath(obj.workingPath),
   tmpRootPath(obj.tmpRootPath),
   dataPath(obj.dataPath),
-	tmpPath(obj.tmpPath),
-	dpyPath(obj.dpyPath),
-	fieldSeparator(obj.fieldSeparator),
-	worker(obj.worker),
-	group_by_process_size(obj.group_by_process_size),
+  tmpPath(obj.tmpPath),
+  dpyPath(obj.dpyPath),
+  fieldSeparator(obj.fieldSeparator),
+  worker(obj.worker),
+  group_by_process_size(obj.group_by_process_size),
   process_thread(obj.process_thread),
-	packSize(obj.packSize),
-	computeAnswer(obj.computeAnswer),
-	skipNestedQuery(obj.skipNestedQuery),
+  packSize(obj.packSize),
+  computeAnswer(obj.computeAnswer),
+  skipNestedQuery(obj.skipNestedQuery),
   useBinAQMatrix(obj.useBinAQMatrix),
   displayCount(obj.displayCount),
   cmdLine(obj.cmdLine),
@@ -83,43 +83,43 @@ Settings::~Settings()
 
 Settings& Settings::operator=(const Settings& obj)
 {
-	if (this != &obj)
-	{
-		iniFile = obj.iniFile;
+  if (this != &obj)
+  {
+    iniFile = obj.iniFile;
     queryIdent = obj.queryIdent;
-		outputFile = obj.outputFile;
+    outputFile = obj.outputFile;
     answerFile = obj.answerFile;
     dbDesc = obj.dbDesc;
-		aqEngine = obj.aqEngine;
+    aqEngine = obj.aqEngine;
     aqLoader = obj.aqLoader;
     aqHome = obj.aqHome;
     aqName = obj.aqName;
-		rootPath = obj.rootPath;
+    rootPath = obj.rootPath;
     workingPath = obj.workingPath;
-		tmpRootPath = obj.tmpRootPath;
+    tmpRootPath = obj.tmpRootPath;
     dataPath = obj.dataPath;
     tmpPath = obj.tmpPath;
     dpyPath = obj.dpyPath;
     fieldSeparator = obj.fieldSeparator;
-		worker = obj.worker;
-		group_by_process_size = obj.group_by_process_size;
+    worker = obj.worker;
+    group_by_process_size = obj.group_by_process_size;
     process_thread = obj.process_thread;
-		packSize = obj.packSize;
-		computeAnswer = obj.computeAnswer;
-		computeAnswer = obj.computeAnswer;
-		skipNestedQuery = obj.skipNestedQuery;
+    packSize = obj.packSize;
+    computeAnswer = obj.computeAnswer;
+    computeAnswer = obj.computeAnswer;
+    skipNestedQuery = obj.skipNestedQuery;
     useBinAQMatrix = obj.useBinAQMatrix;
     displayCount = obj.displayCount;
     cmdLine = obj.cmdLine;
     trace = obj.trace;
-	}
-	return *this;
+  }
+  return *this;
 }
 
 void Settings::load(const std::string& iniFile, const std::string& queryIdent)
 {
-	this->load(iniFile);
-	this->changeIdent(queryIdent);
+  this->load(iniFile);
+  this->changeIdent(queryIdent);
 }
 
 template <class T>
@@ -144,7 +144,7 @@ bool get_opt_value(boost::property_tree::ptree& pt, const char * key, bool defau
 
 void Settings::load(const std::string& iniFile)
 {
-	this->iniFile = iniFile;
+  this->iniFile = iniFile;
   std::ifstream fin(iniFile.c_str(), std::ifstream::in);
   if (fin.is_open())
   {
@@ -163,7 +163,7 @@ void Settings::load(std::istream& is)
     this->aqHome = get_opt_value(pt, "aq-home", this->aqHome);
     boost::algorithm::replace_all(this->aqHome, "\\", "/");
     boost::algorithm::trim(this->aqHome);
-		if (!this->aqHome.empty() && (*this->aqHome.rbegin() != '/')) this->aqHome += "/";
+    if (!this->aqHome.empty() && (*this->aqHome.rbegin() != '/')) this->aqHome += "/";
     this->aqName = get_opt_value(pt, "aq-name", this->aqName);
     this->tmpRootPath = get_opt_value(pt, "tmp-folder", this->rootPath + "data_orga/tmp/");
     this->fieldSeparator = get_opt_value(pt, "field-separator", ';');
@@ -186,13 +186,13 @@ void Settings::load(std::istream& is)
     boost::algorithm::replace_all(this->aqLoader, "\\", "/");
     boost::algorithm::trim(this->aqLoader);
 
-	}
-	catch (const boost::property_tree::ptree_error& e)
-	{
+  }
+  catch (const boost::property_tree::ptree_error& e)
+  {
     std::ostringstream oss;
     oss << "invalid properties file: " << iniFile << " [" << e.what() << "]" << std::endl;
     throw aq::generic_error(aq::generic_error::INVALID_FILE, oss.str());
-	}
+  }
 }
 
 void Settings::initPath(const std::string& root)
@@ -223,37 +223,37 @@ void Settings::initPath(const std::string& root)
 
 void Settings::changeIdent(const std::string& _queryIdent)
 {
-	this->queryIdent = _queryIdent;
-	
+  this->queryIdent = _queryIdent;
+  
   this->workingPath = this->rootPath + "calculus/" + queryIdent + "/";
   this->answerFile = this->workingPath + "Answer.txt";
 
-	//
-	// tempory path
+  //
+  // tempory path
   this->tmpPath = this->tmpRootPath + queryIdent + "/";
   this->dpyPath = this->tmpPath + "dpy/";
-	
-	//
-	// change ini file
-	this->iniFile = this->rootPath + "/calculus/" + queryIdent + "/aqengine.ini";
+  
+  //
+  // change ini file
+  this->iniFile = this->rootPath + "/calculus/" + queryIdent + "/aqengine.ini";
 }
 
 void Settings::dump(std::ostream& os) const
 {
   os << "root-path:            ['" << rootPath             << "']" << std::endl;
   os << "working-path:         ['" << workingPath          << "']" << std::endl;
-	os << "tmp-root-path:        ['" << tmpRootPath          << "']" << std::endl;
-	os << "dataPath:             ['" << dataPath             << "']" << std::endl;
-	os << "tmpPath:              ['" << tmpPath              << "']" << std::endl;
-	os << "dpyPath:              ['" << dpyPath              << "']" << std::endl;
-	os << "db-desc:              ['" << dbDesc               << "']" << std::endl;
-	os << "aq-engine:            ['" << aqEngine             << "']" << std::endl;
-	os << "aq-loader:            ['" << aqLoader             << "']" << std::endl;
-	os << "output:               ['" << outputFile           << "']" << std::endl;
-	os << "answer:               ['" << answerFile           << "']" << std::endl;
-	os << "fieldSeparator:       ['" << fieldSeparator       << "']" << std::endl;
-	os << "MAX_COLUMN_NAME_SIZE: ["  << MAX_COLUMN_NAME_SIZE <<  "]" << std::endl;
-	os << "packSize:             ["  << packSize             <<  "]" << std::endl;
+  os << "tmp-root-path:        ['" << tmpRootPath          << "']" << std::endl;
+  os << "dataPath:             ['" << dataPath             << "']" << std::endl;
+  os << "tmpPath:              ['" << tmpPath              << "']" << std::endl;
+  os << "dpyPath:              ['" << dpyPath              << "']" << std::endl;
+  os << "db-desc:              ['" << dbDesc               << "']" << std::endl;
+  os << "aq-engine:            ['" << aqEngine             << "']" << std::endl;
+  os << "aq-loader:            ['" << aqLoader             << "']" << std::endl;
+  os << "output:               ['" << outputFile           << "']" << std::endl;
+  os << "answer:               ['" << answerFile           << "']" << std::endl;
+  os << "fieldSeparator:       ['" << fieldSeparator       << "']" << std::endl;
+  os << "MAX_COLUMN_NAME_SIZE: ["  << MAX_COLUMN_NAME_SIZE <<  "]" << std::endl;
+  os << "packSize:             ["  << packSize             <<  "]" << std::endl;
   os << "computeAnswer:        ["  << computeAnswer        <<  "]" << std::endl;
   os << "displayCount:         ["  << displayCount         <<  "]" << std::endl;
   os << "cmdLine:              ["  << cmdLine              <<  "]" << std::endl;
@@ -268,8 +268,8 @@ std::string Settings::to_string() const
 
 void Settings::writeAQEngineIni(std::ostream& os) const
 {
-	os << "export.filename.final=" << dbDesc << std::endl;
-	os << "step1.field.separator=" << fieldSeparator << std::endl;
+  os << "export.filename.final=" << dbDesc << std::endl;
+  os << "step1.field.separator=" << fieldSeparator << std::endl;
   os << "k_rep_racine=" << rootPath << std::endl;
   // FIXME
   std::string::size_type pos = tmpRootPath.find("data_orga/tmp/");

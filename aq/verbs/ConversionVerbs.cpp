@@ -12,16 +12,16 @@ namespace verb {
 //------------------------------------------------------------------------------
 bool CastVerb::preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal )
 {
-	assert( pNode && pNode->right );
-	switch( pNode->right->tag )
-	{
-	case K_INTEGER_TYPE: this->ConvertType = COL_TYPE_INT; break;
-	case K_REAL_TYPE: this->ConvertType = COL_TYPE_DOUBLE; break;
-	case K_STRING_TYPE: this->ConvertType = COL_TYPE_VARCHAR; break;
-	default:
-		assert( 0 );
-	}
-	return false;
+  assert( pNode && pNode->right );
+  switch( pNode->right->tag )
+  {
+  case K_INTEGER_TYPE: this->ConvertType = COL_TYPE_INT; break;
+  case K_REAL_TYPE: this->ConvertType = COL_TYPE_DOUBLE; break;
+  case K_STRING_TYPE: this->ConvertType = COL_TYPE_VARCHAR; break;
+  default:
+    assert( 0 );
+  }
+  return false;
 }
 
 //------------------------------------------------------------------------------
@@ -32,12 +32,12 @@ bool CastVerb::changeQuery(aq::tnode* pStart,
                            VerbResult::Ptr resNext )
 {
   // TODO
-	if (!resLeft)
+  if (!resLeft)
   {
-		return false;
+    return false;
   }
   assert(!resRight && !resNext);
-	return false;
+  return false;
 }
 
 //------------------------------------------------------------------------------
@@ -57,9 +57,9 @@ void CastVerb::accept(VerbVisitor* visitor)
 
 //------------------------------------------------------------------------------
 void NvlVerb::changeResult( Table::Ptr table, 
-							VerbResult::Ptr resLeft, 
-							VerbResult::Ptr resRight, 
-							VerbResult::Ptr resNext )
+              VerbResult::Ptr resLeft, 
+              VerbResult::Ptr resRight, 
+              VerbResult::Ptr resNext )
 {
   assert(false);
 }
@@ -73,14 +73,14 @@ void NvlVerb::accept(VerbVisitor* visitor)
 //------------------------------------------------------------------------------
 bool DecodeVerb::preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal )
 {
-	return false;
+  return false;
 }
 
 //------------------------------------------------------------------------------
 void DecodeVerb::changeResult( Table::Ptr table, 
-							   VerbResult::Ptr resLeft, 
-							   VerbResult::Ptr resRight, 
-							   VerbResult::Ptr resNext )
+                 VerbResult::Ptr resLeft, 
+                 VerbResult::Ptr resRight, 
+                 VerbResult::Ptr resNext )
 {
   assert(false);
 }

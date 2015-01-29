@@ -25,52 +25,52 @@ namespace util {
 #endif
 int StrToInt( const char* psz, llong* pnVal )
 {
-	char* pszIdx;
-	if( pnVal == nullptr || psz == nullptr )
-		return -1;
-	if( psz[0] <= ' ' )
-		return -1;
-	errno = 0;
-	*pnVal = strtoll(psz, &pszIdx, 10);
-	if( errno != 0 )
-		return -1;
-	if( *pszIdx != '\0' )
-		return -1;
-	return 0;
+  char* pszIdx;
+  if( pnVal == nullptr || psz == nullptr )
+    return -1;
+  if( psz[0] <= ' ' )
+    return -1;
+  errno = 0;
+  *pnVal = strtoll(psz, &pszIdx, 10);
+  if( errno != 0 )
+    return -1;
+  if( *pszIdx != '\0' )
+    return -1;
+  return 0;
 }
 
 //------------------------------------------------------------------------------
 int StrToDouble( const char* psz, double* pdVal  )
 {
-	char* pszIdx;
-	if( pdVal == nullptr || psz == nullptr )
-		return -1;
-	if( psz[0] <= ' ' )
-		return -1;
-	errno = 0;
-	*pdVal = strtod(psz, &pszIdx);
-	if( errno != 0 )
-		return -1;
-	if( *pszIdx != '\0' )
-		return -1;
-	return 0;
+  char* pszIdx;
+  if( pdVal == nullptr || psz == nullptr )
+    return -1;
+  if( psz[0] <= ' ' )
+    return -1;
+  errno = 0;
+  *pdVal = strtod(psz, &pszIdx);
+  if( errno != 0 )
+    return -1;
+  if( *pszIdx != '\0' )
+    return -1;
+  return 0;
 }
 
 //------------------------------------------------------------------------------
 char* strtoupr( char* pszStr )
 {
-	char *psz;
+  char *psz;
 
-	if ( pszStr == nullptr )
-		return nullptr;
+  if ( pszStr == nullptr )
+    return nullptr;
 
-	psz = pszStr;
-	while ( *psz != '\0' )
-	{
-		*psz = toupper( *psz );
-		psz += 1;
-	}
-	return pszStr;
+  psz = pszStr;
+  while ( *psz != '\0' )
+  {
+    *psz = toupper( *psz );
+    psz += 1;
+  }
+  return pszStr;
 }
 
 //------------------------------------------------------------------------------
@@ -94,9 +94,9 @@ std::wstring string2Wstring(const std::string& s)
 //------------------------------------------------------------------------------
 void doubleToString( char* strVal, double dVal )
 {
-	llong iVal = (llong)(dVal * 100 + ((dVal > 0.0) ? 0.5 : -0.5));
-	dVal = (double) iVal / 100;
-	sprintf( strVal, "%.2lf", dVal );
+  llong iVal = (llong)(dVal * 100 + ((dVal > 0.0) ? 0.5 : -0.5));
+  dVal = (double) iVal / 100;
+  sprintf( strVal, "%.2lf", dVal );
 }
 
 //------------------------------------------------------------------------------
@@ -205,16 +205,16 @@ const char * symbole_to_char(aq::symbole sid)
 //-------------------------------------------------------------------------------
 void removeCharAtEnd(char *my_field, char c)
 {
-	size_t max_size = strlen(my_field);
+  size_t max_size = strlen(my_field);
   if (max_size == 0)
     return;
-	for (size_t i = max_size - 1; i > 0 ; i--)
-	{
-		if (my_field[i] == c)
+  for (size_t i = max_size - 1; i > 0 ; i--)
+  {
+    if (my_field[i] == c)
       my_field[i] = '\0';
-		else
+    else
       return;
-	}
+  }
 }
 
 //-------------------------------------------------------------------------------
@@ -232,76 +232,76 @@ void ChangeChar(char * string, char old_c, char new_c)
 //------------------------------------------------------------------------------
 void SaveFile( const char *pszFN, const char* pszToSave )
 {
-	FILE *pFOut;
+  FILE *pFOut;
 
-	pFOut = fopen( pszFN, "wt" );
-	if ( pFOut == nullptr )
-		throw generic_error(generic_error::GENERIC, "");
-	if ( fputs( pszToSave, pFOut ) < 0 ) {
-		fclose( pFOut );
-		throw generic_error(generic_error::GENERIC, "");
-	}
-	fclose( pFOut );
+  pFOut = fopen( pszFN, "wt" );
+  if ( pFOut == nullptr )
+    throw generic_error(generic_error::GENERIC, "");
+  if ( fputs( pszToSave, pFOut ) < 0 ) {
+    fclose( pFOut );
+    throw generic_error(generic_error::GENERIC, "");
+  }
+  fclose( pFOut );
 }
 
 //------------------------------------------------------------------------------
 int FileCopy( char* pszSrcPath, char* pszDstPath )
 {
-	if( strcmp(pszSrcPath, pszDstPath) == 0 )
-		return 0;
+  if( strcmp(pszSrcPath, pszDstPath) == 0 )
+    return 0;
 
-	FILE *fsrc = nullptr;
-	FILE *fdst = nullptr;
-	char c;
+  FILE *fsrc = nullptr;
+  FILE *fdst = nullptr;
+  char c;
 
-	fsrc = fopen( pszSrcPath, "rb" );
-	if( fsrc == nullptr )
-		return -1;
+  fsrc = fopen( pszSrcPath, "rb" );
+  if( fsrc == nullptr )
+    return -1;
 
-	fdst = fopen( pszDstPath, "wb" );
-	if( fdst == nullptr )
-		return -1;
+  fdst = fopen( pszDstPath, "wb" );
+  if( fdst == nullptr )
+    return -1;
 
-	while( fread(&c, 1, 1, fsrc ) == 1 )
-		if( fwrite(&c, 1, 1, fdst) != 1 )
-		{
-			fclose( fsrc );
-			fclose( fdst );
-			return -1;
-		}
+  while( fread(&c, 1, 1, fsrc ) == 1 )
+    if( fwrite(&c, 1, 1, fdst) != 1 )
+    {
+      fclose( fsrc );
+      fclose( fdst );
+      return -1;
+    }
 
-	fclose( fsrc );
-	fclose( fdst );
-	return 0;
+  fclose( fsrc );
+  fclose( fdst );
+  return 0;
 }
 
 //------------------------------------------------------------------------------
 int FileRename(const char* pszSrcPath, const char* pszDstPath)
 {
-	boost::system::error_code ec;
-	boost::filesystem::path oldFile(pszSrcPath);
-	boost::filesystem::path newFile(pszDstPath);
-	boost::filesystem::rename(oldFile, newFile, ec);
-	if (ec)
-	{
-		aq::Logger::getInstance().log(AQ_ERROR, "Cannot rename file %s to %s\n", pszSrcPath, pszDstPath);
-		return -1;
-	}
-	aq::Logger::getInstance().log(AQ_DEBUG, "rename file %s to %s\n", pszSrcPath, pszDstPath);
-	return 0;
+  boost::system::error_code ec;
+  boost::filesystem::path oldFile(pszSrcPath);
+  boost::filesystem::path newFile(pszDstPath);
+  boost::filesystem::rename(oldFile, newFile, ec);
+  if (ec)
+  {
+    aq::Logger::getInstance().log(AQ_ERROR, "Cannot rename file %s to %s\n", pszSrcPath, pszDstPath);
+    return -1;
+  }
+  aq::Logger::getInstance().log(AQ_DEBUG, "rename file %s to %s\n", pszSrcPath, pszDstPath);
+  return 0;
 }
 
 //------------------------------------------------------------------------------
 void CleanFolder( const char * pszPath )
 {
-	boost::filesystem::path p(pszPath);
-	if (!boost::filesystem::exists(p))
-	{
-		aq::Logger::getInstance().log(AQ_INFO, "path %s doesn't exists\n", p.string().c_str());
-	}
-	else
-	{
-		boost::system::error_code ec;
+  boost::filesystem::path p(pszPath);
+  if (!boost::filesystem::exists(p))
+  {
+    aq::Logger::getInstance().log(AQ_INFO, "path %s doesn't exists\n", p.string().c_str());
+  }
+  else
+  {
+    boost::system::error_code ec;
     for (boost::filesystem::directory_iterator file(p); file != boost::filesystem::directory_iterator(); ++file)
     {
       const std::string& filename = (*file).path().string();
@@ -315,101 +315,101 @@ void CleanFolder( const char * pszPath )
         aq::Logger::getInstance().log(AQ_DEBUG, "delete path %s\n", (*file).path().string().c_str());
       }
     }
-	}
+  }
 }
 
 //------------------------------------------------------------------------------
 void DeleteFolder( const char * pszPath )
 {
-	boost::filesystem::path p(pszPath);
-	if (!boost::filesystem::exists(p))
-	{
-		aq::Logger::getInstance().log(AQ_INFO, "path %s doesn't exists\n", p.string().c_str());
-	}
-	else
-	{
-		boost::system::error_code ec;
-		if (!boost::filesystem::remove_all(p, ec))
-		{
-			aq::Logger::getInstance().log(AQ_ERROR, "cannot delete path %s\n", p.string().c_str());
-		}
-		else
-		{
-			aq::Logger::getInstance().log(AQ_DEBUG, "delete path %s\n", p.string().c_str());
-		}
-	}
+  boost::filesystem::path p(pszPath);
+  if (!boost::filesystem::exists(p))
+  {
+    aq::Logger::getInstance().log(AQ_INFO, "path %s doesn't exists\n", p.string().c_str());
+  }
+  else
+  {
+    boost::system::error_code ec;
+    if (!boost::filesystem::remove_all(p, ec))
+    {
+      aq::Logger::getInstance().log(AQ_ERROR, "cannot delete path %s\n", p.string().c_str());
+    }
+    else
+    {
+      aq::Logger::getInstance().log(AQ_DEBUG, "delete path %s\n", p.string().c_str());
+    }
+  }
 }
 
 //------------------------------------------------------------------------------
 FILE* fopenUTF8( const char* pszFlename, const char* pszMode )
 {
-	FILE	*fp = nullptr;
-	unsigned char bom[3];
-	fp = fopen(pszFlename, pszMode);
-	if( fp == nullptr )
-		return nullptr;
+  FILE  *fp = nullptr;
+  unsigned char bom[3];
+  fp = fopen(pszFlename, pszMode);
+  if( fp == nullptr )
+    return nullptr;
 
-	/* Skip UTF-8 BOM if present */
-	if( fread( bom, 3, sizeof(char), fp ) != 1 )
-	{
-		fclose( fp );
-		return nullptr;
-	}
-	if( !((bom[0] == 0xEF) && (bom[1] == 0xBB) && (bom[2] == 0xBF)) )
-	{
-		/* BOM not present, return to the beginning */
-		if ( fseek( fp, 0, SEEK_SET ) != 0 ) {
-			fclose( fp );
-			return nullptr;
-		}
-	}
-	return fp;
+  /* Skip UTF-8 BOM if present */
+  if( fread( bom, 3, sizeof(char), fp ) != 1 )
+  {
+    fclose( fp );
+    return nullptr;
+  }
+  if( !((bom[0] == 0xEF) && (bom[1] == 0xBB) && (bom[2] == 0xBF)) )
+  {
+    /* BOM not present, return to the beginning */
+    if ( fseek( fp, 0, SEEK_SET ) != 0 ) {
+      fclose( fp );
+      return nullptr;
+    }
+  }
+  return fp;
 }
 
 //------------------------------------------------------------------------------
 int GetFiles(const char* pszSrcPath, std::vector<std::string>& files)
 {
 #ifdef WIN32
-	WIN32_FIND_DATA ffd;
-	HANDLE hFind = INVALID_HANDLE_VALUE;
-	std::string path( pszSrcPath );
-	path += "\\*";
-	hFind = FindFirstFile( path.c_str(), &ffd);
+  WIN32_FIND_DATA ffd;
+  HANDLE hFind = INVALID_HANDLE_VALUE;
+  std::string path( pszSrcPath );
+  path += "\\*";
+  hFind = FindFirstFile( path.c_str(), &ffd);
 
-	if (INVALID_HANDLE_VALUE == hFind)
-		return -1;
+  if (INVALID_HANDLE_VALUE == hFind)
+    return -1;
 
-	do
-	{
-		if( !(ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) )
-			files.push_back( ffd.cFileName );
-	}
-	while (FindNextFile(hFind, &ffd) != 0);
+  do
+  {
+    if( !(ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) )
+      files.push_back( ffd.cFileName );
+  }
+  while (FindNextFile(hFind, &ffd) != 0);
 
-	DWORD dwError = GetLastError();
-	if (dwError != ERROR_NO_MORE_FILES)
-		return -1;
+  DWORD dwError = GetLastError();
+  if (dwError != ERROR_NO_MORE_FILES)
+    return -1;
 
-	FindClose(hFind);
+  FindClose(hFind);
 #else
   throw aq::generic_error(aq::generic_error::NOT_IMPLEMENTED, "");
-	//not implemented yet
+  //not implemented yet
 #endif
-	return 0;
+  return 0;
 }
 
 //------------------------------------------------------------------------------
 int getFileNames(const char * path, std::vector<std::string>& filenames, const char * prefix)
 {
   boost::filesystem::path p(path);
-	if (!boost::filesystem::exists(p))
-	{
-		aq::Logger::getInstance().log(AQ_INFO, "path %s doesn't exists\n", p.string().c_str());
+  if (!boost::filesystem::exists(p))
+  {
+    aq::Logger::getInstance().log(AQ_INFO, "path %s doesn't exists\n", p.string().c_str());
     return -1;
-	}
-	else
-	{
-		boost::system::error_code ec;
+  }
+  else
+  {
+    boost::system::error_code ec;
     for (boost::filesystem::directory_iterator file(p); file != boost::filesystem::directory_iterator(); ++file)
     {
       if ((prefix != nullptr) && ((*file).path().string().find(prefix) != std::string::npos))
@@ -417,7 +417,7 @@ int getFileNames(const char * path, std::vector<std::string>& filenames, const c
         filenames.push_back((*file).path().string());
       }
     }
-	}
+  }
   return 0;
 }
 

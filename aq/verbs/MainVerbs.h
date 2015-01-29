@@ -11,49 +11,49 @@ namespace verb {
 class SelectVerb: public VerbNode
 {
 public:
-	virtual int getVerbType() const { return K_SELECT; };
-	virtual bool preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal );
-	virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-		VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
-	virtual void changeResult( Table::Ptr table, 
-		VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual int getVerbType() const { return K_SELECT; };
+  virtual bool preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal );
+  virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
+    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual void changeResult( Table::Ptr table, 
+    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
 
-	virtual void setBaseDesc(Base::Ptr baseDesc) 
-	{ 
-		m_baseDesc = baseDesc;
-	}
-	
-	virtual void accept(VerbVisitor* visitor);
+  virtual void setBaseDesc(Base::Ptr baseDesc) 
+  { 
+    m_baseDesc = baseDesc;
+  }
+  
+  virtual void accept(VerbVisitor* visitor);
 
 private:
-	std::vector<std::string> Columns;
-	std::vector<std::string> ColumnsDisplay;
-	Base::Ptr m_baseDesc;
+  std::vector<std::string> Columns;
+  std::vector<std::string> ColumnsDisplay;
+  Base::Ptr m_baseDesc;
 };
 
 //------------------------------------------------------------------------------
 class WhereVerb: public VerbNode
 {
 public:
-	virtual int getVerbType() const { return K_WHERE; };
-	virtual bool preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal );
-	virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-		VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
-	virtual void changeResult( Table::Ptr table, 
-		VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
-	virtual void accept(VerbVisitor* visitor);
+  virtual int getVerbType() const { return K_WHERE; };
+  virtual bool preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal );
+  virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
+    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual void changeResult( Table::Ptr table, 
+    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual void accept(VerbVisitor* visitor);
 };
 
 //------------------------------------------------------------------------------
 class OrderVerb: public VerbNode
 {
 public:
-	virtual int getVerbType() const { return K_ORDER; };
-	virtual bool preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal );
-	virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-		VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
-	virtual void changeResult( Table::Ptr table, 
-		VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual int getVerbType() const { return K_ORDER; };
+  virtual bool preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal );
+  virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
+    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual void changeResult( Table::Ptr table, 
+    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
   virtual void accept(VerbVisitor* visitor);
 };
 
@@ -61,11 +61,11 @@ public:
 class ByVerb: public VerbNode
 {
 public:
-	virtual int getVerbType() const { return K_BY; };
-	virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-		VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
-	virtual void changeResult( Table::Ptr table, 
-		VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual int getVerbType() const { return K_BY; };
+  virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
+    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual void changeResult( Table::Ptr table, 
+    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
   void accept(VerbVisitor* visitor);
 };
 
@@ -73,15 +73,15 @@ public:
 class FromVerb: public VerbNode
 {
 public:
-	virtual int getVerbType() const { return K_FROM; };
-	virtual bool preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal );
-	virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-		VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual int getVerbType() const { return K_FROM; };
+  virtual bool preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal );
+  virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
+    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
   virtual void setBaseDesc(Base::Ptr baseDesc) 
   { 
     m_baseDesc = baseDesc;
   }
-	virtual void accept(VerbVisitor* visitor);
+  virtual void accept(VerbVisitor* visitor);
   const std::list<std::string>& getTables() const { return this->tables; };
 private:
   Base::Ptr m_baseDesc;
@@ -92,13 +92,13 @@ private:
 class GroupVerb: public VerbNode
 {
 public:
-	virtual int getVerbType() const { return K_GROUP; };
+  virtual int getVerbType() const { return K_GROUP; };
   virtual bool preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal );
-	virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-		VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
-	virtual void changeResult( Table::Ptr table, 
-		VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
-	virtual void addResult(aq::Row& row);
+  virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
+    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual void changeResult( Table::Ptr table, 
+    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual void addResult(aq::Row& row);
   void accept(VerbVisitor* visitor);
   virtual void setSettings(Settings::Ptr settings)
   {
@@ -115,13 +115,13 @@ private:
 class HavingVerb: public VerbNode
 {
 public:
-	virtual int getVerbType() const { return K_HAVING; };
-	virtual bool preprocessQuery(	aq::tnode* pStart, aq::tnode* pNode, 
-									aq::tnode* pStartOriginal );
-	virtual void changeResult(	Table::Ptr table, 
-								VerbResult::Ptr resLeft, 
-								VerbResult::Ptr resRight, 
-								VerbResult::Ptr resNext );
+  virtual int getVerbType() const { return K_HAVING; };
+  virtual bool preprocessQuery(  aq::tnode* pStart, aq::tnode* pNode, 
+                  aq::tnode* pStartOriginal );
+  virtual void changeResult(  Table::Ptr table, 
+                VerbResult::Ptr resLeft, 
+                VerbResult::Ptr resRight, 
+                VerbResult::Ptr resNext );
   virtual void accept(VerbVisitor* visitor);
 };
 

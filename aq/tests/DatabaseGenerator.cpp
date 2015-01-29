@@ -8,14 +8,14 @@
 using namespace aq;
 
 DatabaseGenerator::DatabaseGenerator(
-	const std::list<std::string>& _tables, 
-	size_t _nb_rows, 
-	int _min_values, 
-	int _max_values, 
-	point_mode_t _mode, 
-	gen_mode_t _gen_mode, 
-	value_mode_t _value_mode,
-	bool _stop_on_error)
+  const std::list<std::string>& _tables, 
+  size_t _nb_rows, 
+  int _min_values, 
+  int _max_values, 
+  point_mode_t _mode, 
+  gen_mode_t _gen_mode, 
+  value_mode_t _value_mode,
+  bool _stop_on_error)
   : nb_rows(_nb_rows), 
   min_values(_min_values),
   max_values(_max_values),
@@ -73,7 +73,7 @@ size_t DatabaseGenerator::generate(handle_t * cb)
       }
     }
     if ((cb->push(this->tables_values) != 0) && (stop_on_error))
-		return 0;
+    return 0;
     return 1;
   }
   std::vector<int> pts;
@@ -115,12 +115,12 @@ size_t DatabaseGenerator::generate(handle_t * cb)
     it_table->second.push_back(values.second);
     it_table++;
     if ((this->generate(cb) == 0) && (stop_on_error))
-	{
-		std::cerr << "STOP ON ERROR" << std::endl;
-		break;
-	}
+  {
+    std::cerr << "STOP ON ERROR" << std::endl;
+    break;
+  }
     n += 1;
-	it_table--;
+  it_table--;
   }
   return n;
 }

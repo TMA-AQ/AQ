@@ -37,30 +37,30 @@ struct base_t
   };
   typedef std::vector<table_t> tables_t;
 
-	std::string name; ///< base's name
-	int id; ///< base's id
-	tables_t table; ///< base's tables
+  std::string name; ///< base's name
+  int id; ///< base's id
+  tables_t table; ///< base's tables
 
   /// \defgroup base structure input/output operations 
-	/// The standard content of a base struct file is defined as :
-	/// 
-	/// \<Name_Base\> \n
-	/// \<Tbl_count\> \n
-	/// \n
-	/// "\<Tbl_Name\>" \<tbl_id\> \<tbl_records_nb\> \<tbl_col_nb\> \n
-	/// "\<Col_Name\>" \<col_id\> \<col_size\> \<col_type\> \n
-	/// 
-	/// Example : \n
-	/// my_base_name \n
-	/// 4 \n
-	/// \n
-	/// "BONUS" 1 1 4 \n
-	/// "ENAME" 1 10 VARCHAR2 \n
-	/// "JOB" 2 9 VARCHAR2 \n
-	/// "SAL" 3 22 NUMBER \n
-	/// "COMM" 4 22 NUMBER \n
-	/// \n
-	/// ...
+  /// The standard content of a base struct file is defined as :
+  /// 
+  /// \<Name_Base\> \n
+  /// \<Tbl_count\> \n
+  /// \n
+  /// "\<Tbl_Name\>" \<tbl_id\> \<tbl_records_nb\> \<tbl_col_nb\> \n
+  /// "\<Col_Name\>" \<col_id\> \<col_size\> \<col_type\> \n
+  /// 
+  /// Example : \n
+  /// my_base_name \n
+  /// 4 \n
+  /// \n
+  /// "BONUS" 1 1 4 \n
+  /// "ENAME" 1 10 VARCHAR2 \n
+  /// "JOB" 2 9 VARCHAR2 \n
+  /// "SAL" 3 22 NUMBER \n
+  /// "COMM" 4 22 NUMBER \n
+  /// \n
+  /// ...
   /// \{
   
   /// \brief build base from file

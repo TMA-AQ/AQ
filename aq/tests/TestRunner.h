@@ -36,8 +36,8 @@ namespace aq
       std::string mysql_user;
       std::string mysql_pass;
       std::string mysql_name;
-	  bool stop_on_error;
-	  bool check_result;
+    bool stop_on_error;
+    bool check_result;
     };
   public:
     TestCase(boost::shared_ptr<Report> report);
@@ -47,14 +47,14 @@ namespace aq
     void createTable(const DatabaseGenerator::handle_t::tables_t::key_type& table);
     void insertValues(const DatabaseGenerator::handle_t::tables_t::value_type& values);
     bool execute(const aq::core::SelectStatement& ss, DatabaseIntf::result_t& r1);
-	std::string get_name() const { return "test_case"; }
+  std::string get_name() const { return "test_case"; }
     size_t getNbResult() const { return nb_result / (2 * nb_tests); }
     size_t getNbTests() const { return nb_tests; }
     size_t getNbSuccess() const { return nb_success; }
     size_t getNbFailure() const { return nb_failure; }
   protected:
     bool compare(const DatabaseIntf::result_t& r1, const DatabaseIntf::result_t& r2);
-	void dump_result(const DatabaseIntf::result_t& result);
+  void dump_result(const DatabaseIntf::result_t& result);
   private:
     TestCase(const TestCase& o);
     TestCase& operator=(const TestCase& o);
@@ -63,7 +63,7 @@ namespace aq
     size_t nb_tests;
     size_t nb_success;
     size_t nb_failure;
-	boost::shared_ptr<Report> report;
+  boost::shared_ptr<Report> report;
   };
 }
 

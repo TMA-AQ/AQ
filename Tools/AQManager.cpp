@@ -42,8 +42,8 @@ int check_database(const aq::Settings::Ptr settings)
   aq::Database db(settings->rootPath);
   if (!db.isValid())
   {
-	  aq::Logger::getInstance().log(AQ_ERROR, "invalid database [%s]\n", settings->rootPath.c_str());
-	  return EXIT_FAILURE;
+    aq::Logger::getInstance().log(AQ_ERROR, "invalid database [%s]\n", settings->rootPath.c_str());
+    return EXIT_FAILURE;
   }
 
   aq::base_t b = db.getBaseDesc();
@@ -55,16 +55,16 @@ int check_database(const aq::Settings::Ptr settings)
 
   for (auto& t : b.table)
   {
-	  aq::Logger::getInstance().log(AQ_NOTICE, "check table [id:%u;name:%s;cols:%u;records:%u]\n",
-		  t.id, t.name.c_str(), t.colonne.size(), t.nb_record);
-	  for (auto& c : t.colonne)
-	  {
-		  aq::Logger::getInstance().log(AQ_NOTICE, "check table [%u;%s] column [%u;%s] [records:%u]\n",
-			  t.id, t.name.c_str(), c.id, c.name.c_str(), t.nb_record);
-		  for (size_t p = 0; p <= (t.nb_record / settings->packSize); p++)
-		  {
-			  std::string thefilename = aq::Database::getThesaurusFileName(settings->dataPath.c_str(), t.id, c.id, p);
-			  aq::Logger::getInstance().log(AQ_NOTICE, "check thesaurus [%s]\n", thefilename.c_str());
+    aq::Logger::getInstance().log(AQ_NOTICE, "check table [id:%u;name:%s;cols:%u;records:%u]\n",
+      t.id, t.name.c_str(), t.colonne.size(), t.nb_record);
+    for (auto& c : t.colonne)
+    {
+      aq::Logger::getInstance().log(AQ_NOTICE, "check table [%u;%s] column [%u;%s] [records:%u]\n",
+        t.id, t.name.c_str(), c.id, c.name.c_str(), t.nb_record);
+      for (size_t p = 0; p <= (t.nb_record / settings->packSize); p++)
+      {
+        std::string thefilename = aq::Database::getThesaurusFileName(settings->dataPath.c_str(), t.id, c.id, p);
+        aq::Logger::getInstance().log(AQ_NOTICE, "check thesaurus [%s]\n", thefilename.c_str());
 
   //      switch (c.type)
   //      {
@@ -147,8 +147,8 @@ int check_database(const aq::Settings::Ptr settings)
   //        aq::logger::getinstance().log(aq_info, "%s\n", value.c_str());
   //      }
 
-		  }
-	  }
+      }
+    }
   }
 
   //aq::logger::getinstance().log(aq_error, "");
@@ -165,86 +165,86 @@ int check_database(const aq::Settings::Ptr settings)
 // -------------------------------------------------------------------------------------------------
 int process_aq_matrix(const std::string& query, const std::string& aqMatrixFileName, const std::string& answerFileName, aq::Settings::Ptr settings, aq::Base::Ptr baseDesc)
 {
-	aq::tnode	*pNode;
-	int	nRet;
+  aq::tnode  *pNode;
+  int  nRet;
 
-	//
-	// Parse SQL request
-	{
+  //
+  // Parse SQL request
+  {
 
-		boost::mutex::scoped_lock lock(parserMutex);
-		aq::Logger::getInstance().log(AQ_INFO, "parse sql query: '%s'\n", query.c_str());
-		if ((nRet = SQLParse(query.c_str(), pNode)) != 0 )
-		{
-			aq::Logger::getInstance().log(AQ_ERROR, "error parsing sql request '%s'\n", query.c_str());
-			return EXIT_FAILURE;
-		}
+    boost::mutex::scoped_lock lock(parserMutex);
+    aq::Logger::getInstance().log(AQ_INFO, "parse sql query: '%s'\n", query.c_str());
+    if ((nRet = SQLParse(query.c_str(), pNode)) != 0 )
+    {
+      aq::Logger::getInstance().log(AQ_ERROR, "error parsing sql request '%s'\n", query.c_str());
+      return EXIT_FAILURE;
+    }
 
-	}
+  }
 
   boost::array<aq::tnode::tag_t, 6> categories_order = { { K_FROM, K_WHERE, K_SELECT, K_GROUP, K_HAVING, K_ORDER } };
-	aq::verb::VerbNode::Ptr spTree = aq::verb::VerbNode::BuildVerbsTree(pNode, categories_order, baseDesc, settings );
-	spTree->changeQuery();
-	aq::util::cleanQuery( pNode );
+  aq::verb::VerbNode::Ptr spTree = aq::verb::VerbNode::BuildVerbsTree(pNode, categories_order, baseDesc, settings );
+  spTree->changeQuery();
+  aq::util::cleanQuery( pNode );
 
-	settings->answerFile = aqMatrixFileName;
+  settings->answerFile = aqMatrixFileName;
 
-	boost::shared_ptr<aq::engine::AQMatrix> aqMatrix(new aq::engine::AQMatrix(settings, baseDesc));
-	std::vector<llong> tableIDs;
+  boost::shared_ptr<aq::engine::AQMatrix> aqMatrix(new aq::engine::AQMatrix(settings, baseDesc));
+  std::vector<llong> tableIDs;
 
-	aq::Timer timer;
-	std::vector<std::string> answerFile;
-	answerFile.push_back(aqMatrixFileName);
-	for (std::vector<std::string>::const_iterator it = answerFile.begin(); it != answerFile.end(); ++it)
-	{
-		aqMatrix->load((*it).c_str(), tableIDs);
-	}
-	// aqMatrix->simulate(113867938, 2);
-	// aqMatrix->simulate(10, 2);
-	// tableIDs.push_back(8);
-	aq::Logger::getInstance().log(AQ_INFO, "Load AQ Matrix: Elapsed Time = %s\n", aq::Timer::getString(timer.getTimeElapsed()).c_str());
+  aq::Timer timer;
+  std::vector<std::string> answerFile;
+  answerFile.push_back(aqMatrixFileName);
+  for (std::vector<std::string>::const_iterator it = answerFile.begin(); it != answerFile.end(); ++it)
+  {
+    aqMatrix->load((*it).c_str(), tableIDs);
+  }
+  // aqMatrix->simulate(113867938, 2);
+  // aqMatrix->simulate(10, 2);
+  // tableIDs.push_back(8);
+  aq::Logger::getInstance().log(AQ_INFO, "Load AQ Matrix: Elapsed Time = %s\n", aq::Timer::getString(timer.getTimeElapsed()).c_str());
 
-	boost::shared_ptr<aq::AQEngineSimulate> aqEngine(new aq::AQEngineSimulate(baseDesc, settings));
-	aqEngine->setAQMatrix(aqMatrix);
-	aqEngine->setTablesIDs(tableIDs);
+  boost::shared_ptr<aq::AQEngineSimulate> aqEngine(new aq::AQEngineSimulate(baseDesc, settings));
+  aqEngine->setAQMatrix(aqMatrix);
+  aqEngine->setTablesIDs(tableIDs);
 
   unsigned int id_generator = 1;
-	aq::QueryResolver queryResolver(pNode, settings, aqEngine, baseDesc, id_generator);
+  aq::QueryResolver queryResolver(pNode, settings, aqEngine, baseDesc, id_generator);
   queryResolver.solveAQMatrix(spTree);
 
-	return 0;
+  return 0;
 }
 
 // -------------------------------------------------------------------------------------------------
 int transform_query(const std::string& query, aq::Settings::Ptr settings, aq::Base::Ptr baseDesc)
 {
-	aq::tnode	*pNode;
-	int	nRet;
+  aq::tnode  *pNode;
+  int  nRet;
 
-	//
-	// Parse SQL request
-	{
+  //
+  // Parse SQL request
+  {
 
-		boost::mutex::scoped_lock lock(parserMutex);
-		aq::Logger::getInstance().log(AQ_INFO, "parse sql query %s\n", query.c_str());
-		if ((nRet = SQLParse(query.c_str(), pNode)) != 0 )
-		{
-			aq::Logger::getInstance().log(AQ_ERROR, "error parsing sql request '%s'\n", query.c_str());
-			return EXIT_FAILURE;
-		}
+    boost::mutex::scoped_lock lock(parserMutex);
+    aq::Logger::getInstance().log(AQ_INFO, "parse sql query %s\n", query.c_str());
+    if ((nRet = SQLParse(query.c_str(), pNode)) != 0 )
+    {
+      aq::Logger::getInstance().log(AQ_ERROR, "error parsing sql request '%s'\n", query.c_str());
+      return EXIT_FAILURE;
+    }
 
-	}
+  }
 
   boost::array<uint32_t, 6> categories_order = { { K_FROM, K_WHERE, K_SELECT, K_GROUP, K_HAVING, K_ORDER } };
-	aq::verb::VerbNode::Ptr spTree = aq::verb::VerbNode::BuildVerbsTree(pNode, categories_order, baseDesc, settings);
-	spTree->changeQuery();
-	aq::util::cleanQuery( pNode );
+  aq::verb::VerbNode::Ptr spTree = aq::verb::VerbNode::BuildVerbsTree(pNode, categories_order, baseDesc, settings);
+  spTree->changeQuery();
+  aq::util::cleanQuery( pNode );
 
-	std::string str;
-	aq::syntax_tree_to_aql_form(pNode, str);
+  std::string str;
+  aq::syntax_tree_to_aql_form(pNode, str);
   aq::parser::ParseJeq( str );
 
-	return 0;
+  return 0;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -327,10 +327,10 @@ int generate_tmp_table(const aq::Settings::Ptr settings, aq::base_t& baseDesc, u
 // -------------------------------------------------------------------------------------------------
 int prepareQuery(const std::string& query, const aq::Settings::Ptr settingsBase, aq::Base::Ptr baseDesc, aq::Settings::Ptr settings, std::string& displayFile, const std::string queryIdentStr, bool force)
 {
-	//
-	// generate ident and ini file
+  //
+  // generate ident and ini file
   std::string queryIdentTmp = queryIdentStr;
-	if (queryIdentTmp == "")
+  if (queryIdentTmp == "")
   {
     boost::uuids::uuid queryIdent = boost::uuids::random_generator()();
     std::ostringstream queryIdentOSS;
@@ -343,31 +343,31 @@ int prepareQuery(const std::string& query, const aq::Settings::Ptr settingsBase,
     settings->changeIdent(queryIdentTmp);
   }
 
-	//
-	// create directories
-	std::list<fs::path> lpaths;
-	lpaths.push_back(fs::path(settings->rootPath + "calculus/" + queryIdentTmp));
-	lpaths.push_back(fs::path(settings->tmpPath));
-	lpaths.push_back(fs::path(settings->dpyPath));
-	for (std::list<fs::path>::const_iterator dir = lpaths.begin(); dir != lpaths.end(); ++dir)
-	{
-		if (fs::exists(*dir))
-		{
+  //
+  // create directories
+  std::list<fs::path> lpaths;
+  lpaths.push_back(fs::path(settings->rootPath + "calculus/" + queryIdentTmp));
+  lpaths.push_back(fs::path(settings->tmpPath));
+  lpaths.push_back(fs::path(settings->dpyPath));
+  for (std::list<fs::path>::const_iterator dir = lpaths.begin(); dir != lpaths.end(); ++dir)
+  {
+    if (fs::exists(*dir))
+    {
       aq::Logger::getInstance().log(AQ_WARNING, "directory already exist '%s'\n", (*dir).string().c_str());
       if (!force)
       {
         return EXIT_FAILURE;
       }
-		}
-		else if (!fs::create_directory(*dir))
-		{
-			aq::Logger::getInstance().log(AQ_WARNING, "cannot create directory '%s'\n", (*dir).string().c_str());
+    }
+    else if (!fs::create_directory(*dir))
+    {
+      aq::Logger::getInstance().log(AQ_WARNING, "cannot create directory '%s'\n", (*dir).string().c_str());
       if (!force)
       {
         return EXIT_FAILURE;
       }
-		}
-	}
+    }
+  }
 
   //
   // write request file
@@ -376,18 +376,18 @@ int prepareQuery(const std::string& query, const aq::Settings::Ptr settingsBase,
   queryFile << query;
   queryFile.close();
 
-	//
-	// write ini file (it is needed for now by AQEngine)
-	std::ofstream iniFile(settings->iniFile.c_str());
-	settings->writeAQEngineIni(iniFile);
-	iniFile.close();
+  //
+  // write ini file (it is needed for now by AQEngine)
+  std::ofstream iniFile(settings->iniFile.c_str());
+  settings->writeAQEngineIni(iniFile);
+  iniFile.close();
 
-	// generate answer file
-	// displayFile = settings.szRootPath + "/calculus/" + queryIdentStr + "/display.txt"; // TODO
-	displayFile = settings->rootPath + "calculus/" + queryIdentStr + "/answer.txt"; // TODO
-	aq::Logger::getInstance().log(AQ_INFO, "save answer to %s\n", displayFile.c_str());
+  // generate answer file
+  // displayFile = settings.szRootPath + "/calculus/" + queryIdentStr + "/display.txt"; // TODO
+  displayFile = settings->rootPath + "calculus/" + queryIdentStr + "/answer.txt"; // TODO
+  aq::Logger::getInstance().log(AQ_INFO, "save answer to %s\n", displayFile.c_str());
 
-	return EXIT_SUCCESS;
+  return EXIT_SUCCESS;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -396,34 +396,34 @@ int processQuery(const std::string& query, aq::Settings::Ptr settings, aq::Base:
 {
   int rc = EXIT_SUCCESS;
 
-	try
-	{
+  try
+  {
 
-		aq::Logger::getInstance().log(AQ_INFO, "processing sql query\n");
+    aq::Logger::getInstance().log(AQ_INFO, "processing sql query\n");
 
-		aq::tnode	*pNode  = nullptr;
-		int	nRet;
+    aq::tnode  *pNode  = nullptr;
+    int  nRet;
 
-		//
-		// Parse SQL request
-		{
+    //
+    // Parse SQL request
+    {
 
-			boost::mutex::scoped_lock lock(parserMutex);
-			aq::Logger::getInstance().log(AQ_INFO, "parse sql query %s\n", query.c_str());
-			if ((nRet = SQLParse(query.c_str(), pNode)) != 0 )
-			{
-				aq::Logger::getInstance().log(AQ_ERROR, "error parsing sql request '%s'\n", query.c_str());
-				return EXIT_FAILURE;
-			}
+      boost::mutex::scoped_lock lock(parserMutex);
+      aq::Logger::getInstance().log(AQ_INFO, "parse sql query %s\n", query.c_str());
+      if ((nRet = SQLParse(query.c_str(), pNode)) != 0 )
+      {
+        aq::Logger::getInstance().log(AQ_ERROR, "error parsing sql request '%s'\n", query.c_str());
+        return EXIT_FAILURE;
+      }
 
 #if defined(_DEBUG) && defined(_TRACE)
-			std::cout << *pNode << std::endl;
+      std::cout << *pNode << std::endl;
 #endif
 
     }
 
     //
-		// Transform SQL request in prefix form,
+    // Transform SQL request in prefix form,
     if (pNode->tag == K_SELECT)
     {
       unsigned int id_generator = 1;
@@ -447,23 +447,23 @@ int processQuery(const std::string& query, aq::Settings::Ptr settings, aq::Base:
       aq::Logger::getInstance().log(AQ_INFO, "[%s] is not supported", aq::id_to_string(pNode->tag));
     }
 
-		delete pNode;
-	}
-	catch (const aq::generic_error& ge)
-	{
-		aq::Logger::getInstance().log(AQ_ERROR, "%s\n", ge.what());
-		rc = EXIT_FAILURE;
-	}
-	catch (const std::exception& ex)
-	{
-		aq::Logger::getInstance().log(AQ_ERROR, "%s\n", ex.what());
-		rc = EXIT_FAILURE;
-	}
-	catch (...)
-	{
-		aq::Logger::getInstance().log(AQ_ERROR, "unknown exception\n");
-		rc = EXIT_FAILURE;
-	}
+    delete pNode;
+  }
+  catch (const aq::generic_error& ge)
+  {
+    aq::Logger::getInstance().log(AQ_ERROR, "%s\n", ge.what());
+    rc = EXIT_FAILURE;
+  }
+  catch (const std::exception& ex)
+  {
+    aq::Logger::getInstance().log(AQ_ERROR, "%s\n", ex.what());
+    rc = EXIT_FAILURE;
+  }
+  catch (...)
+  {
+    aq::Logger::getInstance().log(AQ_ERROR, "unknown exception\n");
+    rc = EXIT_FAILURE;
+  }
 
   if (!keepFiles)
   {
@@ -473,7 +473,7 @@ int processQuery(const std::string& query, aq::Settings::Ptr settings, aq::Base:
     aq::util::DeleteFolder(settings->workingPath.c_str());
   }
 
-	return rc;
+  return rc;
 }
 
 // -------------------------------------------------------------------------------------------------

@@ -19,19 +19,19 @@ bool AggregateVerb::changeQuery(aq::tnode* pStart,
                                 VerbResult::Ptr resRight, 
                                 VerbResult::Ptr resNext )
 {
-	if ((this->getContext() != K_SELECT) && (this->getContext() != K_HAVING))
+  if ((this->getContext() != K_SELECT) && (this->getContext() != K_HAVING))
   {
-		throw generic_error( generic_error::AGGREGATE_NOT_IN_SELECT_OR_HAVING, "" );
+    throw generic_error( generic_error::AGGREGATE_NOT_IN_SELECT_OR_HAVING, "" );
   }
   pNode->tag = K_DELETED;
-	return resLeft != nullptr;
+  return resLeft != nullptr;
 }
 
 //------------------------------------------------------------------------------
-void AggregateVerb::changeResult(	Table::Ptr table, 
-									VerbResult::Ptr resLeft,
-									VerbResult::Ptr resRight,
-									VerbResult::Ptr resNext )
+void AggregateVerb::changeResult(  Table::Ptr table, 
+                  VerbResult::Ptr resLeft,
+                  VerbResult::Ptr resRight,
+                  VerbResult::Ptr resNext )
 {
 }
 

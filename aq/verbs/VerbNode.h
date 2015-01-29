@@ -25,8 +25,8 @@ class VerbNode: public Verb
 public:
   typedef boost::intrusive_ptr<VerbNode> Ptr;
 
-	VerbNode();
-	
+  VerbNode();
+  
   virtual bool preprocessQuery(aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal) { return false; }
   virtual bool changeQuery(aq::tnode* pStart, aq::tnode* pNode, VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext) { return false; }
   virtual void changeResult(Table::Ptr table, VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext) {}
@@ -51,13 +51,13 @@ public:
   /// \brief call change query 
   /// 
   //// childs are called in this order: brother, left then right
-	void changeQuery();
+  void changeQuery();
 
   /// \brief add a result row on verb tree, and process it
   /// \param row
   /// \fixme the call order is not sure (brother, right then left
   void addResultOnChild(aq::Row& row);
-	
+  
   virtual void accept(VerbVisitor*);
   
   /// \brief apply visitor in this order : brother, left then right
@@ -70,11 +70,11 @@ public:
   /// \param context
   /// \param BaseDesc
   /// \param settings
-	static VerbNode::Ptr build(aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal, tnode::tag_t context, Base::Ptr BaseDesc, Settings::Ptr settings);
+  static VerbNode::Ptr build(aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal, tnode::tag_t context, Base::Ptr BaseDesc, Settings::Ptr settings);
 
-	/// \brief build a subtree for each major category
+  /// \brief build a subtree for each major category
   /// \param pStart top node of query tree
-	/// \param categories_order order in which main verb are build (the last one will be executed first !)
+  /// \param categories_order order in which main verb are build (the last one will be executed first !)
   /// \param baseDesc base description
   /// \param settings settings
   /// \return the subtree builded
@@ -95,9 +95,9 @@ public:
   static void dump(std::ostream& os, VerbNode::Ptr tree, std::string ident = "");
 
 private:
-	aq::tnode* pStart; ///< top node in the query tree
-	aq::tnode* pNode; ///< node to which this VerbNode corresponds
-	VerbNode::Ptr left, right, brother; ///< childs
+  aq::tnode* pStart; ///< top node in the query tree
+  aq::tnode* pNode; ///< node to which this VerbNode corresponds
+  VerbNode::Ptr left, right, brother; ///< childs
   bool toSolve; ///< indicate is the verb need to be solved
 };
 

@@ -35,48 +35,48 @@ struct Settings
   
   mutable std::stringstream output;
 
-	std::string iniFile; ///< settings ini absolute file name
-	std::string queryIdent; ///< query ident. each query should have an unique identification (as uuid)
-	std::string outputFile; ///< the output file where result are written
-	std::string answerFile; ///< the answer file where result are written \deprecated
-	std::string dbDesc; ///< the database description file
-	std::string aqEngine; ///< aq engine file name executable
-	std::string aqLoader; ///< aq loader file name executable
+  std::string iniFile; ///< settings ini absolute file name
+  std::string queryIdent; ///< query ident. each query should have an unique identification (as uuid)
+  std::string outputFile; ///< the output file where result are written
+  std::string answerFile; ///< the answer file where result are written \deprecated
+  std::string dbDesc; ///< the database description file
+  std::string aqEngine; ///< aq engine file name executable
+  std::string aqLoader; ///< aq loader file name executable
   std::string aqHome; ///< algoquest databases root directory (path containing the directory database)
   std::string aqName; ///< algoquest database name
   std::string rootPath; ///< algoquest dabtabase root directory (aqHome/aqName/)
   std::string workingPath; ///< working directory for aq engine
-	std::string tmpRootPath; ///< temporary root working directory for aq engine
+  std::string tmpRootPath; ///< temporary root working directory for aq engine
   std::string dataPath; ///< data files directory (PRM, THESAURUSE, VDG, NMO and PRD files)
-	std::string tmpPath; ///< temporary directory for aq engine (containing temporary table from nested queries)
-	std::string dpyPath; ///< tempoaray display directory for aq engine (containing dpy/aq-matrix files)
+  std::string tmpPath; ///< temporary directory for aq engine (containing temporary table from nested queries)
+  std::string dpyPath; ///< tempoaray display directory for aq engine (containing dpy/aq-matrix files)
 
-	char fieldSeparator; ///< field separator of table loading files
-	static const int MAX_COLUMN_NAME_SIZE = 255;
-	
-	size_t worker; ///< number of pool thread to resolve several queries
-	size_t group_by_process_size; ///< number of thread to resolve aq matrix when a group by occur
+  char fieldSeparator; ///< field separator of table loading files
+  static const int MAX_COLUMN_NAME_SIZE = 255;
+  
+  size_t worker; ///< number of pool thread to resolve several queries
+  size_t group_by_process_size; ///< number of thread to resolve aq matrix when a group by occur
   size_t process_thread; ///< number of thread to resolve a query
-	
+  
   int packSize; ///< packet size of the database (see aq-engine specification for more explanation)
-	// int maxRecordSize; ///< \deprecated
+  // int maxRecordSize; ///< \deprecated
 
   /// \name settings_flags settings flags
   /// \todo use mask
   /// \{
-	bool computeAnswer;
-	bool csvFormat;
-	bool skipNestedQuery;
+  bool computeAnswer;
+  bool csvFormat;
+  bool skipNestedQuery;
   bool useBinAQMatrix;
   bool displayCount;
   bool cmdLine;
   bool trace;
   /// \}
 
-	AQENGINE_API Settings();
-	AQENGINE_API Settings(const Settings&);
-	AQENGINE_API ~Settings();
-	AQENGINE_API Settings& operator=(const Settings&);
+  AQENGINE_API Settings();
+  AQENGINE_API Settings(const Settings&);
+  AQENGINE_API ~Settings();
+  AQENGINE_API Settings& operator=(const Settings&);
 
   /// \brief initialize path
   /// \param root
@@ -86,18 +86,18 @@ struct Settings
   /// \param iniFile
   /// \param queryIdent
   AQENGINE_API void load(const std::string& iniFile, const std::string& queryIdent);
-	
+  
   /// \brief load ini file
   /// \param iniFile
   AQENGINE_API void load(const std::string& iniFile);
 
   /// \brief load ini stream
   /// \param is
-	AQENGINE_API void load(std::istream& is);
+  AQENGINE_API void load(std::istream& is);
 
   /// \brief change query ident
   /// \param queryIdent
-	AQENGINE_API void changeIdent(const std::string& queryIdent);
+  AQENGINE_API void changeIdent(const std::string& queryIdent);
 
   /// \brief dump settings
   /// \param os

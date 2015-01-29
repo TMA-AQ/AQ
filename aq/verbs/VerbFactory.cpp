@@ -12,14 +12,14 @@ VerbFactory::~VerbFactory()
 //------------------------------------------------------------------------------
 VerbFactory& VerbFactory::GetInstance()
 {
-	static VerbFactory Instance;
-	return Instance;
+  static VerbFactory Instance;
+  return Instance;
 }
 
 //------------------------------------------------------------------------------
 VerbNode::Ptr VerbFactory::getVerb(int verbType) const
 {
-	return this->builder->build(verbType);
+  return this->builder->build(verbType);
 }
 
 }

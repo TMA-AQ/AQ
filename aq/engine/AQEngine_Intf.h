@@ -13,7 +13,7 @@ namespace engine {
 class AQENGINE_API AQEngineCallback_Intf
 {
 public:
-	virtual void getValue(uint64_t key, size_t packet, uint8_t*& values, size_t& size) const = 0;
+  virtual void getValue(uint64_t key, size_t packet, uint8_t*& values, size_t& size) const = 0;
 };
 
 /// \brief Interface to call aq engine and get the result
@@ -29,7 +29,7 @@ public:
     NESTED_2
   };
 
-	virtual ~AQEngine_Intf() {}
+  virtual ~AQEngine_Intf() {}
   
   /// \brief prepare the call to aq engine (create files, directories, ...)
   virtual void prepare() const = 0;
@@ -53,10 +53,10 @@ public:
   /// \param[in] id unique identifier of the query
   /// \param[out] resultTables relation between table name and temporary table
   virtual void renameResult(unsigned int id, std::vector<std::pair<std::string, std::string> >& resultTables) = 0;
-	
+  
   /// \brief get the result aq matrix
   virtual AQMatrix::Ptr getAQMatrix() = 0;
-	
+  
   /// \deprecated
   /// \brief get table id in result
   /// \return a std::vector of table id

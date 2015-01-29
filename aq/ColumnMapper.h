@@ -20,57 +20,57 @@ template <typename T, class M>
 class ColumnMapper : public ColumnMapper_Intf<T>
 {
 public:
-	ColumnMapper(const char * path, size_t tableId, size_t columnId, size_t _size, size_t _packetSize, bool _cache = true, typename M::mode_t mode = M::mode_t::READ);
-	~ColumnMapper();
-	int loadValue(size_t index, T * value);
+  ColumnMapper(const char * path, size_t tableId, size_t columnId, size_t _size, size_t _packetSize, bool _cache = true, typename M::mode_t mode = M::mode_t::READ);
+  ~ColumnMapper();
+  int loadValue(size_t index, T * value);
   int setValue(size_t index, T * value);
   int append(T * value);
-	const std::vector<size_t>& getSimilarIndex(size_t index) const;
-	const aq::ColumnType getType() const { return type_conversion<T>::type; }
+  const std::vector<size_t>& getSimilarIndex(size_t index) const;
+  const aq::ColumnType getType() const { return type_conversion<T>::type; }
 private:
   size_t setPrmThe(size_t index);
   uint32_t updateThesaurus(T * value, size_t size);
   void updatePrm(size_t offset, int gap);
-	static const aq::ColumnType type;
-	size_t nbRemap;
-	size_t tableId;
-	size_t columnId;
+  static const aq::ColumnType type;
+  size_t nbRemap;
+  size_t tableId;
+  size_t columnId;
   size_t size;
-	size_t currentPart;
-	size_t packetSize;
-	const std::string path;
+  size_t currentPart;
+  size_t packetSize;
+  const std::string path;
   typename M::mode_t mode;
   bool cache;
-	boost::shared_ptr<M> prmMapper;
-	boost::shared_ptr<M> thesaurusMapper;
-	std::map<size_t, boost::shared_ptr<M> > prmMappers;
-	std::map<size_t, boost::shared_ptr<M> > thesaurusMappers;
+  boost::shared_ptr<M> prmMapper;
+  boost::shared_ptr<M> thesaurusMapper;
+  std::map<size_t, boost::shared_ptr<M> > prmMappers;
+  std::map<size_t, boost::shared_ptr<M> > thesaurusMappers;
   T * val;
 };
 
 template <typename T, class M>
 ColumnMapper<T, M>::ColumnMapper(const char * _path, size_t _tableId, size_t _columnId, size_t _size, size_t _packetSize, bool _cache, typename M::mode_t _mode)
-	: nbRemap(0),
-		tableId(_tableId),
-		columnId(_columnId),
+  : nbRemap(0),
+    tableId(_tableId),
+    columnId(_columnId),
     size(_size),
-		currentPart(0),
-		packetSize(_packetSize),
-		path(_path),
+    currentPart(0),
+    packetSize(_packetSize),
+    path(_path),
     mode(_mode),
     cache(_cache)
 {
-	std::string prmFilename = aq::Database::getPrmFileName(path.c_str(), tableId, columnId, currentPart);
-	std::string thesaurusFilename = aq::Database::getThesaurusFileName(path.c_str(), tableId, columnId, currentPart);
-	this->prmMapper.reset(new M(prmFilename.c_str(), mode));
-	this->thesaurusMapper.reset(new M(thesaurusFilename.c_str(), mode));
+  std::string prmFilename = aq::Database::getPrmFileName(path.c_str(), tableId, columnId, currentPart);
+  std::string thesaurusFilename = aq::Database::getThesaurusFileName(path.c_str(), tableId, columnId, currentPart);
+  this->prmMapper.reset(new M(prmFilename.c_str(), mode));
+  this->thesaurusMapper.reset(new M(thesaurusFilename.c_str(), mode));
   this->val = new T[size];
 }
 
 template <typename T, class M>
 ColumnMapper<T, M>::~ColumnMapper()
 {
-	aq::Logger::getInstance().log(AQ_DEBUG, "%u remaping\n", nbRemap);
+  aq::Logger::getInstance().log(AQ_DEBUG, "%u remaping\n", nbRemap);
   delete[] this->val;
 }
 
@@ -79,8 +79,8 @@ int ColumnMapper<T, M>::loadValue(size_t index, T * value)
 {
   int rc = 0;
   size_t i = this->setPrmThe(index);
-	uint32_t offset = 0;
-	if ((rc = this->prmMapper->read(&offset, i * sizeof(uint32_t), sizeof(uint32_t))) != -1)
+  uint32_t offset = 0;
+  if ((rc = this->prmMapper->read(&offset, i * sizeof(uint32_t), sizeof(uint32_t))) != -1)
   {
     if ((rc = this->thesaurusMapper->read(val, offset * size * sizeof(T), size * sizeof(T))) == 0)
     {
@@ -96,8 +96,8 @@ int ColumnMapper<T, M>::setValue(size_t index, T * value)
   int rc = 0;
   size_t i = this->setPrmThe(index);
 
-	uint32_t old_offset = 0;
-	uint32_t new_offset = 0;
+  uint32_t old_offset = 0;
+  uint32_t new_offset = 0;
 
   if ((rc = this->prmMapper->read(&old_offset, i * sizeof(uint32_t), sizeof(uint32_t))) != 0)
   {
@@ -152,36 +152,36 @@ int ColumnMapper<T, M>::append(T * value)
 
 template <typename T, class M>
 size_t ColumnMapper<T, M>::setPrmThe(size_t index)
-{	
+{  
   size_t part = index / packetSize;
-	size_t i = index % packetSize;
-	if (currentPart != part)
-	{
-		++nbRemap;
-		currentPart = part;
+  size_t i = index % packetSize;
+  if (currentPart != part)
+  {
+    ++nbRemap;
+    currentPart = part;
 
-		if (this->prmMappers.find(currentPart) == this->prmMappers.end())
-		{
-			std::string prmFilename = aq::Database::getPrmFileName(path.c_str(), tableId, columnId, currentPart);
-			std::string thesaurusFilename = aq::Database::getThesaurusFileName(path.c_str(), tableId, columnId, currentPart);
+    if (this->prmMappers.find(currentPart) == this->prmMappers.end())
+    {
+      std::string prmFilename = aq::Database::getPrmFileName(path.c_str(), tableId, columnId, currentPart);
+      std::string thesaurusFilename = aq::Database::getThesaurusFileName(path.c_str(), tableId, columnId, currentPart);
 
-			aq::Logger::getInstance().log(AQ_DEBUG, "open %s\n", prmFilename.c_str());
-			aq::Logger::getInstance().log(AQ_DEBUG, "open %s\n", thesaurusFilename.c_str());
+      aq::Logger::getInstance().log(AQ_DEBUG, "open %s\n", prmFilename.c_str());
+      aq::Logger::getInstance().log(AQ_DEBUG, "open %s\n", thesaurusFilename.c_str());
 
-			boost::filesystem::path p1(prmFilename);
-			if (!boost::filesystem::exists(p1))
-			{
+      boost::filesystem::path p1(prmFilename);
+      if (!boost::filesystem::exists(p1))
+      {
         throw aq::generic_error(aq::generic_error::COULD_NOT_OPEN_FILE, prmFilename.c_str());
-			}
+      }
 
-			boost::filesystem::path p2(thesaurusFilename);
+      boost::filesystem::path p2(thesaurusFilename);
       if (!boost::filesystem::exists(p2))
       {
         throw aq::generic_error(aq::generic_error::COULD_NOT_OPEN_FILE, thesaurusFilename.c_str());
-			}
+      }
 
-			this->prmMapper.reset(new M(prmFilename.c_str(), mode));
-			this->thesaurusMapper.reset(new M(thesaurusFilename.c_str(), mode));
+      this->prmMapper.reset(new M(prmFilename.c_str(), mode));
+      this->thesaurusMapper.reset(new M(thesaurusFilename.c_str(), mode));
 
       if (this->cache)
       {
@@ -189,12 +189,12 @@ size_t ColumnMapper<T, M>::setPrmThe(size_t index)
         this->thesaurusMappers.insert(std::make_pair(currentPart, this->thesaurusMapper));
       }
     }
-		else
-		{
-			this->prmMapper = this->prmMappers[currentPart];
-			this->thesaurusMapper = this->thesaurusMappers[currentPart];
-		}
-	}
+    else
+    {
+      this->prmMapper = this->prmMappers[currentPart];
+      this->thesaurusMapper = this->thesaurusMappers[currentPart];
+    }
+  }
   return i;
 }
 

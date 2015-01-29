@@ -19,7 +19,7 @@ namespace aq
     void createTable(const DatabaseGenerator::handle_t::tables_t::key_type& table);
     void insertValues(const DatabaseGenerator::handle_t::tables_t::value_type& values);
     bool execute(const aq::core::SelectStatement& ss, DatabaseIntf::result_t& r1);
-	std::string get_name() const { return "mysql"; }
+  std::string get_name() const { return "mysql"; }
   private:
     std::string              host;
     std::string              user;

@@ -165,32 +165,32 @@ std::string Database::getThesaurusFileName(size_t tableIdx, size_t columnIdx, si
 // static
 std::string Database::getPrmFileName(const char* path, size_t tableIdx, size_t columnIdx, size_t partIdx)
 {
-	return Database::getDataFileName(path, tableIdx, columnIdx, partIdx, "prm");
+  return Database::getDataFileName(path, tableIdx, columnIdx, partIdx, "prm");
 }
 
 // static
 std::string Database::getThesaurusFileName(const char* path, size_t tableIdx, size_t columnIdx, size_t partIdx)
 {
-	return Database::getDataFileName(path, tableIdx, columnIdx, partIdx, "the");
+  return Database::getDataFileName(path, tableIdx, columnIdx, partIdx, "the");
 }
 
 // static
 std::string Database::getDataFileName(const char * path, size_t tIdx, size_t cIdx, size_t pIdx, const char * ext)
 {
-	char szFN[ _MAX_PATH ];
-	if (path)
-		sprintf(szFN, "%sB001T%.4luC%.4luV01P%.12lu.%s", path, tIdx, cIdx, pIdx, ext);
-	else
-		sprintf(szFN, "B001T%.4luC%.4luV01P%.12lu.%s", tIdx, cIdx, pIdx, ext);
-	return szFN;
+  char szFN[ _MAX_PATH ];
+  if (path)
+    sprintf(szFN, "%sB001T%.4luC%.4luV01P%.12lu.%s", path, tIdx, cIdx, pIdx, ext);
+  else
+    sprintf(szFN, "B001T%.4luC%.4luV01P%.12lu.%s", tIdx, cIdx, pIdx, ext);
+  return szFN;
 }
 
 // static
 std::string Database::getTemporaryFileName(size_t tableIdx, size_t columnIdx, size_t partIdx, const char * type, size_t size)
 {
-	char szFN[ _MAX_PATH ];
+  char szFN[ _MAX_PATH ];
   sprintf(szFN, "B001TMP%.4luC%.4lu%s%.4luP%.12lu.TMP", tableIdx, columnIdx, type, size, partIdx);
-	return szFN;
+  return szFN;
 }
 
 }

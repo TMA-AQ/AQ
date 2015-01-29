@@ -17,49 +17,49 @@ using namespace aq::engine;
 namespace
 {
   
-	struct inner_column_cmp_t
-	{
-	public:
-		inner_column_cmp_t(const std::vector<size_t>& lessThanColumn)
-			: m_lessThanColumn(lessThanColumn)
-		{
-		}
-		bool operator()(size_t idx1, size_t idx2)
-		{
-			return m_lessThanColumn[idx1] < m_lessThanColumn[idx2];
-		}
-	private:
-		const std::vector<size_t>& m_lessThanColumn;
-	};
+  struct inner_column_cmp_t
+  {
+  public:
+    inner_column_cmp_t(const std::vector<size_t>& lessThanColumn)
+      : m_lessThanColumn(lessThanColumn)
+    {
+    }
+    bool operator()(size_t idx1, size_t idx2)
+    {
+      return m_lessThanColumn[idx1] < m_lessThanColumn[idx2];
+    }
+  private:
+    const std::vector<size_t>& m_lessThanColumn;
+  };
 
 }
 
 uint64_t AQMatrix::uid_generator = 0;
 
 AQMatrix::AQMatrix(const aq::Settings::Ptr _settings, const aq::Base::Ptr _baseDesc)
-	: settings(_settings),
+  : settings(_settings),
     baseDesc(_baseDesc),
-		totalCount(0),
+    totalCount(0),
     nbRows(0),
     nbRowsParsed(0),
     nbPacket(0),
     packet(0),
     rowCountCheck(0),
-		hasCount(false)
+    hasCount(false)
 {
   uid = ++AQMatrix::uid_generator;
 }
 
 AQMatrix::AQMatrix(const AQMatrix& source)
-	: settings(source.settings),
-	  baseDesc(source.baseDesc),
-	  totalCount(source.totalCount),
-	  nbRows(source.nbRows),
+  : settings(source.settings),
+    baseDesc(source.baseDesc),
+    totalCount(source.totalCount),
+    nbRows(source.nbRows),
     nbRowsParsed(0),
     nbPacket(0),
     packet(0),
     rowCountCheck(0),
-		hasCount(source.hasCount)
+    hasCount(source.hasCount)
 {
 }
 
@@ -69,26 +69,26 @@ AQMatrix::~AQMatrix()
 
 AQMatrix& AQMatrix::operator=(const AQMatrix& source)
 {
-	if (this != &source)
-	{
-		totalCount = source.totalCount;
-		nbRows = source.nbRows;
-		hasCount = source.hasCount;
-		nbRowsParsed = source.nbRowsParsed;
-		nbPacket = source.nbPacket;
-		packet = source.packet;
-	}
-	return *this;
+  if (this != &source)
+  {
+    totalCount = source.totalCount;
+    nbRows = source.nbRows;
+    hasCount = source.hasCount;
+    nbRowsParsed = source.nbRowsParsed;
+    nbPacket = source.nbPacket;
+    packet = source.packet;
+  }
+  return *this;
 }
 
 void AQMatrix::clear()
 {
   matrix.clear();
-	count.clear();
+  count.clear();
   groupByIndex.clear();
-	totalCount = 0;
-	nbRows = 0;
-	hasCount = false;
+  totalCount = 0;
+  nbRows = 0;
+  hasCount = false;
 }
 
 void AQMatrix::write(const char * filePath)
@@ -246,7 +246,7 @@ void AQMatrix::loadNextPacket()
       this->matrix[c].indexes.push_back(index);
     }
     fread(&value, sizeof(uint64_t), 1, fdc);
-	this->count.push_back(value);
+  this->count.push_back(value);
     this->rowCountCheck += value;
   }
 
@@ -261,13 +261,13 @@ void AQMatrix::loadNextPacket()
     assert(this->nbRows == this->count.size());
     if (this->totalCount != this->rowCountCheck)
     {
-	  Logger::getInstance().log(AQ_WARNING, "bad matrix data file [count_expected:%u] [count_get:%u]", this->totalCount, this->rowCountCheck);
-	  // exit(EXIT_FAILURE);
+    Logger::getInstance().log(AQ_WARNING, "bad matrix data file [count_expected:%u] [count_get:%u]", this->totalCount, this->rowCountCheck);
+    // exit(EXIT_FAILURE);
       // throw aq::generic_error(aq::generic_error::AQ_ENGINE, "bad matrix data file [count_expected:%u] [count_get:%u]", this->totalCount, this->rowCountCheck);
     }
     if (this->nbRows != this->count.size())
     {
-	  Logger::getInstance().log(AQ_WARNING, "bad matrix data file [nb_rows:%u] [nb_count:%u]", this->nbRows, this->count.size());
+    Logger::getInstance().log(AQ_WARNING, "bad matrix data file [nb_rows:%u] [nb_count:%u]", this->nbRows, this->count.size());
       // throw aq::generic_error(aq::generic_error::AQ_ENGINE, "bad matrix data file [nb_rows:%u] [nb_count:%u]", this->nbRows, this->count.size());
     }
   }

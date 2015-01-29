@@ -16,7 +16,7 @@ class Base
 {
 public:
   typedef boost::shared_ptr<Base> Ptr;
-	typedef std::vector<Table::Ptr> tables_t;
+  typedef std::vector<Table::Ptr> tables_t;
   
   Base();
   Base(const Base& source);
@@ -25,9 +25,9 @@ public:
   Base& operator=(const Base& source);
   
 
-	void loadFromBaseDesc( const aq::base_t& base );
+  void loadFromBaseDesc( const aq::base_t& base );
   void dumpRaw(std::ostream& os) const;
-	void dumpXml(std::ostream& os) const;
+  void dumpXml(std::ostream& os) const;
 
   void clear();
 
@@ -36,13 +36,13 @@ public:
   const std::string& getName() const { return this->Name; }
   
   Table::Ptr getTable(size_t id);
-	Table::Ptr getTable(const std::string& name) ;
+  Table::Ptr getTable(const std::string& name) ;
   const Table::Ptr getTable(size_t id) const;
-	const Table::Ptr getTable(const std::string& name) const;
+  const Table::Ptr getTable(const std::string& name) const;
   
 private:
-	tables_t    Tables;
-	std::string Name;
+  tables_t    Tables;
+  std::string Name;
 };
 
 }

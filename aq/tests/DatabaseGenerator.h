@@ -37,14 +37,14 @@ namespace aq
     };
   public:
     DatabaseGenerator(
-		const std::list<std::string>& tables, 
-		size_t nb_rows, 
-		int min_values, 
-		int max_values, 
-		point_mode_t mode, 
-		gen_mode_t gen_mode, 
-		value_mode_t _value_mode,
-		bool _stop_on_error);
+    const std::list<std::string>& tables, 
+    size_t nb_rows, 
+    int min_values, 
+    int max_values, 
+    point_mode_t mode, 
+    gen_mode_t gen_mode, 
+    value_mode_t _value_mode,
+    bool _stop_on_error);
     ~DatabaseGenerator();
     size_t generate(handle_t * cb);
     size_t getNbDB() const;
@@ -63,7 +63,7 @@ namespace aq
     point_mode_t mode;
     gen_mode_t gen_mode;
     value_mode_t value_mode;
-	bool stop_on_error;
+  bool stop_on_error;
   };
 
 }

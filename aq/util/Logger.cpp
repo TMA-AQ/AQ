@@ -75,9 +75,9 @@ Logger::Logger(const char *_ident, int _mode)
   else if (this->mode & LOCALFILE)
   {
     if (this->openFile(_ident) != 0)
-		{
-			this->mode = STDOUT;
-		}
+    {
+      this->mode = STDOUT;
+    }
   }
 }
 
@@ -98,15 +98,15 @@ Logger::~Logger()
 
 void Logger::setLocalFile(const char * filename)
 {
-	if (this->localFile)
-	{
-		this->closeFile();
-	}
-	this->mode = LOCALFILE;
-	if (this->openFile(filename) != 0)
-	{
-		this->mode = STDOUT;
-	}
+  if (this->localFile)
+  {
+    this->closeFile();
+  }
+  this->mode = LOCALFILE;
+  if (this->openFile(filename) != 0)
+  {
+    this->mode = STDOUT;
+  }
 }
 
 void Logger::log(const char *file, const char *function, unsigned int line, int facility, const char *format, ...) const
@@ -250,13 +250,13 @@ void Logger::printWithColor(const char * buf, int facility) const
 int Logger::openFile(const char * name)
 {
   this->localFile = fopen(name, "a");
-	if (localFile == nullptr)
-		return -1;
-	return 0;
+  if (localFile == nullptr)
+    return -1;
+  return 0;
 }
 
 void Logger::closeFile(void)
-{	
+{  
   boost::mutex::scoped_lock lock(this->mutex);
   fclose(this->localFile);
 }

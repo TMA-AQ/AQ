@@ -31,38 +31,38 @@ Table::Table(const std::string& _name, unsigned int _id, uint64_t _totalCount)
   NoAnswer(false),
   temporary(false)
 {
-	this->setName(_name);
-	memset(szBuffer, 0, STR_BUF_SIZE);
+  this->setName(_name);
+  memset(szBuffer, 0, STR_BUF_SIZE);
 }
 
 //------------------------------------------------------------------------------
 Table::Table(const std::string& _name, unsigned int _id, uint64_t _totalCount, bool _temporary)
   : 
-	ID(ID), 
-	HasCount(_totalCount), 
-	TotalCount(0), 
-	GroupByApplied(false), 
-	OrderByApplied(false),
-	NoAnswer(false),
+  ID(ID), 
+  HasCount(_totalCount), 
+  TotalCount(0), 
+  GroupByApplied(false), 
+  OrderByApplied(false),
+  NoAnswer(false),
   temporary(_temporary)
 {
-	this->setName(_name);
-	memset(szBuffer, 0, STR_BUF_SIZE);
+  this->setName(_name);
+  memset(szBuffer, 0, STR_BUF_SIZE);
 }
 
 //------------------------------------------------------------------------------
 Table::Table(const Table& source)
   : 
-	ID(source.ID), 
-	HasCount(source.HasCount), 
-	TotalCount(source.TotalCount), 
-	GroupByApplied(source.GroupByApplied), 
-	OrderByApplied(source.OrderByApplied),
-	NoAnswer(source.NoAnswer),
+  ID(source.ID), 
+  HasCount(source.HasCount), 
+  TotalCount(source.TotalCount), 
+  GroupByApplied(source.GroupByApplied), 
+  OrderByApplied(source.OrderByApplied),
+  NoAnswer(source.NoAnswer),
   temporary(source.temporary)
 {
   this->setName(source.Name);
-	memset(szBuffer, 0, STR_BUF_SIZE);
+  memset(szBuffer, 0, STR_BUF_SIZE);
   for (auto& c : source.Columns)
   {
     Column::Ptr column(new Column(*c));
@@ -117,37 +117,37 @@ Column::Ptr Table::getColumn(const std::string& columnName) const
 //------------------------------------------------------------------------------
 int Table::getColumnIdx( const std::string& name ) const
 {
-	std::string auxName = name;
-	boost::to_upper(auxName);
-	boost::trim(auxName);
-	for( size_t idx = 0; idx < this->Columns.size(); ++idx )
-		if( auxName == this->Columns[idx]->getName() )
-			return static_cast<int>(idx);
-	return -1;
+  std::string auxName = name;
+  boost::to_upper(auxName);
+  boost::trim(auxName);
+  for( size_t idx = 0; idx < this->Columns.size(); ++idx )
+    if( auxName == this->Columns[idx]->getName() )
+      return static_cast<int>(idx);
+  return -1;
 }
 
 //------------------------------------------------------------------------------
 std::vector<Column::Ptr> Table::getColumnsByName( std::vector<Column::Ptr>& columns ) const
 {
-	std::vector<Column::Ptr> correspondingColumns;
-	for( size_t idx = 0; idx < columns.size(); ++idx )
-	{
-		bool found = false;
-		for( size_t idx2 = 0; idx2 < this->Columns.size(); ++idx2 )
+  std::vector<Column::Ptr> correspondingColumns;
+  for( size_t idx = 0; idx < columns.size(); ++idx )
+  {
+    bool found = false;
+    for( size_t idx2 = 0; idx2 < this->Columns.size(); ++idx2 )
     {
-			if( columns[idx]->getName() == this->Columns[idx2]->getName() )
-			{
-				correspondingColumns.push_back( this->Columns[idx2] );
-				found = true;
-				break;
-			}
+      if( columns[idx]->getName() == this->Columns[idx2]->getName() )
+      {
+        correspondingColumns.push_back( this->Columns[idx2] );
+        found = true;
+        break;
+      }
     }
-		if( !found )
-		{
+    if( !found )
+    {
       throw generic_error(generic_error::INVALID_QUERY, "");
-		}
-	}
-	return correspondingColumns;
+    }
+  }
+  return correspondingColumns;
 }
 
 //------------------------------------------------------------------------------
@@ -159,21 +159,21 @@ void Table::setName( const std::string& name )
     boost::to_upper(this->OriginalName);
     boost::trim(this->OriginalName);
   }
-	this->Name = name;
-	boost::to_upper(this->Name);
-	boost::trim(this->Name);
+  this->Name = name;
+  boost::to_upper(this->Name);
+  boost::trim(this->Name);
 }
 
 //------------------------------------------------------------------------------
 const std::string& Table::getName() const
 {
-	return this->Name;
+  return this->Name;
 }
 
 //------------------------------------------------------------------------------
 const std::string& Table::getOriginalName() const
 {
-	return this->OriginalName;
+  return this->OriginalName;
 }
 
 //------------------------------------------------------------------------------

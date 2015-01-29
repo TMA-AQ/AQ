@@ -15,7 +15,7 @@ void QueryGenerator::parse(std::istream& is, std::string& base, ops_t& ops, iden
   {
     boost::erase_all(line, "\n");
     boost::trim(line);
-		if (line.find('=') != std::string::npos)
+    if (line.find('=') != std::string::npos)
     {
       std::vector<std::string> op_2_values;
       std::vector<std::string> values;
@@ -24,20 +24,20 @@ void QueryGenerator::parse(std::istream& is, std::string& base, ops_t& ops, iden
         throw; // todo
       boost::trim(op_2_values[0]);
       boost::trim_if(op_2_values[1], boost::is_any_of(" []"));
-			values = boost::split(values, op_2_values[1], boost::is_any_of(","));
-			for (auto& v : values)
+      values = boost::split(values, op_2_values[1], boost::is_any_of(","));
+      for (auto& v : values)
         boost::trim_if(v, boost::is_any_of(" '"));
-			ops.insert(std::make_pair(op_2_values[0], values));
+      ops.insert(std::make_pair(op_2_values[0], values));
     }
-		else if (line != "")
+    else if (line != "")
     {
       base += line + "\n";
     }
-		if (line.find(';') != std::string::npos)
-			break;
+    if (line.find(';') != std::string::npos)
+      break;
   }
 
-	for (const auto& op : ops)
+  for (const auto& op : ops)
   {
     std::string s("\\[" + op.first + "_[0-9]+\\]");
     boost::regex regex(s);

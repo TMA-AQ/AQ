@@ -13,15 +13,15 @@ public:
   void prepare() const;
   void clean() const;
   void call(const std::string& query, aq::engine::AQEngine_Intf::mode_t mode);
-	void call(const aq::core::SelectStatement& stmt, aq::engine::AQEngine_Intf::mode_t mode);
+  void call(const aq::core::SelectStatement& stmt, aq::engine::AQEngine_Intf::mode_t mode);
   void renameResult(unsigned int id, std::vector<std::pair<std::string, std::string> >& resultTables); 
-	boost::shared_ptr<aq::engine::AQMatrix> getAQMatrix();
-	const std::vector<llong>& getTablesIDs() const;
+  boost::shared_ptr<aq::engine::AQMatrix> getAQMatrix();
+  const std::vector<llong>& getTablesIDs() const;
 private:
   aq::Base::Ptr base;
   aq::Settings::Ptr settings;
   aq::engine::AQMatrix::Ptr matrix;
-	std::vector<llong> tableIDs;
+  std::vector<llong> tableIDs;
 };
 
 }

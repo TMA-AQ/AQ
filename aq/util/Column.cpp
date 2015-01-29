@@ -13,84 +13,84 @@ namespace aq
 
 //------------------------------------------------------------------------------
 Column::Column()
-	:	
+  :  
   TableID(0),
-	ID(0), 
-	Size(0), 
-	Type(COL_TYPE_INT), 
-	prmFileItemSize(4),
-	currentNumPack(-1),
-	packOffset(0),
-	nBinItemSize(0),
-	Invisible(false), 
-	GroupBy(false), 
-	OrderBy(false),
+  ID(0), 
+  Size(0), 
+  Type(COL_TYPE_INT), 
+  prmFileItemSize(4),
+  currentNumPack(-1),
+  packOffset(0),
+  nBinItemSize(0),
+  Invisible(false), 
+  GroupBy(false), 
+  OrderBy(false),
   Temporary(false)
 {
-	this->setBinItemSize();
+  this->setBinItemSize();
 }
 
 //------------------------------------------------------------------------------
-Column::Column(	const std::string& name, unsigned int ID, unsigned int size, ColumnType type)
-	: 
+Column::Column(  const std::string& name, unsigned int ID, unsigned int size, ColumnType type)
+  : 
   TableID(0),
-	ID(ID), 
-	Size(size), 
-	Type(type),
-	prmFileItemSize(4),
-	currentNumPack(-1),
-	packOffset(0),
-	nBinItemSize(0),
-	Invisible(false), 
-	GroupBy(false), 
-	OrderBy(false),
+  ID(ID), 
+  Size(size), 
+  Type(type),
+  prmFileItemSize(4),
+  currentNumPack(-1),
+  packOffset(0),
+  nBinItemSize(0),
+  Invisible(false), 
+  GroupBy(false), 
+  OrderBy(false),
   Temporary(false)
 {
-	this->setBinItemSize();
-	this->setName( name );
+  this->setBinItemSize();
+  this->setName( name );
 }
 
 //------------------------------------------------------------------------------
 Column::Column( ColumnType type )
-	: 
+  : 
   TableID(0),
-	ID(0),
-	Size(0),
-	Type(type),
-	prmFileItemSize(4),
-	currentNumPack(-1),
-	packOffset(0),
-	nBinItemSize(0),
-	Invisible(false), 
-	GroupBy(false),
-	OrderBy(false),
+  ID(0),
+  Size(0),
+  Type(type),
+  prmFileItemSize(4),
+  currentNumPack(-1),
+  packOffset(0),
+  nBinItemSize(0),
+  Invisible(false), 
+  GroupBy(false),
+  OrderBy(false),
   Temporary(false)
 {
-	this->setBinItemSize();
+  this->setBinItemSize();
 }
 
 //------------------------------------------------------------------------------
 Column::Column( const Column& source )
-	:
+  :
   TableID(source.TableID),
-	ID(source.ID),
-	Size(source.Size),
-	Type(source.Type),
-	Name(source.Name),
-	OriginalName(source.OriginalName),
-	DisplayName(source.DisplayName),
-	Count(source.Count),
-	TableName(source.TableName),
-	prmFileItemSize(source.prmFileItemSize),
-	currentNumPack(source.currentNumPack),
-	packOffset(source.packOffset),
-	nBinItemSize(source.nBinItemSize),
-	Invisible(false),
-	GroupBy(false),
-	OrderBy(false),
+  ID(source.ID),
+  Size(source.Size),
+  Type(source.Type),
+  Name(source.Name),
+  OriginalName(source.OriginalName),
+  DisplayName(source.DisplayName),
+  Count(source.Count),
+  TableName(source.TableName),
+  prmFileItemSize(source.prmFileItemSize),
+  currentNumPack(source.currentNumPack),
+  packOffset(source.packOffset),
+  nBinItemSize(source.nBinItemSize),
+  Invisible(false),
+  GroupBy(false),
+  OrderBy(false),
   Temporary(source.Temporary)
 {
-	this->setBinItemSize();
+  this->setBinItemSize();
 }
 
 //----------------------------------------------------------------------------
@@ -101,46 +101,46 @@ Column::~Column()
 //------------------------------------------------------------------------------
 Column& Column::operator=(const Column& source)
 {
-	if (this != &source)
-	{
+  if (this != &source)
+  {
     this->TableID = source.TableID;
-		this->ID = source.ID;
-		this->Size = source.Size;
-		this->Type = source.Type;
-		this->Invisible = false;
-		this->GroupBy = false;
-		this->OrderBy = false;
+    this->ID = source.ID;
+    this->Size = source.Size;
+    this->Type = source.Type;
+    this->Invisible = false;
+    this->GroupBy = false;
+    this->OrderBy = false;
     this->Temporary = source.Temporary;
-		this->Name = source.Name;
-		this->OriginalName = source.OriginalName;
-		this->DisplayName = source.DisplayName;
-		this->Count = source.Count;
-		this->TableName = source.TableName;
-		this->prmFileItemSize = source.prmFileItemSize;
-		this->currentNumPack = source.currentNumPack,
-		this->packOffset = source.packOffset;
-		this->nBinItemSize = source.nBinItemSize;
-		this->setBinItemSize();
-	}
-	return *this;
+    this->Name = source.Name;
+    this->OriginalName = source.OriginalName;
+    this->DisplayName = source.DisplayName;
+    this->Count = source.Count;
+    this->TableName = source.TableName;
+    this->prmFileItemSize = source.prmFileItemSize;
+    this->currentNumPack = source.currentNumPack,
+    this->packOffset = source.packOffset;
+    this->nBinItemSize = source.nBinItemSize;
+    this->setBinItemSize();
+  }
+  return *this;
 }
 
 void Column::setBinItemSize()
 {
-	switch( this->Type )
-	{
-	case COL_TYPE_INT:
-		nBinItemSize	= 4;
-		break;
-	case COL_TYPE_BIG_INT:
-	case COL_TYPE_DATE:
-	case COL_TYPE_DOUBLE:
-		nBinItemSize	= 8;
-		break;
-	case COL_TYPE_VARCHAR:
-		nBinItemSize	= this->Size;
-		break;
-	}
+  switch( this->Type )
+  {
+  case COL_TYPE_INT:
+    nBinItemSize  = 4;
+    break;
+  case COL_TYPE_BIG_INT:
+  case COL_TYPE_DATE:
+  case COL_TYPE_DOUBLE:
+    nBinItemSize  = 8;
+    break;
+  case COL_TYPE_VARCHAR:
+    nBinItemSize  = this->Size;
+    break;
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -153,59 +153,59 @@ void Column::setName( const std::string& name )
     boost::trim(this->OriginalName);
   }
   this->Name = name;
-	boost::to_upper(this->Name);
-	boost::trim(this->Name);
+  boost::to_upper(this->Name);
+  boost::trim(this->Name);
 }
 
 //------------------------------------------------------------------------------
 void Column::setDisplayName( const std::string& name )
 {
-	this->DisplayName = name;
+  this->DisplayName = name;
 }
 
 //------------------------------------------------------------------------------
 void Column::setOriginalName( const std::string& name )
 {
-	this->OriginalName = name;
+  this->OriginalName = name;
 }
 
 //------------------------------------------------------------------------------
 std::string& Column::getName()
 {
-	return this->Name;
+  return this->Name;
 }
 
 //------------------------------------------------------------------------------
 std::string& Column::getOriginalName()
 {
-	return this->OriginalName;
+  return this->OriginalName;
 }
 
 
 //------------------------------------------------------------------------------
 std::string& Column::getDisplayName()
 {
-	if( this->DisplayName == "" )
-		if( this->OriginalName == "" )
-			return this->Name;
-		else
-			return this->OriginalName;
-	else
-		return this->DisplayName;
+  if( this->DisplayName == "" )
+    if( this->OriginalName == "" )
+      return this->Name;
+    else
+      return this->OriginalName;
+  else
+    return this->DisplayName;
 }
 
 //------------------------------------------------------------------------------
 void Column::setTableName( const std::string& name )
 {
-	this->TableName = name;
-	boost::to_upper(this->TableName);
-	boost::trim(this->TableName);
+  this->TableName = name;
+  boost::to_upper(this->TableName);
+  boost::trim(this->TableName);
 }
 
 //------------------------------------------------------------------------------
 std::string& Column::getTableName()
 {
-	return this->TableName;
+  return this->TableName;
 }
 
 //------------------------------------------------------------------------------

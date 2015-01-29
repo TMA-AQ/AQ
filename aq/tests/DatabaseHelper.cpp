@@ -193,13 +193,13 @@ bool AlgoQuestDatabase::execute(const aq::core::SelectStatement& ss, DatabaseInt
       aq::engine::AQEngine_Intf::Ptr engine(aq::engine::getAQEngineSystem(base, settings));
       engine->prepare();
 
-	  static aq::Timer timer;
-	  timer.start();
+    static aq::Timer timer;
+    timer.start();
       engine->call(ss);
-	  timer.stop();
-	  //std::cout << "engine:" << aq::Timer::getString(timer.getTimeElapsed()) << std::endl;
+    timer.stop();
+    //std::cout << "engine:" << aq::Timer::getString(timer.getTimeElapsed()) << std::endl;
       
-	  engine->clean();
+    engine->clean();
       auto matrix = engine->getAQMatrix();
       if (matrix != nullptr)
       {
@@ -209,12 +209,12 @@ bool AlgoQuestDatabase::execute(const aq::core::SelectStatement& ss, DatabaseInt
         o.withCount = o.withIndex = false;
         for (const auto& c : ss.selectedTables)
           columns.push_back(c.table.name + "." + c.name);
-		
-		static aq::Timer timer;
-		timer.start();
+    
+    static aq::Timer timer;
+    timer.start();
         aq::display(cb.get(), matrix, base, settings, o, columns);
-		timer.stop();
-		//std::cout << "display:" << aq::Timer::getString(timer.getTimeElapsed()) << std::endl;
+    timer.stop();
+    //std::cout << "display:" << aq::Timer::getString(timer.getTimeElapsed()) << std::endl;
       }
     }
     catch (const aq::generic_error& ge)

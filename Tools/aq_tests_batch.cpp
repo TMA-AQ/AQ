@@ -65,7 +65,7 @@ struct Runner : public aq::DatabaseGenerator::handle_t
       std::string point_mode;
       std::string gen_mode;
       std::string value_mode;
-	  std::string report_filename = "report.xml";
+    std::string report_filename = "report.xml";
 
       boost::filesystem::path iniFile("aq.ini");
       if (boost::filesystem::exists(iniFile))
@@ -95,8 +95,8 @@ struct Runner : public aq::DatabaseGenerator::handle_t
       all.add_options()
         ("help,h", "produce help message")
         ("settings,s", "")
-		("report", po::value<std::string>(&report_filename)->default_value("report.xml"), "report filename")
-		("stop-on-error", po::bool_switch(&opt->stop_on_error), "")
+    ("report", po::value<std::string>(&report_filename)->default_value("report.xml"), "report filename")
+    ("stop-on-error", po::bool_switch(&opt->stop_on_error), "")
         ;
 
       po::options_description log_options("Logging");
@@ -152,8 +152,8 @@ struct Runner : public aq::DatabaseGenerator::handle_t
 
       aq::Logger::getInstance().setLevel(log_level);
       aq::verb::VerbFactory::GetInstance().setBuilder(boost::shared_ptr<aq::VerbBuilder>(new aq::VerbBuilder));
-	  
-	  report.reset(new aq::Report(report_filename));
+    
+    report.reset(new aq::Report(report_filename));
 
       opt->point_mode = (point_mode == "FULL") ? aq::DatabaseGenerator::point_mode_t::FULL : aq::DatabaseGenerator::point_mode_t::MIN_MAX;
       opt->gen_mode = (gen_mode == "ALL") ? aq::DatabaseGenerator::gen_mode_t::ALL : aq::DatabaseGenerator::gen_mode_t::INTERSECT;
@@ -191,9 +191,9 @@ struct Runner : public aq::DatabaseGenerator::handle_t
       }
 
       gen.reset(new aq::DatabaseGenerator(
-		  tables, opt->nb_rows, opt->min_value, opt->max_value, 
-		  opt->point_mode, opt->gen_mode, opt->value_mode, opt->stop_on_error));
-	  
+      tables, opt->nb_rows, opt->min_value, opt->max_value, 
+      opt->point_mode, opt->gen_mode, opt->value_mode, opt->stop_on_error));
+    
       tc.reset(new aq::TestCase(report));
       aq::Settings::Ptr settings(new aq::Settings);
       settings->initPath(opt->aq_path + "/" + opt->aq_name);
@@ -258,12 +258,12 @@ struct Runner : public aq::DatabaseGenerator::handle_t
       tc->insertValues(table);
     }
 
-	report->new_db(tables);
+  report->new_db(tables);
 
     std::string aqlQuery;
     aq::DatabaseIntf::result_t result;
     size_t nb_queries = 0;
-	std::cout << "check queries" << std::endl;
+  std::cout << "check queries" << std::endl;
     for (const auto& gen : queriesGenerators) 
     {
       gen->reset();
@@ -290,12 +290,12 @@ struct Runner : public aq::DatabaseGenerator::handle_t
         if (!tc->execute(ss, result)) 
         { 
           std::cout << "E";
-		  report->error(ss);
+      report->error(ss);
         }
         else 
         { 
           std::cout << ".";
-		  // report->success(ss);
+      // report->success(ss);
         }
       }
     }
@@ -308,7 +308,7 @@ struct Runner : public aq::DatabaseGenerator::handle_t
       << std::endl;
     assert((tc->getNbSuccess() + tc->getNbFailure()) == nb_queries);
     assert(tc->getNbTests() == nb_queries);
-	return tc->getNbFailure();
+  return tc->getNbFailure();
   }
 
   boost::shared_ptr<aq::TestCase::opt_t> opt;
@@ -330,6 +330,6 @@ int main(int argc, char * argv[])
     rc = runner.run();
     std::cout << runner.nb_tests << " databases tests performed in " << aq::Timer::getString(timer.getTimeElapsed()) << std::endl;
   }
-	return rc;
+  return rc;
 }
 

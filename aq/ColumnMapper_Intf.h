@@ -22,14 +22,14 @@ template <typename T>
 class ColumnMapper_Intf
 {
 public:
-	typedef boost::shared_ptr<ColumnMapper_Intf> Ptr;
+  typedef boost::shared_ptr<ColumnMapper_Intf> Ptr;
   virtual ~ColumnMapper_Intf() {}
 
   /// \brief load an item
   /// \param index the position in the column
   /// \param value a pointer holding the value to load
   /// \return 0 if succeed, -1 otherwise
-	virtual int loadValue(size_t index, T * value) = 0;
+  virtual int loadValue(size_t index, T * value) = 0;
   
   /// \brief set an item
   /// \param index the position in the column
