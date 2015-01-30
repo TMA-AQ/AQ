@@ -38,7 +38,6 @@ ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 file(GLOB aq_util_source_files aq/util/*.cpp)
 file(GLOB aq_engine_source_files aq/engine/AQEngine.cpp aq/engine/AQMatrix.cpp)
 file(GLOB_RECURSE aq_query_resolver_source_files aq/parser/SQL92_Tok.l aq/parser/SQL92_Grm.y aq/*.cpp)
-list(APPEND aq_query_resolver_source "aq/parser/sql92_grm_tab.cpp")
 list(REMOVE_ITEM aq_query_resolver_source_files ${aq_util_source_files})
 list(REMOVE_ITEM aq_query_resolver_source_files ${aq_engine_source_files})
 
@@ -49,6 +48,11 @@ file(GLOB exclude_files "aq/tests/WhereComparator.cpp"
 list(REMOVE_ITEM aq_util_source_files ${exclude_files})
 list(REMOVE_ITEM aq_query_resolver_source_files ${exclude_files})
 
+# remove previous generated files from list
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/sql92_grm_tab.cpp")
+  file(GLOB exclude_files "aq/parser/sql92_grm_tab.cpp")
+  list(REMOVE_ITEM aq_query_resolver_source_files ${exclude_files})
+endif()
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/lex.yy.cpp")
   file(GLOB exclude_files "aq/parser/lex.yy.cpp")
   list(REMOVE_ITEM aq_query_resolver_source_files ${exclude_files})
@@ -60,23 +64,21 @@ ADD_CUSTOM_TARGET(SQL_PARSER echo "Creating sql parser")
 # Create custom command for flex/lex (note the outputs)
 ADD_CUSTOM_COMMAND(
   TARGET SQL_PARSER
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-  SOURCE aq/parser/SQL92_Tok.l
-  COMMAND echo `pwd`
+  SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Tok.l
+  COMMAND echo "${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Tok.l"
   COMMAND flex
   ARGS --nounput -o${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/lex.yy.cpp ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Tok.l
-  OUTPUTS aq/parser/lex.yy.cpp
+  OUTPUTS ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/lex.yy.cpp
 )
 
 # Create custom command for bison/yacc (note the DEPENDS)
 ADD_CUSTOM_COMMAND(
   TARGET SQL_PARSER
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-  SOURCE aq/parser/SQL92_Grm.y
+  SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Grm.y
   COMMAND bison
   ARGS -y ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Grm.y -o ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/sql92_grm_tab.cpp
-  DEPENDS aq/parser/lex.yy.cpp
-  OUTPUTS aq/parser/sql92_grm_tab.cpp
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/lex.yy.cpp
+  OUTPUTS ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/sql92_grm_tab.cpp
 )
 
 SET(aq_query_resolver_source_files ${aq_query_resolver_source_files} aq/parser/sql92_grm_tab.cpp)
