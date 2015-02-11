@@ -2,7 +2,7 @@
 #include <aq/util/DBTypes.h>
 #include <aq/util/Exceptions.h>
 #include <aq/util/Logger.h>
-#include "sql92_grm_tab.hpp"
+#include "Parser.hpp"
 #include "ID2Str.h"
 
 #include <cstdio>

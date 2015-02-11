@@ -1,6 +1,6 @@
 #include "AQFunctor.h"
 
-#include <aq/parser/sql92_grm_tab.hpp>
+#include <aq/parser/Parser.hpp>
 #include <aq/TreeUtilities.h>
 
 #ifndef WIN32
@@ -122,12 +122,12 @@ namespace aq
 
   void AQFunctor::setArgChanged()
   {
-    
+
   }
 
   void AQFunctor::setArgChanged(const std::string& ident)
   {
-     
+
   }
 
 }

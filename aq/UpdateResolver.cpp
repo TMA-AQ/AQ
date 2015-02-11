@@ -1,5 +1,5 @@
 #include "UpdateResolver.h"
-#include "parser/sql92_grm_tab.hpp"
+#include "parser/Parser.hpp"
 #include "TreeUtilities.h"
 #include "QueryResolver.h"
 #include "ColumnMapper.h"
@@ -7,7 +7,7 @@
 
 namespace aq
 {
-  
+
 UpdateResolver::UpdateResolver(aq::tnode * _statement, aq::Settings::Ptr _settings, aq::engine::AQEngine_Intf::Ptr _aqEngine, aq::Base::Ptr _base)
   : statement(_statement), aqEngine(_aqEngine), settings(_settings), base(_base)
 {
@@ -49,14 +49,14 @@ void UpdateResolver::solve()
       throw aq::generic_error(aq::generic_error::INVALID_QUERY, "right side of operator = in SET clause should be a value");
     }
     std::string column = n->left->getData().val_str;
-    
+
     // col_handler_t ch;
     // ch.column = this->table->getColumn(column);
     // ch.item = aq::GetItem(*n->right);
     // TODO
     // bool cache = false;
     // ch.mapper = aq::build_column_mapper<aq::FileMapper>(ch.column->Type, settings.dataPath.c_str(), this->table->ID, ch.column->ID, ch.column->Size, settings.packSize, cache, aq::FileMapper::mode_t::WRITE);
-    
+
     if (columns.find(column) != columns.end())
     {
       throw aq::generic_error(aq::generic_error::INVALID_QUERY, "column [%s] appears several times in SET clause", column.c_str());

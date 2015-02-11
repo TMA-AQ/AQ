@@ -1,7 +1,8 @@
 #ifndef __AQ_ID2STR_H__
 #define __AQ_ID2STR_H__
 
-#include "sql92_grm_tab.hpp"
+#include "SQLParser.h"
+#include "Parser.hpp"
 
 namespace aq
 {

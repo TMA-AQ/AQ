@@ -2,7 +2,7 @@
 #define __AQ_EXPRTRANSFORM_H__
 
 #include "parser/SQLParser.h"
-#include "parser/sql92_grm_tab.hpp"
+#include "parser/Parser.hpp"
 #include "Column2Table.h"
 #include "ColumnMapper_Intf.h"
 #include "TreeUtilities.h"
@@ -14,40 +14,40 @@
 #include <boost/regex.hpp>
 #include <boost/static_assert.hpp>
 
-namespace 
+namespace
 {
-  
+
   // ----------------------------------------------------------------------------
   template <typename T>
   void nodeToItem(const aq::tnode&, aq::ColumnItem<T>&)
   {
     BOOST_STATIC_ASSERT_MSG(sizeof(T) == 0, "missing specialisation");
   }
-  
+
   template <> inline
   void nodeToItem<int32_t>(const aq::tnode& node, aq::ColumnItem<int32_t>& item)
   {
     item.setValue(static_cast<int32_t>(node.getData().val_int));
   }
-  
+
   template <> inline
   void nodeToItem<int64_t>(const aq::tnode& node, aq::ColumnItem<int64_t>& item)
   {
     item.setValue(static_cast<int64_t>(node.getData().val_int));
   }
-  
+
   template <> inline
   void nodeToItem<double>(const aq::tnode& node, aq::ColumnItem<double>& item)
   {
     item.setValue(node.getData().val_number);
   }
-  
+
   template <> inline
   void nodeToItem<char*>(const aq::tnode& node, aq::ColumnItem<char*>& item)
   {
     item.setValue(node.getData().val_str);
   }
-  
+
   // ----------------------------------------------------------------------------
   template <typename T>
   aq::tnode * itemToNode(const aq::ColumnItem<T>&, const aq::ColumnType)
@@ -55,7 +55,7 @@ namespace
     BOOST_STATIC_ASSERT_MSG(sizeof(T) == 0, "missing specialisation");
     return NULL;
   }
-  
+
   template <> inline
   aq::tnode * itemToNode<int32_t>(const aq::ColumnItem<int32_t>& item, const aq::ColumnType type)
   {
@@ -90,7 +90,7 @@ namespace
 
   template <typename T>
   aq::tnode* create_in_subtree(const std::vector<aq::ColumnItem<T> >& items, const aq::ColumnType type, size_t nLevel = 0)
-  {  
+  {
     aq::tnode *pNode = new aq::tnode(K_IN);
 
     if (items.empty())
@@ -141,15 +141,15 @@ namespace
     assert(n != nullptr);
     return n;
   }
-  
+
   template <typename T>
   aq::tnode * getResult(const std::vector<aq::ColumnItem<T> >& result, const aq::ColumnType& type)
   {
-    if (result.empty()) 
+    if (result.empty())
     {
       return new aq::tnode( K_FALSE );
-    } 
-    else 
+    }
+    else
     {
       return ::create_in_subtree(result, type);
     }
@@ -184,33 +184,33 @@ namespace
     }
   }
 
-  bool check_between_for_transform(const aq::tnode& n) 
+  bool check_between_for_transform(const aq::tnode& n)
   {
-    return (((n.tag == K_BETWEEN) || (n.tag == K_NOT_BETWEEN)) && 
-      aq::util::isColumnReference(n.left) && 
-      n.right && (n.right->tag == K_AND) && 
-      n.right->left && ((n.right->left->tag == K_STRING) || (n.right->left->tag == K_INTEGER)) && 
-      n.right->right && ((n.right->right->tag == K_STRING) || (n.right->right->tag == K_INTEGER))); 
+    return (((n.tag == K_BETWEEN) || (n.tag == K_NOT_BETWEEN)) &&
+      aq::util::isColumnReference(n.left) &&
+      n.right && (n.right->tag == K_AND) &&
+      n.right->left && ((n.right->left->tag == K_STRING) || (n.right->left->tag == K_INTEGER)) &&
+      n.right->right && ((n.right->right->tag == K_STRING) || (n.right->right->tag == K_INTEGER)));
   }
 
-  bool check_like_for_transform(const aq::tnode& n) 
+  bool check_like_for_transform(const aq::tnode& n)
   {
     return (((n.tag == K_LIKE) || (n.tag == K_NOT_LIKE)) &&
-      (aq::util::isColumnReference(n.left)) && 
-      n.right && 
-      ((n.right->tag == K_STRING) || 
-       ((n.right->tag == K_ESCAPE) && ((n.right->left) && (n.right->left->tag == K_STRING) && 
+      (aq::util::isColumnReference(n.left)) &&
+      n.right &&
+      ((n.right->tag == K_STRING) ||
+       ((n.right->tag == K_ESCAPE) && ((n.right->left) && (n.right->left->tag == K_STRING) &&
         (n.right->right) && (n.right->right->tag == K_STRING)))));
   }
 
-  bool check_cmp_op_for_transform(const aq::tnode& n) 
+  bool check_cmp_op_for_transform(const aq::tnode& n)
   {
-    if (n.tag == K_NOT) 
+    if (n.tag == K_NOT)
     {
       return (n.left) && ::check_cmp_op_for_transform(*n.left);
-    } 
-     
-    return (((n.tag == K_EQ) || (n.tag == K_NEQ) || (n.tag == K_LT) || (n.tag == K_GT) || (n.tag == K_LEQ) || (n.tag == K_GEQ)) && 
+    }
+
+    return (((n.tag == K_EQ) || (n.tag == K_NEQ) || (n.tag == K_LT) || (n.tag == K_GT) || (n.tag == K_LEQ) || (n.tag == K_GEQ)) &&
             (((aq::util::isColumnReference(n.left)) && (n.right) && ((n.right->tag == K_STRING) || (n.right->tag == K_INTEGER) || (n.right->tag == K_REAL))) ||
              ((aq::util::isColumnReference(n.right)) && ((n.left) && ((n.left->tag == K_STRING) || (n.left->tag == K_INTEGER) || (n.left->tag == K_REAL))))));
   }
@@ -222,7 +222,7 @@ namespace aq {
 class ExpressionTransform
 {
 public:
-  ExpressionTransform(const Base::Ptr _baseDesc, const std::string _dataPath, size_t _packSize) 
+  ExpressionTransform(const Base::Ptr _baseDesc, const std::string _dataPath, size_t _packSize)
     : baseDesc(_baseDesc), dataPath(_dataPath), packSize(_packSize) {}
   template <typename M> aq::tnode * transform(aq::tnode * pNode);
 private:
@@ -244,7 +244,7 @@ private:
   size_t packSize;
 };
 
-template <typename T> 
+template <typename T>
 class check_cmp_op
 {
 public:
@@ -265,7 +265,7 @@ private:
   bool reverseOp;
 };
 
-template <typename T> 
+template <typename T>
 class check_between
 {
 public:
@@ -286,7 +286,7 @@ private:
   bool bNotBetween;
 };
 
-template <typename T> 
+template <typename T>
 class check_like
 {
 public:
@@ -303,7 +303,7 @@ private:
   aq::tnode * pNodeRes;
   ColumnType cType;
   bool bNotLike;
-  
+
   // TPatternDescription  patternDesc;
   boost::regex rgx;
   mutable char szTmpBuf[100];
@@ -314,7 +314,7 @@ private:
 // ----------------------------------------------------------------------
 
 template <typename T>
-check_cmp_op<T>::check_cmp_op(const aq::Base::Ptr _baseDesc, aq::tnode * node) 
+check_cmp_op<T>::check_cmp_op(const aq::Base::Ptr _baseDesc, aq::tnode * node)
   : baseDesc(_baseDesc), pNode(node)
 {
   this->init();
@@ -330,15 +330,15 @@ void check_cmp_op<T>::init()
     reverseOp = !reverseOp;
   }
 
-  if (aq::util::isColumnReference( pNode->left ) != 0) 
+  if (aq::util::isColumnReference( pNode->left ) != 0)
   {
-    // Left is column reference -> check for strings at right 
+    // Left is column reference -> check for strings at right
     pNodeColumnRef = pNode->left;
     pNodeStr = pNode->right;
     bLeftColumnRef = true;
     op_tag = pNode->tag;
-  } 
-  else if (aq::util::isColumnReference(pNode->right) != 0) 
+  }
+  else if (aq::util::isColumnReference(pNode->right) != 0)
   {
     // Right is column reference -> check for strings at left
     pNodeColumnRef = pNode->right;
@@ -353,7 +353,7 @@ void check_cmp_op<T>::init()
     throw aq::generic_error(aq::generic_error::INVALID_QUERY, "");
   }
 
-  if (aq::util::isColumnReference(pNodeColumnRef) == 0) 
+  if (aq::util::isColumnReference(pNodeColumnRef) == 0)
   {
     throw aq::generic_error(aq::generic_error::INVALID_QUERY, "");
   }
@@ -364,9 +364,9 @@ void check_cmp_op<T>::init()
   {
     if ( pNode->tag == K_LT )
       op_tag = K_GEQ;
-    else if ( pNode->tag == K_GT ) 
+    else if ( pNode->tag == K_GT )
       op_tag = K_LEQ;
-    else if ( pNode->tag == K_LEQ ) 
+    else if ( pNode->tag == K_LEQ )
       op_tag = K_GT;
     else if ( pNode->tag == K_GEQ )
       op_tag = K_LT;
@@ -381,7 +381,7 @@ const aq::tnode * check_cmp_op<T>::getColumnRef() const
 
 template <typename T>
 bool check_cmp_op<T>::check(const aq::ColumnItem<T>& item, const aq::ColumnType& cType) const
-{   
+{
   switch (op_tag)
   {
   case K_EQ:
@@ -410,7 +410,7 @@ bool check_cmp_op<T>::check(const aq::ColumnItem<T>& item, const aq::ColumnType&
 template <typename T>
 void check_cmp_op<T>::success(aq::tnode * node)
 {
-  if (node->tag != K_FALSE) 
+  if (node->tag != K_FALSE)
   {
     // Move the column reference subtree into the newly created subtree !
     node->left = this->pNodeColumnRef;  // which can be pNode->left or right !
@@ -466,7 +466,7 @@ bool check_between<T>::check(const aq::ColumnItem<T>& item, const aq::ColumnType
 template <typename T>
 void check_between<T>::success(aq::tnode * node)
 {
-  if (node->tag != K_FALSE) 
+  if (node->tag != K_FALSE)
   {
     // Move the column reference subtree into the newly created subtree !
     node->left = pNodeColumnRef;  // which is pNodeTmp->left; !
@@ -517,7 +517,7 @@ bool check_like<T>::check(const aq::ColumnItem<T>& item, const aq::ColumnType& c
 template <typename T>
 void check_like<T>::success(aq::tnode * node)
 {
-  if (node->tag != K_FALSE) 
+  if (node->tag != K_FALSE)
   {
     // Move the column reference subtree into the newly created subtree !
     node->left = pNodeColumnRef;  // which is pNodeTmp->left; !
@@ -532,15 +532,15 @@ template <typename M>
 aq::tnode * ExpressionTransform::transform(aq::tnode * pNode)
 {
   ::getColumnInfos(this->baseDesc, *pNode->left, this->tId, this->cId, this->cSize, this->cType);
-  
+
   transformation_type tt = transformation_type::NONE;
   if (::check_between_for_transform(*pNode) != 0)
     tt = transformation_type::BETWEEN_TRANS;
-  else if (::check_like_for_transform(*pNode) != 0) 
+  else if (::check_like_for_transform(*pNode) != 0)
     tt = transformation_type::LIKE_TRANS;
   else if (::check_cmp_op_for_transform(*pNode) != 0)
     tt = transformation_type::CMP_OP_TRANS;
-  
+
   switch (this->cType)
   {
   case aq::ColumnType::COL_TYPE_INT:
@@ -569,7 +569,7 @@ aq::tnode * ExpressionTransform::transform(aq::tnode * pNode)
   //  pNode->left = this->transform<M>(pNode->left);
   //}
   //// Do not call on K_PERIOD's node right branch if the right tag is K_COLUMN !
-  //if ((pNode->right != nullptr) && ((pNode->tag != K_PERIOD) || (pNode->right->tag != K_COLUMN))) 
+  //if ((pNode->right != nullptr) && ((pNode->tag != K_PERIOD) || (pNode->right->tag != K_COLUMN)))
   //{
   //  pNode->right = this->transform<M>(pNode->right);
   //}
@@ -577,8 +577,8 @@ aq::tnode * ExpressionTransform::transform(aq::tnode * pNode)
   return pNode;
 }
 
-template <typename T, typename M> 
-aq::tnode * ExpressionTransform::transform(aq::tnode * pNode, transformation_type tt) 
+template <typename T, typename M>
+aq::tnode * ExpressionTransform::transform(aq::tnode * pNode, transformation_type tt)
 {
   switch (tt)
   {
@@ -603,7 +603,7 @@ aq::tnode * ExpressionTransform::transform(aq::tnode * pNode, transformation_typ
   case transformation_type::NONE:
     break;
   }
-  
+
   return pNode;
 }
 
@@ -617,7 +617,7 @@ struct column_item_cmp_t
 };
 
 template <typename T, typename M, class CMP>
-aq::tnode * ExpressionTransform::transform(CMP& cmp) 
+aq::tnode * ExpressionTransform::transform(CMP& cmp)
 {
   aq::tnode * pNodeRes = nullptr;
   size_t index = 0;
@@ -631,7 +631,7 @@ aq::tnode * ExpressionTransform::transform(CMP& cmp)
   while (cm->loadValue(index++, &value) == 0)
   {
     item.setValue(value);
-    if (cmp.check(item, cType)) 
+    if (cmp.check(item, cType))
     {
       ++matched;
       if (!resultTmp1.empty() && ColumnItem<T>::lessThan(item, *resultTmp1.rbegin()))
@@ -656,7 +656,7 @@ aq::tnode * ExpressionTransform::transform(CMP& cmp)
       }
     }
   }
-  
+
   if (!resultTmp2.empty())
   {
     pNodeRes = ::getResult(resultTmp2, cType);
@@ -670,7 +670,7 @@ aq::tnode * ExpressionTransform::transform(CMP& cmp)
     std::merge(resultTmp1.begin(), resultTmp1.end(), resultTmp2.begin(), resultTmp2.end(), std::back_inserter(result), column_cmp);
     pNodeRes = ::getResult(result, cType);
   }
-  if (pNodeRes == nullptr) 
+  if (pNodeRes == nullptr)
   {
     throw aq::generic_error(aq::generic_error::INVALID_QUERY, "");
   }
@@ -682,7 +682,7 @@ aq::tnode * ExpressionTransform::transform(CMP& cmp)
 
 /// \brief tree node transformation expression
 namespace expression_transform {
-  
+
   /// \brief transformation of expression in a tree into a list of value
   /// \param base database description
   /// \param settings
@@ -702,7 +702,7 @@ namespace expression_transform {
     tree->right = newTree->right;
     tree->next = newTree->next;
     tree->parent = nullptr;
-    
+
     return tree;
   }
 

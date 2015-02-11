@@ -6,7 +6,7 @@
 #include <aq/util/Timer.h>
 
 #include <aq/parser/SQLParser.h>
-#include <aq/parser/sql92_grm_tab.hpp>
+#include <aq/parser/Parser.hpp>
 #include <aq/parser/ID2Str.h>
 
 #include <aq/verbs/VerbNode.h>

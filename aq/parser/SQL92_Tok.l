@@ -1,7 +1,6 @@
 %{
 
-//#include "sql92_grm_tab.h"
-// int wordCount = 0;
+#include "SQLParser.h"
 #define YY_NO_UNISTD_H
 
 #ifdef WIN32

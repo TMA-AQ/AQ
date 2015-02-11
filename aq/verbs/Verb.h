@@ -10,7 +10,7 @@
 #include <aq/RowProcess_Intf.h>
 #include <aq/util/Table.h>
 #include <aq/parser/SQLParser.h>
-#include <aq/parser/sql92_grm_tab.hpp>
+#include <aq/parser/Parser.hpp>
 #include <aq/util/Exceptions.h>
 
 namespace aq {
@@ -35,7 +35,7 @@ class Verb: public Object<Verb>
 public:
   Verb();
   virtual ~Verb();
-  
+
   /// \brief return verb identifier (K_XXX from sql92_grm_tab.h)
   virtual int getVerbType() const = 0;
 
@@ -54,7 +54,7 @@ public:
   /// \deprecated \param resLeft results from left children verbs
   /// \deprecated \param resRight results from right children verbs
   /// \deprecated \param resNext results from next children verbs
-  /// \return 
+  /// \return
   ///   - True if verb can be solved and changeResult is not necessary. Then pNode should
   ///     be assigned the appropriate subtree.
   ///   - False if verb cannot be solved completely changeQuery.
@@ -78,15 +78,15 @@ public:
 
   /// \brief Set the Base Description
   /// \param BaseDesc the base description
-  virtual void setBaseDesc(Base::Ptr BaseDesc) 
-  { 
+  virtual void setBaseDesc(Base::Ptr BaseDesc)
+  {
     // empty by default
   }
-  
+
   /// \brief Set the settings
   /// \param settings the query settings
   /// \todo settings should be a const shared_ptr
-  virtual void setSettings(Settings::Ptr settings) 
+  virtual void setSettings(Settings::Ptr settings)
   {
     // empty by default
   }
@@ -95,26 +95,26 @@ public:
   /// \param visitor the visitor
   /// visitor are used to perform operation on verb tree
   virtual void accept(VerbVisitor * visitor) = 0;
-  
+
   void setContext(tnode::tag_t _context) { this->context = _context; }
   void disable() { disabled = true; }
 
   VerbResult::Ptr getResult() const { return this->Result; }
   tnode::tag_t getContext() const { return this->context; }
-  bool isDisabled() const { return disabled; }  
+  bool isDisabled() const { return disabled; }
 
 protected:
   /// \brief the result is automatically passed as a parameter to parent verbs (in VerbNode)
   /// \fixme: ugly hack used so that FirstValue verb can use LagVerb protected:
   VerbResult::Ptr Result;
-  
+
   /// the context indicates to what major category the verb is in
   /// (behavior should be different depending on context)
   /// can be K_SELECT, K_WHERE, K_HAVING ..
   tnode::tag_t context;
-  
+
   /// if true, do not use this Verb or its children anymore
-  bool disabled; 
+  bool disabled;
 };
 
 }

@@ -1666,7 +1666,7 @@ column_column_pair	: column_reference K_EQ column_reference	{
 %%
 
 //------------------------------------------------------------------------------
-#include "lex.yy.cpp"
+#include "Lexer.cpp"
 
 namespace aq
 {

@@ -1,5 +1,5 @@
 #include "Column2Table.h"
-#include "parser/sql92_grm_tab.hpp"
+#include "parser/Parser.hpp"
 #include <aq/util/Base.h>
 #include <aq/util/Logger.h>
 #include <aq/util/Exceptions.h>
@@ -7,8 +7,8 @@
 
 namespace aq
 {
-  
-///  
+
+///
 struct TColumn2Tables
 {
   char         *  m_pszColumnName;
@@ -77,10 +77,10 @@ int get_column_id_from_table(Table& pTD, char * pszColumnName, unsigned int * pn
 }
 
 //------------------------------------------------------------------------------
-aq::TColumn2Tables * new_column2tables(const char * pszColumnName) 
+aq::TColumn2Tables * new_column2tables(const char * pszColumnName)
 {
   TColumn2Tables* pC2T;
-  
+
   if ( pszColumnName == nullptr )
     return nullptr;
 
@@ -108,7 +108,7 @@ aq::TColumn2Tables * add_table_name(aq::TColumn2Tables * pC2T, const char * pszT
 
   if ( pC2T == nullptr || pszTableName == nullptr ) {
 #ifdef CREATE_LOG
-    Log( "add_table_name() : One of the parameters is nullptr (pC2T:%u; pszTableName:<%u>)!\n", 
+    Log( "add_table_name() : One of the parameters is nullptr (pC2T:%u; pszTableName:<%u>)!\n",
        (unsigned int)pC2T, (unsigned int)pszTableName );
 #endif
     return nullptr;
@@ -210,25 +210,25 @@ aq::TColumn2Tables * find_column_in_column2tables_array(aq::TColumn2TablesArray 
 
   for ( iColumn = 0; iColumn < parrC2T->m_nColumnCount; iColumn++ ) {
     if ( strcmp( parrC2T->m_pparrC2T[ iColumn ]->m_pszColumnName, pszTmpColumnName ) == 0 ) {
-      /* Delete Temporary String */ 
+      /* Delete Temporary String */
       free( pszTmpColumnName );
       return parrC2T->m_pparrC2T[ iColumn ];
     }
   }
 
-  /* Delete Temporary String */ 
+  /* Delete Temporary String */
   free( pszTmpColumnName );
 
   return nullptr;
 }
 
 //------------------------------------------------------------------------------
-aq::TColumn2TablesArray * add_table_columns_to_column2tables_array(aq::TColumn2TablesArray * parrC2T, 
-                                                                   aq::Base * baseDesc, 
+aq::TColumn2TablesArray * add_table_columns_to_column2tables_array(aq::TColumn2TablesArray * parrC2T,
+                                                                   aq::Base * baseDesc,
                                                                    char * pszTableName ) {
   unsigned int iColumn;
   aq::TColumn2Tables *pC2T;
-  
+
   Table& pTD = *baseDesc->getTable(pszTableName);
 
   for ( iColumn = 0; iColumn < pTD.Columns.size(); iColumn++ ) {
@@ -257,51 +257,51 @@ aq::TColumn2TablesArray * add_table_columns_to_column2tables_array(aq::TColumn2T
 
 //------------------------------------------------------------------------------
 // Return -1 on error, 0 on success
-int add_tnode_tables(aq::tnode * pNode, aq::Base * baseDesc, aq::TColumn2TablesArray * parrC2T) 
+int add_tnode_tables(aq::tnode * pNode, aq::Base * baseDesc, aq::TColumn2TablesArray * parrC2T)
 {
   /* Check node type against K_COMMA, K_IDENT */
-  if ( pNode->tag == K_COMMA ) 
+  if ( pNode->tag == K_COMMA )
   {
-    if ( add_tnode_tables( pNode->left, baseDesc, parrC2T ) != 0 ) 
+    if ( add_tnode_tables( pNode->left, baseDesc, parrC2T ) != 0 )
       return -1;
-    if ( add_tnode_tables( pNode->right, baseDesc, parrC2T ) != 0 ) 
+    if ( add_tnode_tables( pNode->right, baseDesc, parrC2T ) != 0 )
       return -1;
-  } 
-  else if ( pNode->tag == K_IDENT ) 
+  }
+  else if ( pNode->tag == K_IDENT )
   {
-    if ( add_table_columns_to_column2tables_array( parrC2T, baseDesc, pNode->getData().val_str ) == nullptr ) 
+    if ( add_table_columns_to_column2tables_array( parrC2T, baseDesc, pNode->getData().val_str ) == nullptr )
     {
       aq::Logger::getInstance().log(AQ_ERROR, "add_aq::tnode_tables() : Function add_table_columns_to_column2tables_array() returned -1 (error)!\n");
       return -1;
     }
-  } 
-  else if ( pNode->tag == K_INNER || pNode->tag == K_LEFT || pNode->tag == K_RIGHT || 
-    pNode->tag == K_FULL || pNode->tag == K_OUTER || pNode->tag == K_JOIN ) 
+  }
+  else if ( pNode->tag == K_INNER || pNode->tag == K_LEFT || pNode->tag == K_RIGHT ||
+    pNode->tag == K_FULL || pNode->tag == K_OUTER || pNode->tag == K_JOIN )
   {
     /* K_INNER, K_LEFT, K_RIGHT, K_FULL, K_OUTER, K_JOIN */
-    if ( add_tnode_tables( pNode->left, baseDesc, parrC2T ) != 0 ) 
+    if ( add_tnode_tables( pNode->left, baseDesc, parrC2T ) != 0 )
       return -1;
-  } 
-  else if ( pNode->tag == K_AS ) 
+  }
+  else if ( pNode->tag == K_AS )
   {
     /* correlation_name */
-    if ( add_tnode_tables( pNode->left, baseDesc, parrC2T ) != 0 ) 
+    if ( add_tnode_tables( pNode->left, baseDesc, parrC2T ) != 0 )
       return -1;
-  } 
-  else if ( pNode->tag == K_SELECT ) 
+  }
+  else if ( pNode->tag == K_SELECT )
   {
     /* K_SELECT -> find K_FROM */
     aq::tnode *pNodeFound;
     pNodeFound = pNode->find_main(K_FROM );
-    if ( pNodeFound == nullptr ) 
+    if ( pNodeFound == nullptr )
     {
       aq::Logger::getInstance().log(AQ_ERROR, "add_aq::tnode_tables() : Function find_main_node() returned nullptr !\n");
       return -1;
     }
     if ( add_tnode_tables( pNodeFound->left, baseDesc, parrC2T ) != 0 )
       return -1;
-  } 
-  else 
+  }
+  else
   {
     aq::Logger::getInstance().log(AQ_ERROR, "add_aq::tnode_tables() : Invalid TAG (%u) encountered !\n", pNode->tag);
     return -1;
@@ -317,30 +317,30 @@ TColumn2TablesArray * create_column_map_for_tables_used_in_select(aq::tnode * pN
   TColumn2TablesArray * parrC2T = nullptr;
 
   pNodeFound = pNode->find_main(K_FROM);
-  if ( pNodeFound == nullptr ) 
+  if ( pNodeFound == nullptr )
   {
     aq::Logger::getInstance().log(AQ_ERROR, "create_column_map_for_tables_used_in_select() : Function find_main_node() returned nullptr !\n");
     return nullptr;
   }
 
   parrC2T = new_column2tables_array();
-  if ((parrC2T != nullptr) && (add_tnode_tables( pNodeFound->left, baseDesc, parrC2T ) != 0)) 
+  if ((parrC2T != nullptr) && (add_tnode_tables( pNodeFound->left, baseDesc, parrC2T ) != 0))
   {
     aq::Logger::getInstance().log(AQ_ERROR, "add_tnode_tables failed\n");
     delete_column2tables_array(parrC2T);
     parrC2T = nullptr;
   }
-  
+
   return parrC2T;
 }
 
 //------------------------------------------------------------------------------
-int enforce_qualified_column_reference(aq::tnode * pNode, aq::Base & baseDesc) 
+int enforce_qualified_column_reference(aq::tnode * pNode, aq::Base & baseDesc)
 {
   int pErr = 0;
 
   TColumn2TablesArray * parrC2T = create_column_map_for_tables_used_in_select(pNode, &baseDesc);
-  
+
   if ( parrC2T == nullptr )
     return -1;
 
@@ -364,37 +364,37 @@ int enforce_qualified_column_reference(aq::tnode * pNode, aq::Base & baseDesc)
     //do not call on K_PERIOD's node right branch if the right tag is K_COLUMN !
     if(  pNode->right && (pNode->tag != K_PERIOD || pNode->right->tag != K_COLUMN ) )
         nodes.push_back( pNode->right );
-    
-    if ( pNode->tag != K_COLUMN ) 
+
+    if ( pNode->tag != K_COLUMN )
       continue;
     //reached a K_COLUMN without a K_PERIOD parent
     TColumn2Tables* pC2T;
     pC2T = find_column_in_column2tables_array( parrC2T, pNode->getData().val_str );
-    if ( pC2T != nullptr ) 
+    if ( pC2T != nullptr )
     {
-      if ( pC2T->m_nTableCount > 1 ) 
+      if ( pC2T->m_nTableCount > 1 )
       {
         delete_column2tables_array(parrC2T);
         aq::Logger::getInstance().log(AQ_ERROR, "Column name ambiguity ! Multiple tables with same column name : <%s>", pNode->getData().val_str);
         return -1;
-      } 
-      else if ( pC2T->m_nTableCount == 0 ) 
+      }
+      else if ( pC2T->m_nTableCount == 0 )
       {
         delete_column2tables_array(parrC2T);
         aq::Logger::getInstance().log(AQ_ERROR, "No table with column name <%s> specified using FROM ... !", pNode->getData().val_str);
         return -2;
-      } 
-      else 
+      }
+      else
       {
         aq::tnode *pNodeColumn, *pNodeTable;
         pNodeColumn = new aq::tnode( *pNode );
-        if ( pNodeColumn == nullptr ) 
+        if ( pNodeColumn == nullptr )
         {
           delete_column2tables_array(parrC2T);
           return -3;
         }
         pNodeTable = new aq::tnode( K_IDENT );
-        if ( pNodeTable == nullptr ) 
+        if ( pNodeTable == nullptr )
         {
           delete_column2tables_array(parrC2T);
           delete pNodeColumn ;

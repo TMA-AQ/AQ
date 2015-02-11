@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 2.8)
 
 project(AQQueryResolver)
 
+################################################################################
+# libraries dependencies
+
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE})
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
 
@@ -20,6 +23,11 @@ link_directories(
   $ENV{AQUTIL_LIBRARY_DIR}
 )
 
+# TODO add mysql client
+
+################################################################################
+# system specifics
+
 # Mac OS X specific code
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     SET(OperatingSystem "Darwin")
@@ -35,6 +43,8 @@ IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(CMAKE_CXX_FLAGS "-O0 -ggdb -std=c++11 -Wall")
 ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
+# TODO add windows specifics
+
 ################################################################################
 # util
 
@@ -46,74 +56,53 @@ list(REMOVE_ITEM aq_util_source_files ${exclude_files})
 # aq-util static library
 add_library(aq-util STATIC ${aq_util_source_files})
 
-# # aq-util shared library
-# add_library(aq-util-shared SHARED ${aq_util_source_files})
-# target_link_libraries(aq-util-shared ${Boost_LIBRARIES})
-# set_target_properties(aq-util-shared PROPERTIES OUTPUT_NAME "aq-util")
-
 ################################################################################
 # parser
 
-# source files
-file(GLOB aq_parser_source_files aq/parser/*.cpp
-                                 aq/parser/SQL92_Tok.l
-                                 aq/parser/SQL92_Grm.y
-                                 aq/parser/sql92_grm_tab.cpp)
-
-
-# remove previous generated files from list
-# if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/sql92_grm_tab.cpp")
-#   file(GLOB exclude_files "aq/parser/sql92_grm_tab.cpp")
-#   list(REMOVE_ITEM aq_parser_source_files ${exclude_files})
-# endif()
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/lex.yy.cpp")
-  file(GLOB exclude_files "aq/parser/lex.yy.cpp")
-  list(REMOVE_ITEM aq_parser_source_files ${exclude_files})
-endif()
-
 # Create target for the parser
-ADD_CUSTOM_TARGET(SQL_PARSER echo "Creating sql parser")
+ADD_CUSTOM_TARGET(bison-sql-parser)
 
-# Create custom command for flex/lex (note the outputs)
+# Create custom command for flex/lex
 ADD_CUSTOM_COMMAND(
-  TARGET SQL_PARSER
+  TARGET bison-sql-parser
   SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Tok.l
   COMMAND echo "${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Tok.l"
   COMMAND flex
-  ARGS --nounput -o${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/lex.yy.cpp ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Tok.l
-  OUTPUTS ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/lex.yy.cpp
+  ARGS --nounput -o${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/Lexer.cpp ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Tok.l
+  OUTPUTS ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/Lexer.cpp
 )
 
-# Create custom command for bison/yacc (note the DEPENDS)
+# Create custom command for bison/yacc
 ADD_CUSTOM_COMMAND(
-  TARGET SQL_PARSER
+  TARGET bison-sql-parser
   SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Grm.y
   COMMAND bison
-  ARGS -y ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Grm.y -o ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/sql92_grm_tab.cpp
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/lex.yy.cpp
-  OUTPUTS ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/sql92_grm_tab.cpp
+  ARGS -y -d ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Grm.y -o ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/Parser.cpp
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/Lexer.cpp
+  OUTPUTS ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/Parser.cpp ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/Parser.hpp
 )
 
-SET(aq_query_resolver_source_files ${aq_parser_source_files} aq/parser/sql92_grm_tab.cpp)
 SET_SOURCE_FILES_PROPERTIES(aq/parser/lex.yy.cpp GENERATED)
-SET_SOURCE_FILES_PROPERTIES(aq/parser/sql92_grm_tab.cpp GENERATED)
+SET_SOURCE_FILES_PROPERTIES(aq/parser/Parser.cpp GENERATED)
+SET_SOURCE_FILES_PROPERTIES(aq/parser/Parser.hpp GENERATED)
 
 # aq-parser static library
-add_library(aq-parser STATIC ${aq_parser_source_files})
+add_library(aq-parser STATIC aq/parser/Parser.cpp
+                             aq/parser/JeqParser.cpp
+                             aq/parser/SQLParser.cpp
+                             aq/parser/ID2Str.cpp)
+add_dependencies(aq-parser bison-sql-parser)
 
 ################################################################################
 # engine
 
 # source files
-file(GLOB aq_engine_source_files aq/engine/*.cpp)
+file(GLOB aq_engine_source_files aq/engine/AQEngine.cpp
+                                 aq/engine/AQEngineException.cpp
+                                 aq/engine/AQMatrix.cpp)
 
 # aq-engine static library
 add_library(aq-engine STATIC ${aq_engine_source_files})
-
-# # aq-engine shared library
-# add_library(aq-engine-shared SHARED ${aq_engine_source_files})
-# target_link_libraries(aq-engine-shared ${Boost_LIBRARIES})
-# set_target_properties(aq-engine-shared PROPERTIES OUTPUT_NAME "aq-engine")
 
 ################################################################################
 # query resolver
@@ -125,11 +114,6 @@ file(GLOB aq_query_resolver_source_files aq/*.cpp
 
 # aq-query-resolver static library
 add_library(aq-query-resolver STATIC ${aq_query_resolver_source_files})
-
-# # aq-query-resolver shared library
-# add_library(aq-query-resolver-shared SHARED ${aq_query_resolver_source_files})
-# target_link_libraries(aq-query-resolver-shared aq-engine ${Boost_LIBRARIES})
-# set_target_properties(aq-query-resolver-shared PROPERTIES OUTPUT_NAME "aq-query-resolver")
 
 ################################################################################
 # tools

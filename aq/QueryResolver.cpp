@@ -1,7 +1,7 @@
 #include "QueryResolver.h"
 #include "SQLPrefix.h"
 #include "QueryAnalyzer.h"
-#include "parser/sql92_grm_tab.hpp"
+#include "parser/Parser.hpp"
 
 #include "RowProcesses.h"
 #include "RowWritter.h"

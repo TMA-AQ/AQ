@@ -2,7 +2,7 @@
 
 #include "parser/SQLParser.h"
 #include "parser/JeqParser.h"
-#include "parser/sql92_grm_tab.hpp"
+#include "parser/Parser.hpp"
 #include "Settings.h"
 
 #include <aq/util/Base.h>
@@ -49,7 +49,7 @@ namespace util {
   /// \param tag
   /// \param tables
   void addInnerOuterNodes(aq::tnode* pNode, aq::tnode::tag_t tag, const std::vector<std::string>& tables);
-  
+
   /// \brief
   /// \param pStart
   /// \param BaseDesc
@@ -72,7 +72,7 @@ namespace util {
   /// \param columnNames the resulting columnNames
   /// \param columnDisplayNames the name of the columns
   void solveSelectStar(aq::tnode* pNode, Base::Ptr BaseDesc, std::vector<std::string>& columnNames, std::vector<std::string>& columnDisplayNames);
-  
+
   /// \brief Create trees of select
   /// \param pNode
   /// \param BaseDesc
@@ -105,7 +105,7 @@ namespace util {
   /// \param table
   /// \param column
   bool assignFake(std::string& name, aq::tnode* table, aq::tnode* column);
-  
+
   /// \brief
   /// \param pInterior
   /// \param pExterior
@@ -127,11 +127,11 @@ namespace util {
   /// \}
 
 
-  
+
   /// \brief
   /// \param pNode
   aq::tnode * getJoin(aq::tnode* pNode);
-  
+
   /// \brief
   /// \param pNode
   /// \param BaseDesc
@@ -141,7 +141,7 @@ namespace util {
   /// \param pNode
   /// \param columnNodes
   void getAllColumnNodes(aq::tnode*& pNode, std::vector<aq::tnode*>& columnNodes);
-  
+
   /// \brief
   /// \param pNode
   /// \param columns
@@ -156,7 +156,7 @@ namespace util {
   /// \param pNode
   /// \param pLastTag
   /// \param pCheckNode
-  /// \param tag 
+  /// \param tag
   aq::tnode* getLastTag(aq::tnode*& pNode, aq::tnode* pLastTag, aq::tnode* pCheckNode, aq::tnode::tag_t tag);
 
   /// \brief
@@ -248,11 +248,11 @@ namespace util {
   /// \brief
   /// \param pNode
   bool isColumnReference(const aq::tnode * pNode);
-  
+
   /// \brief
   /// \param pNode
   void dateNodeToBigInt(tnode * pNode);
-  
+
   /// \brief
   /// \param baseDesc
   /// \param settings
@@ -264,12 +264,12 @@ namespace util {
   /// \param pNode
   /// \param columns
   void getAllColumns(aq::tnode* pNode, std::vector<aq::tnode*>& columns);
-  
+
   /// \brief
   /// \param pNode
   /// \param name
   void extractName(aq::tnode* pNode, std::string& name);
-  
+
   /// \brief get table and column name if n is a column reference
   /// \param[int] n the input column node
   /// \param[out] table output table name
@@ -290,7 +290,7 @@ namespace util {
   /// AND: change to OR, apply NOT on children
   void processNot(aq::tnode*& pNode, bool applyNot);
 
-  /// \brief 
+  /// \brief
   /// \param pNode
   /// \param stmt
   void tnodeToSelectStatement(const aq::tnode& pNode, aq::core::SelectStatement& stmt);

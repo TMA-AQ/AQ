@@ -1,6 +1,6 @@
 #include "TreeUtilities.h"
 #include "ExprTransform.h"
-#include "parser/sql92_grm_tab.hpp"
+#include "parser/Parser.hpp"
 #include "parser/ID2Str.h"
 #include "parser/JeqParser.h"
 #include <cassert>
@@ -17,12 +17,12 @@
 
 namespace aq {
 namespace util {
-  
+
 //------------------------------------------------------------------------------
 namespace helper {
 
   void markAsDeleted(aq::tnode* pNode)
-  {  
+  {
     if( !pNode )
       return;
     pNode->tag = K_DELETED;
@@ -205,7 +205,7 @@ void addInnerOuterNodes( aq::tnode* pNode, aq::tnode::tag_t tag, const std::vect
 
 //------------------------------------------------------------------------------
 void moveFromJoinToWhere( aq::tnode* pStart, Base::Ptr BaseDesc )
-{  
+{
   assert( pStart && pStart->tag == K_SELECT );
 
   aq::tnode* pNode = pStart->find_main(K_FROM);
@@ -223,14 +223,14 @@ void moveFromJoinToWhere( aq::tnode* pStart, Base::Ptr BaseDesc )
     assert(pInner->left->next && (pInner->left->next->tag == K_ON));
     aq::tnode* tablesNodes = pInner->left;
     aq::tnode* condNodes = pInner->left->next->left;
-    
+
     assert(tablesNodes->left && ((tablesNodes->left->tag == K_IDENT) || (tablesNodes->left->tag == K_COMMA)));
     assert(tablesNodes->right && ((tablesNodes->right->tag == K_IDENT) || (tablesNodes->right->tag == K_COMMA)));
 
     pInner->tag = K_COMMA;
     pInner->left = tablesNodes->left;
     pInner->right = tablesNodes->right;
-    
+
     // std::swap(condNodes->left, condNodes->right);
     addInnerOuterNodes( condNodes, K_INNER, K_INNER );
     condNodes->inf = 1;
@@ -256,7 +256,7 @@ void moveFromJoinToWhere( aq::tnode* pStart, Base::Ptr BaseDesc )
 //------------------------------------------------------------------------------
 void addAlias( aq::tnode* pNode )
 {
-  if (pNode == nullptr) 
+  if (pNode == nullptr)
     return;
   if (pNode->tag == K_COMMA)
   {
@@ -346,7 +346,7 @@ void solveSelectStar(aq::tnode* pNode, Base::Ptr BaseDesc, std::vector<std::stri
 
     if ( !tables[idx] || ( tables[idx]->getTag() == K_SELECT && ( column = tables[idx]->find_first(K_AS)) == nullptr) || !(column = nextFrom->find_first(K_IDENT)))
       throw aq::parsException( "STAR failed, no AS found", pNode, true );
-    
+
     aq::tnode *column2;
     aq::tnode *alias;
     aq::tnode* colRef;
@@ -669,7 +669,7 @@ void changeTableNames(  aq::tnode* pIntSelectAs, aq::tnode* pInteriorSelect, aq:
   aq::tnode* extFromNode = pExteriorSelect->find_main(K_FROM);
   std::vector<aq::tnode*> extTables;
   extFromNode->left->treeListToNodeArray(extTables, K_COMMA);
-  
+
   std::vector<aq::tnode*> newExtTables;
   for( size_t idx = 0; idx < extTables.size(); ++idx )
     if( extTables[idx] != pIntSelectAs )
@@ -700,7 +700,7 @@ void changeColumnNames(  aq::tnode* pIntSelectAs, aq::tnode* pInteriorSelect, aq
     {
     case K_PERIOD:
       {
-        assert( extCol->left && extCol->left->tag == K_IDENT && 
+        assert( extCol->left && extCol->left->tag == K_IDENT &&
           extCol->right->tag == K_COLUMN );
         if( tableName != std::string(extCol->left->getData().val_str) )
           continue;
@@ -761,7 +761,7 @@ aq::tnode * getJoin(aq::tnode* pNode)
       pNode = right;
     }
   }
-  else if (!((pNode->tag == K_JEQ) || (pNode->tag == K_JAUTO) || 
+  else if (!((pNode->tag == K_JEQ) || (pNode->tag == K_JAUTO) ||
     (pNode->tag == K_JIEQ) || (pNode->tag == K_JSEQ))) // TODO : some join type are missing
   {
     delete pNode;
@@ -788,7 +788,7 @@ void solveOneTableInFrom( aq::tnode* pStart, Base::Ptr BaseDesc )
   Column::Ptr col = BaseDesc->getTable( tName )->Columns[0];
   if( !col )
     return;
-  
+
   aq::tnode* pWhere = pStart->find_main(K_WHERE);
   if( !pWhere )
   {
@@ -803,7 +803,7 @@ void solveOneTableInFrom( aq::tnode* pStart, Base::Ptr BaseDesc )
     pWhere->left = pAnd;
     pWhere = pAnd;
   }
-  
+
   aq::tnode* newNode = new aq::tnode( K_JNO );
   pWhere->left = newNode;
   newNode->left = new aq::tnode( K_INNER );
@@ -821,12 +821,12 @@ void getColumnsList( aq::tnode* pNode,std::vector<aq::tnode*>& columns )
   if( (pNode->tag == K_PERIOD) || (pNode->inf == 1) )
   {
     columns.push_back( pNode );
-  } 
+  }
   else if( pNode->tag == K_COMMA )
   {
     getColumnsList( pNode->left, columns );
     getColumnsList( pNode->right, columns );
-  } 
+  }
   else
   {
     //     pNode->tag = K_DELETED;
@@ -843,7 +843,7 @@ void getTablesList( aq::tnode* pNode, std::list<std::string>& tables )
     if (pNode->tag == K_IDENT)
     {
       tables.push_back( pNode->getData().val_str );
-    } 
+    }
     else // if (pNode->tag == K_COMMA)
     {
       getTablesList( pNode->left, tables );
@@ -886,7 +886,7 @@ void cleanQuery( aq::tnode*& pNode )
 {
   if( !pNode )
     return;
-  
+
   if( pNode->tag == K_DELETED )
   {
     //if (pNode->parent->left == pNode)
@@ -909,7 +909,7 @@ void cleanQuery( aq::tnode*& pNode )
   //K_IN_VALUES can have a very deep sub-tree, stack overflow danger
   if( pNode->tag == K_IN_VALUES )
     return;
-  
+
   cleanQuery( pNode->next );
   cleanQuery( pNode->left );
   cleanQuery( pNode->right );
@@ -1004,13 +1004,13 @@ aq::tnode* GetTree( Table& table )
 //  }
 //  pNode->left = Getnode(column.Items[size - 2], column.Type);
 //  pNode->right = Getnode(column.Items[size - 1], column.Type);
-  
+
   return pStart;
 }
 
 //------------------------------------------------------------------------------
 void toNodeListToStdList(tnode* pNode, std::list<tnode*>& columns)
-{  
+{
   if( !pNode || !pNode->left )
     return;
   if (pNode->left->tag == K_COMMA)
@@ -1120,7 +1120,7 @@ void removePartitionBy(tnode *& pNode)
 }
 
 //------------------------------------------------------------------------------
-bool isColumnReference(const aq::tnode *pNode) 
+bool isColumnReference(const aq::tnode *pNode)
 {
   if ( pNode == nullptr )
     return false;
@@ -1261,7 +1261,7 @@ void extractName( aq::tnode* pNode, std::string& name )
 }
 
 //------------------------------------------------------------------------------
-void getTableAndColumnName(const aq::tnode& n, std::string& table, std::string& column) 
+void getTableAndColumnName(const aq::tnode& n, std::string& table, std::string& column)
 {
   if (n.tag == K_COLUMN)
   {
@@ -1406,7 +1406,7 @@ void processNot( aq::tnode*& pNode, bool applyNot )
     break;
   default:
     throw generic_error(generic_error::NOT_IMPLEMENTED, "operator doesn't support NOT");
-  }  
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -1442,7 +1442,7 @@ void tnodeToSelectStatement(const aq::tnode& tree, aq::core::SelectStatement& ss
   {
     assert(fromNode->left);
     std::vector<tnode*> nodes;
-    
+
     //
     fromNode->joinlistToNodeArray(nodes);
     for (const auto& table : nodes)
@@ -1466,13 +1466,13 @@ void tnodeToSelectStatement(const aq::tnode& tree, aq::core::SelectStatement& ss
     {
       std::cout << *join << std::endl;
       aq::core::JoinCondition jc;
-      
+
       aq::tnode * on = join->next;
       assert(on->getTag() == K_ON);
       assert(on->left != nullptr);
 
       jc.op = aq::id_to_kstring(on->left->getTag());
-      
+
       aq::tnode * jtype = join->parent;
       assert(jtype != nullptr);
       if (jtype->getTag() == K_INNER)
@@ -1511,7 +1511,7 @@ void tnodeToSelectStatement(const aq::tnode& tree, aq::core::SelectStatement& ss
       jc.left.name = n->left->right->getData().val_str;
       jc.right.table.name = n->right->left->getData().val_str;
       jc.right.name = n->right->right->getData().val_str;
-      
+
       boost::to_upper(jc.left.table.name);
       boost::to_upper(jc.left.name);
       boost::to_upper(jc.right.table.name);
@@ -1533,7 +1533,7 @@ void tnodeToSelectStatement(const aq::tnode& tree, aq::core::SelectStatement& ss
         ss.fromTables.push_back(tr);
       }
     }
-    
+
   }
 
   if (whereNode != nullptr)
