@@ -35,27 +35,40 @@ IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(CMAKE_CXX_FLAGS "-O0 -ggdb -std=c++11 -Wall")
 ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
-file(GLOB aq_util_source_files aq/util/*.cpp)
-file(GLOB aq_engine_source_files aq/engine/AQEngine.cpp aq/engine/AQMatrix.cpp)
-file(GLOB_RECURSE aq_query_resolver_source_files aq/parser/SQL92_Tok.l aq/parser/SQL92_Grm.y aq/*.cpp)
-list(REMOVE_ITEM aq_query_resolver_source_files ${aq_util_source_files})
-list(REMOVE_ITEM aq_query_resolver_source_files ${aq_engine_source_files})
+################################################################################
+# util
 
-file(GLOB exclude_files "aq/tests/WhereComparator.cpp"
-                        "aq/tests/WhereIn.cpp"
-                        "aq/tests/WhereValidator.cpp"
-                        "aq/util/WIN32FileMapper.cpp")
+# source files
+file(GLOB aq_util_source_files aq/util/*.cpp)
+file(GLOB exclude_files "aq/util/WIN32FileMapper.cpp")
 list(REMOVE_ITEM aq_util_source_files ${exclude_files})
-list(REMOVE_ITEM aq_query_resolver_source_files ${exclude_files})
+
+# aq-util static library
+add_library(aq-util STATIC ${aq_util_source_files})
+
+# # aq-util shared library
+# add_library(aq-util-shared SHARED ${aq_util_source_files})
+# target_link_libraries(aq-util-shared ${Boost_LIBRARIES})
+# set_target_properties(aq-util-shared PROPERTIES OUTPUT_NAME "aq-util")
+
+################################################################################
+# parser
+
+# source files
+file(GLOB aq_parser_source_files aq/parser/*.cpp
+                                 aq/parser/SQL92_Tok.l
+                                 aq/parser/SQL92_Grm.y
+                                 aq/parser/sql92_grm_tab.cpp)
+
 
 # remove previous generated files from list
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/sql92_grm_tab.cpp")
-  file(GLOB exclude_files "aq/parser/sql92_grm_tab.cpp")
-  list(REMOVE_ITEM aq_query_resolver_source_files ${exclude_files})
-endif()
+# if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/sql92_grm_tab.cpp")
+#   file(GLOB exclude_files "aq/parser/sql92_grm_tab.cpp")
+#   list(REMOVE_ITEM aq_parser_source_files ${exclude_files})
+# endif()
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/lex.yy.cpp")
   file(GLOB exclude_files "aq/parser/lex.yy.cpp")
-  list(REMOVE_ITEM aq_query_resolver_source_files ${exclude_files})
+  list(REMOVE_ITEM aq_parser_source_files ${exclude_files})
 endif()
 
 # Create target for the parser
@@ -81,34 +94,44 @@ ADD_CUSTOM_COMMAND(
   OUTPUTS ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/sql92_grm_tab.cpp
 )
 
-SET(aq_query_resolver_source_files ${aq_query_resolver_source_files} aq/parser/sql92_grm_tab.cpp)
+SET(aq_query_resolver_source_files ${aq_parser_source_files} aq/parser/sql92_grm_tab.cpp)
 SET_SOURCE_FILES_PROPERTIES(aq/parser/lex.yy.cpp GENERATED)
 SET_SOURCE_FILES_PROPERTIES(aq/parser/sql92_grm_tab.cpp GENERATED)
 
-#  aq-util static library
-add_library(aq-util STATIC ${aq_util_source_files})
+# aq-parser static library
+add_library(aq-parser STATIC ${aq_parser_source_files})
 
-# aq-util shared library
-add_library(aq-util-shared SHARED ${aq_util_source_files})
-target_link_libraries(aq-util-shared ${Boost_LIBRARIES})
-set_target_properties(aq-util-shared PROPERTIES OUTPUT_NAME "aq-util")
+################################################################################
+# engine
+
+# source files
+file(GLOB aq_engine_source_files aq/engine/*.cpp)
 
 # aq-engine static library
 add_library(aq-engine STATIC ${aq_engine_source_files})
 
-# aq-engine shared library
-add_library(aq-engine-shared SHARED ${aq_engine_source_files})
-target_link_libraries(aq-engine-shared ${Boost_LIBRARIES})
-set_target_properties(aq-engine-shared PROPERTIES OUTPUT_NAME "aq-engine")
+# # aq-engine shared library
+# add_library(aq-engine-shared SHARED ${aq_engine_source_files})
+# target_link_libraries(aq-engine-shared ${Boost_LIBRARIES})
+# set_target_properties(aq-engine-shared PROPERTIES OUTPUT_NAME "aq-engine")
+
+################################################################################
+# query resolver
+
+# source file
+file(GLOB aq_query_resolver_source_files aq/*.cpp
+                                         aq/db_loader/*.cpp
+                                         aq/verbs/*.cpp)
 
 # aq-query-resolver static library
 add_library(aq-query-resolver STATIC ${aq_query_resolver_source_files})
 
-# aq-query-resolver shared library
-add_library(aq-query-resolver-shared SHARED ${aq_query_resolver_source_files})
-target_link_libraries(aq-query-resolver-shared aq-engine ${Boost_LIBRARIES})
-set_target_properties(aq-query-resolver-shared PROPERTIES OUTPUT_NAME "aq-query-resolver")
+# # aq-query-resolver shared library
+# add_library(aq-query-resolver-shared SHARED ${aq_query_resolver_source_files})
+# target_link_libraries(aq-query-resolver-shared aq-engine ${Boost_LIBRARIES})
+# set_target_properties(aq-query-resolver-shared PROPERTIES OUTPUT_NAME "aq-query-resolver")
 
+################################################################################
 # tools
 file(GLOB aq_tools_source_files Tools/*.cpp)
 file(GLOB exclude_files "Tools/aq_tests_batch.cpp")
@@ -116,12 +139,14 @@ list(REMOVE_ITEM aq_tools_source_files ${exclude_files})
 add_executable(aq-tools ${aq_tools_source_files})
 target_link_libraries(
     aq-tools
-    aq-query-resolver-shared
-    aq-engine-shared
-    aq-util-shared
+    aq-query-resolver
+    aq-engine
+    aq-parser
+    aq-util
     ${Boost_LIBRARIES}
     -lmysqlcppconn)
 
+################################################################################
 # tests
 file(GLOB aq_tests_source_files Tools/*.cpp)
 file(GLOB exclude_files "Tools/aq_tools.cpp")
@@ -129,8 +154,9 @@ list(REMOVE_ITEM aq_tests_source_files ${exclude_files})
 add_executable(aq-tests ${aq_tools_source_files})
 target_link_libraries(
     aq-tests
-    aq-query-resolver-shared
-    aq-engine-shared
-    aq-util-shared
+    aq-query-resolver
+    aq-engine
+    aq-parser
+    aq-util
     ${Boost_LIBRARIES}
     -lmysqlcppconn)

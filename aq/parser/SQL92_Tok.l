@@ -185,7 +185,7 @@ UNKNOWN			[Uu][Nn][Kk][Nn][Oo][Ww][Nn]
 							}
 						}				
 						if ( c == EOF ) {
-							yyerror( "EOF in comment" );
+							yyerror(nullptr, "EOF in comment" );
 							break;
 						}
 					}
@@ -405,7 +405,7 @@ UNKNOWN			[Uu][Nn][Kk][Nn][Oo][Ww][Nn]
 .						{	/* Catch All Rule */
 							char szBuf[ 100 ];
 							sprintf( szBuf, "Unsupported character <%c> (0x%x) encountered at line number: %d\n", *yytext, (int)(unsigned char)*yytext, yylineno );
-							yyerror( szBuf ); 
+							yyerror(nullptr, szBuf ); 
 							yyterminate();
 						} 
 %%

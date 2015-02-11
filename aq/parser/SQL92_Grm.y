@@ -1,35 +1,21 @@
-%defines
 %{
-// %option bison-bridge
-// %option bison-locations
-// %option noyywrap
-
-/* define stack type */
 #define YYSTYPE aq::tnode*
-#define YYPARSE_PARAM ppNode
-
-/* define error & debugging flags */
-#define YYERROR_VERBOSE
-#define YYDEBUG 1
-
 #include "SQLParser.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
-
 // Forward Definitions
-int yyerror( const char *pszMsg );
-
+int yyerror(aq::tnode ** ppNode, const char *pszMsg );
 int yylex( void );
-        
 using namespace aq;
-
 %}
+
+%parse-param { aq::tnode ** ppNode }
 
 %start startsymbol
 
-%token K_AND K_OR K_PLUS K_MINUS K_MUL K_DIV K_EQ K_LT K_GT 
+%token K_AND K_OR K_PLUS K_MINUS K_MUL K_DIV K_EQ K_LT K_GT
 %token K_NEQ K_LEQ K_GEQ K_NOT K_CONCAT
 	/* K_MUL echivalent with asterisk & K_STAR ! */
 %token K_STAR
@@ -48,17 +34,17 @@ using namespace aq;
 %token K_TRUE K_FALSE K_UNKNOWN
 
 %token K_ALL K_ANY K_AS K_ASC K_AVG K_BETWEEN K_BY K_CASE K_COMMIT K_COUNT K_DATE
-%token K_DAY K_DEFAULT K_DEFERRED K_DELETE K_DESC K_DISTINCT K_ELSE 
+%token K_DAY K_DEFAULT K_DEFERRED K_DELETE K_DESC K_DISTINCT K_ELSE
 %token K_END K_EXISTS K_EXTRACT K_ESCAPE K_IMMEDIATE K_FOR K_FROM K_FULL
 %token K_GROUP K_HAVING K_IN K_INNER K_INSERT K_INTERVAL K_INTO
 %token K_IS K_JOIN K_LEFT K_LIKE K_MAX K_MIN K_MONTH K_NATURAL
-%token K_NULL K_ON K_ORDER K_OUTER K_RIGHT K_ROLLBACK K_SELECT K_SET 
+%token K_NULL K_ON K_ORDER K_OUTER K_RIGHT K_ROLLBACK K_SELECT K_SET
 %token K_SUBSTRING K_SUM K_TABLE K_THEN K_TRANSACTION K_UNION K_UPDATE
 %token K_VALUES K_WHEN K_WHERE K_WORK K_YEAR
 
 %token K_FUNC K_TO K_TO_DATE K_TO_CHAR
 
-%token K_CALL K_COLUMNS K_LIST K_OUTREF K_SOURCE K_START 
+%token K_CALL K_COLUMNS K_LIST K_OUTREF K_SOURCE K_START
 
 %token K_COLUMN
 
@@ -101,7 +87,7 @@ startsymbol : select_stmt cmd_term			{
 			| update_stmt					{
 												*(aq::tnode**)ppNode = $$;
 												YYACCEPT;
-											}					
+											}
 			| delete_stmt					{
 												*(aq::tnode**)ppNode = $$;
 												YYACCEPT;
@@ -126,9 +112,9 @@ cmd_term	: K_SEMICOLON /* ';' */
 	/*======================================================*/
 	/* Select - From - Where - Group_by - Order_by - Having */
 	/*======================================================*/
-select_stmt : K_SELECT 
-				set_quantifier 
-				select_list 
+select_stmt : K_SELECT
+				set_quantifier
+				select_list
 				table_expression			{	aq::tnode *pNode;
 												$$ = $1;
 												if ( $2 != nullptr ) {
@@ -150,7 +136,7 @@ query_exp	: select_stmt
 
 
 set_quantifier  : K_ALL
-				| K_DISTINCT 
+				| K_DISTINCT
 				| /* Nothing - ALL is implicit */	{ $$ = nullptr; }
 				;
 
@@ -158,7 +144,7 @@ select_list		: K_MUL	/* Asterisk */				{ $$ = $1; $$->setTag(K_STAR); }
 				| select_sublist_rec				// { $$ = $1; }
 				;
 
-select_sublist_rec	: select_sublist				
+select_sublist_rec	: select_sublist
 					| select_sublist_rec K_COMMA select_sublist	{
 														$2->left		= $1;
 														$2->right	= $3;
@@ -196,21 +182,21 @@ derived_column	: value_expression
 													}
 				;
 
-replace_clause : K_REPLACE K_LPAREN replace_clause K_COMMA K_STRING K_COMMA K_STRING K_RPAREN { 
+replace_clause : K_REPLACE K_LPAREN replace_clause K_COMMA K_STRING K_COMMA K_STRING K_RPAREN {
 														$1->left = $3;
 														$1->right = $6;
 														$6->left = $5;
 														$6->right = $7;
 														$$ = $1;
 													}
-				| K_REPLACE K_LPAREN column_reference K_COMMA K_STRING K_COMMA K_STRING K_RPAREN { 
+				| K_REPLACE K_LPAREN column_reference K_COMMA K_STRING K_COMMA K_STRING K_RPAREN {
 														$1->left = $3;
 														$1->right = $6;
 														$6->left = $5;
 														$6->right = $7;
 														$$ = $1;
 													}
-				| K_REPLACE K_LPAREN K_STRING K_COMMA K_STRING K_COMMA K_STRING K_RPAREN { 
+				| K_REPLACE K_LPAREN K_STRING K_COMMA K_STRING K_COMMA K_STRING K_RPAREN {
 														$1->left = $3;
 														$1->right = $6;
 														$6->left = $5;
@@ -256,11 +242,11 @@ as_clause	: column_name							{
 
 													}
 			;
-	
-table_expression :  from_clause 
-					where_clause 
-					group_by_clause 
-					having_clause 
+
+table_expression :  from_clause
+					where_clause
+					group_by_clause
+					having_clause
 					/* [ [ UNION | UNION ALL | INTERSECT | MINUS ] select-statement ]... */
 					order_by_clause					{
 														aq::tnode *pNode;
@@ -319,38 +305,38 @@ joined_table : table_reference
 			;
 
 	/* [ K_INNER | { { K_LEFT | K_RIGHT | K_FULL } [ K_OUTER ] } ] K_JOIN */
-joined_type :  K_INNER K_JOIN						{	
-														$1->left	= $2; 
+joined_type :  K_INNER K_JOIN						{
+														$1->left	= $2;
 														$$			= $1;
 													}
-			|   K_LEFT K_JOIN						{	
-														$1->left	= $2; 
+			|   K_LEFT K_JOIN						{
+														$1->left	= $2;
 														$$			= $1;
 													}
-			|   K_LEFT K_OUTER K_JOIN				{	
-														$1->left	= $2; 
-														$2->left	= $3; 
+			|   K_LEFT K_OUTER K_JOIN				{
+														$1->left	= $2;
+														$2->left	= $3;
 														$$			= $1;
 													}
-			|   K_RIGHT K_JOIN						{	
-														$1->left	= $2; 
+			|   K_RIGHT K_JOIN						{
+														$1->left	= $2;
 														$$			= $1;
 													}
-			|   K_RIGHT K_OUTER K_JOIN				{	
-														$1->left	= $2; 
-														$2->left	= $3; 
+			|   K_RIGHT K_OUTER K_JOIN				{
+														$1->left	= $2;
+														$2->left	= $3;
 														$$			= $1;
 													}
-			|   K_FULL K_JOIN						{	
-														$1->left	= $2; 
+			|   K_FULL K_JOIN						{
+														$1->left	= $2;
 														$$			= $1;
 													}
-			|   K_FULL K_OUTER K_JOIN				{	
-														$1->left	= $2; 
-														$2->left	= $3; 
+			|   K_FULL K_OUTER K_JOIN				{
+														$1->left	= $2;
+														$2->left	= $3;
 														$$			= $1;
 													}
-			|	K_JOIN 
+			|	K_JOIN
 			;
 
 where_clause : K_WHERE search_condition				{
@@ -432,7 +418,7 @@ column_name_list : column_reference
 													}
 				 ;
 
-column_name : identifier 
+column_name : identifier
 			;
 
 sort_specification_list : sort_specification
@@ -470,9 +456,9 @@ sort_key	: value_expression						{
 														$$ = $1;
 														#endif
 													}
-			; 
+			;
 
-ordering_specification	: K_ASC 
+ordering_specification	: K_ASC
 						| K_DESC
 						| /* nothing */				{ $$ = nullptr; }
 						;
@@ -501,7 +487,7 @@ datetime_value_function	: K_DATE K_LPAREN datetime_value_expression K_RPAREN {
 														$$ = $1;
 														$1->left = $3;
 													}
-						| date_conversion 
+						| date_conversion
 						| K_CURRENT_DATE
 						;
 
@@ -516,12 +502,12 @@ date_conversion : K_TO_DATE K_LPAREN string_value_expression K_COMMA K_STRING K_
 														$$			= $1;
 													}
 				;
-				
+
 char_conversion : K_TO_CHAR K_LPAREN numeric_value_expression K_RPAREN	{
 														$1->left	= $3;
 														$$			= $1;
 													}
-				| K_TO_CHAR K_LPAREN numeric_value_expression 
+				| K_TO_CHAR K_LPAREN numeric_value_expression
 				  K_COMMA K_STRING K_RPAREN			{
 														$1->left	= $3;
 														$1->right	= $5;
@@ -561,7 +547,7 @@ term	: factor
 		;
 
 factor	: numeric_primary
-		| sign numeric_primary						{	
+		| sign numeric_primary						{
 														$1->setTag(K_UMINUS);
 														$1->left	= $2;
 														$$			= $1;
@@ -576,7 +562,7 @@ numeric_primary	: value_expression_primary
 				| K_INTEGER
 				| K_REAL
 				;
-				
+
 numeric_value_function	: square_root
 						| absolute_value_expression
 						| year_expresssion
@@ -640,10 +626,10 @@ count_all : K_COUNT K_LPAREN K_MUL K_RPAREN			{
 													}
 			;
 
-general_set_function	: set_function_type 
-							K_LPAREN 
-							set_quantifier 
-							value_expression 
+general_set_function	: set_function_type
+							K_LPAREN
+							set_quantifier
+							value_expression
 							K_RPAREN				{
 														if ( $3 != nullptr ) {
 															$1->left	= $3;
@@ -655,10 +641,10 @@ general_set_function	: set_function_type
 													}
 						;
 
-set_function_type	: K_AVG 
-					| K_MAX 
-					| K_MIN 
-					| K_SUM 
+set_function_type	: K_AVG
+					| K_MAX
+					| K_MIN
+					| K_SUM
 				/*
 					| K_COUNT
 				*/
@@ -673,8 +659,8 @@ case_expression	: case_specification
 case_specification	: simple_case
 					| searched_case
 					;
- 
-	/* Tree : 
+
+	/* Tree :
 		CASE->left		= case_operand;
 		CASE->right		= WHEN[1];
 		WHEN[1]->next	= WHEN[2];
@@ -699,7 +685,7 @@ simple_case	: K_CASE case_operand simple_when_clause_list else_clause K_END	{
 													}
 			;
 
-	/* Tree : 
+	/* Tree :
 		CASE->left		= WHEN[1];
 		//CASE->right		= ELSE;
 		WHEN[1]->next	= WHEN[2];
@@ -767,7 +753,7 @@ case_operand	: value_expression
 when_operand	: value_expression
 				;
 
-result	: result_expression 
+result	: result_expression
 		| K_NULL
 		;
 
@@ -803,7 +789,7 @@ character_primary	: K_STRING		/* Added by Zoli */
 					| value_expression_primary
 					| string_value_function
 					;
-					
+
 string_value_function	: binary_substring_function
 						| char_conversion
 						;
@@ -842,7 +828,7 @@ boolean_test	: boolean_primary K_IS K_NOT truth_value	{
 														$2->right	= $3;
 														$$			= $2;
 													}
-				| boolean_primary 
+				| boolean_primary
 				;
 
 truth_value	: K_TRUE
@@ -873,21 +859,21 @@ predicate	: comparison_predicate
 //---------------
 comparison_predicate	: row_value_constructor comp_op row_value_constructor	{
 // K_PERIOD
-														//#if 0 
+														//#if 0
 														/* Enforce K_JEQ instead of K_EQ ! */
 														/* Moved to convert_syntax_tree_to_prefix_form() */
-														
-														if ( $1->getTag() == K_IDENT || 
-															 $1->getTag() == K_COLUMN || 
-															( $1->getTag() == K_PERIOD && 
+
+														if ( $1->getTag() == K_IDENT ||
+															 $1->getTag() == K_COLUMN ||
+															( $1->getTag() == K_PERIOD &&
 															  $1->left != nullptr &&
 															  $1->left->getTag() == K_IDENT &&
 															  $1->right != nullptr &&
-															  ( $1->right->getTag() == K_IDENT || 
+															  ( $1->right->getTag() == K_IDENT ||
 															    $1->right->getTag() == K_COLUMN ) ) )
-															if ( $3->getTag() == K_IDENT || 
-																 $3->getTag() == K_COLUMN || 
-																( $3->getTag() == K_PERIOD && 
+															if ( $3->getTag() == K_IDENT ||
+																 $3->getTag() == K_COLUMN ||
+																( $3->getTag() == K_PERIOD &&
 																  $3->left != nullptr &&
 																  $3->left->getTag() == K_IDENT &&
 																  $3->right != nullptr &&
@@ -903,7 +889,7 @@ comparison_predicate	: row_value_constructor comp_op row_value_constructor	{
 																    case K_NEQ: $2->setTag(K_JNEQ); break;
 																    default:;
 																    };
-														
+
 														//#endif
 														$2->left	= $1;
 														$2->right	= $3;
@@ -955,7 +941,7 @@ between_predicate	: row_value_constructor K_NOT K_BETWEEN
 														$4->right	= $5;
 														$$			= $2;
 													}
-					; 
+					;
 
 //----------------
 in_predicate	: row_value_constructor K_NOT K_IN in_predicate_value	{
@@ -1052,11 +1038,11 @@ null_predicate	: row_value_constructor K_IS K_NOT K_NULL {
 														$2->right	= $3;
 														$$			= $2;
 													}
-				; 
+				;
 
 exists_predicate	: K_EXISTS table_subquery		{
 														$1->left = $2;
-														$$ = $1; 
+														$$ = $1;
 													}
 					;
 
@@ -1088,7 +1074,7 @@ aggregate_function	: set_function_specification //[ <filter clause> ]
 					//| binary_set_function [ <filter clause> ]
 					//| ordered_set_function [ <filter clause> ]
 					;
-								
+
 //---------------------------------------------------
 window_function	: window_function_type K_OVER window_name_or_specification {
 														delete $2;
@@ -1099,20 +1085,20 @@ window_function	: window_function_type K_OVER window_name_or_specification {
 
 window_function_type	: /*rank_function_type K_LPAREN K_RPAREN
 						|*/ K_ROW_NUMBER K_LPAREN K_RPAREN
-						| aggregate_function		{ 
+						| aggregate_function		{
 														$$	= $1;
 													}
 						/*| ntile_function*/
-						| lead_or_lag_function		{ 
-														$$	= $1; 
+						| lead_or_lag_function		{
+														$$	= $1;
 													}
-						| first_or_last_value_function	{ 
-														$$	= $1; 
+						| first_or_last_value_function	{
+														$$	= $1;
 													}
 						/*| nth_value_function*/
 						;
 
-/*						
+/*
 rank_function_type	: K_RANK
 					| K_DENSE_RANK
 					| K_PERCENT_RANK
@@ -1173,10 +1159,10 @@ default_expression_optional	: K_COMMA default_expression {
 default_expression	: value_expression
 
 /*
-null_treatment	: K_RESPECT_NULLS 
+null_treatment	: K_RESPECT_NULLS
 				| K_IGNORE_NULLS
 */
-				
+
 first_or_last_value_function	: first_or_last_value
 								  K_LPAREN value_expression K_RPAREN {
 														$1->left	= $3;
@@ -1271,14 +1257,14 @@ window_frame_clause	: window_frame_units window_frame_extent /*[ <window frame e
 window_frame_units	: K_ROWS
 					| K_RANGE
 
-window_frame_extent	: window_frame_start			
-					| window_frame_between			
+window_frame_extent	: window_frame_start
+					| window_frame_between
 
-window_frame_start	: K_UNBOUNDED K_PRECEDING		{	
+window_frame_start	: K_UNBOUNDED K_PRECEDING		{
 														$2->left	= $1;
 														$$			= $2;
 													}
-					| window_frame_preceding		
+					| window_frame_preceding
 					| K_CURRENT K_ROW				{	$$ = $1;	}
 
 /* window_frame_preceding	: unsigned_value_specification K_PRECEDING */
@@ -1300,7 +1286,7 @@ window_frame_bound		: window_frame_start
 														$$			= $2;
 													}
 						| window_frame_following
-						
+
 /*window_frame_following	: unsigned_value_specification FOLLOWING*/
 window_frame_following	: K_INTEGER K_FOLLOWING		{
 														$2->left	= $1;
@@ -1324,13 +1310,13 @@ cast_operand	: value_expression
 				/*| implicitly_typed_value_specification*/
 
 cast_target	: /*domain_name
-			| */data_type							
-			
+			| */data_type
+
 data_type	: K_STRING_TYPE
 			| K_REAL_TYPE
 			| K_INTEGER_TYPE
-			
-nvl_specification	: K_NVL K_LPAREN value_expression K_COMMA 
+
+nvl_specification	: K_NVL K_LPAREN value_expression K_COMMA
 					  value_expression K_RPAREN		{
 														$1->left	= $3;
 														$1->right	= $5;
@@ -1366,8 +1352,8 @@ day_expresssion	: K_DAY K_LPAREN datetime_value_expression K_RPAREN {
 														$1->left	= $3;
 														$$			= $1;
 													}
-				;			
-				
+				;
+
 aq_function		: K_FUNC K_LPAREN aq_arg_list K_RPAREN				{
 														$1->left	= $3;
 														$$			= $1;
@@ -1383,14 +1369,14 @@ aq_arg_list		: value_expression
 				;
 
 //---------------------------------------------------
-binary_substring_function	: K_SUBSTRING K_LPAREN binary_primary 
+binary_substring_function	: K_SUBSTRING K_LPAREN binary_primary
 							  K_COMMA start_position K_RPAREN {
 														$4->left		= $3;
 														$4->right	= $5;
 														$1->left		= $4;
 														$$			= $1;
 													}
-							| K_SUBSTRING K_LPAREN binary_primary 
+							| K_SUBSTRING K_LPAREN binary_primary
 							  K_COMMA start_position K_COMMA string_length K_RPAREN {
 														$4->left			= $3;
 														$1->left			= $4;
@@ -1414,16 +1400,16 @@ binary_primary	: value_expression_primary
 
 identifier	: K_IDENT
 			;
-			
+
 //---------------------------------------------------
 create_table_stmt	: K_CREATE K_TABLE table_name K_AS select_stmt {
 														$1->left	= $3;
 														$1->right	= $5;
 														$$			= $1;
 													}
-													
+
 //---------------------------------------------------
-insert_stmt	: K_INSERT K_INTO table_name K_LPAREN column_name_list K_RPAREN 
+insert_stmt	: K_INSERT K_INTO table_name K_LPAREN column_name_list K_RPAREN
 			  K_VALUES K_LPAREN value_list K_RPAREN	{
 														$1->left		= $3;
 														aq::tnode *pNode;
@@ -1433,7 +1419,7 @@ insert_stmt	: K_INSERT K_INTO table_name K_LPAREN column_name_list K_RPAREN
 														pNode->right	= $9;
 														$$				= $1;
 													}
-			| K_INSERT K_INTO table_name K_LPAREN column_name_list K_RPAREN 
+			| K_INSERT K_INTO table_name K_LPAREN column_name_list K_RPAREN
 			  select_stmt							{
 														$1->left		= $3;
 														aq::tnode *pNode;
@@ -1452,15 +1438,15 @@ value_list	: value_scalar
 														$$			= $2;
 													}
 			;
-																	
+
 value_scalar	: K_INTEGER
 				| K_REAL
 				| K_STRING
 				| K_DATE_VALUE
 				;
-				
+
 //---------------------------------------------------
-update_stmt	: K_UPDATE table_name 
+update_stmt	: K_UPDATE table_name
 			  K_SET column_value_list
 			  where_clause							{
 														$1->left = $2;
@@ -1470,7 +1456,7 @@ update_stmt	: K_UPDATE table_name
 														pNode->left = $4;
 														pNode->next = $5;
 													}
-			| K_UPDATE table_name 
+			| K_UPDATE table_name
 			  K_SET column_value_list
 			  K_WHERE K_LPAREN column_name_list K_RPAREN K_IN subquery	{
 														$1->left		= $2;
@@ -1492,14 +1478,14 @@ column_value_list	: column_value_pair
 														$$			= $2;
 													}
 					;
-																	
+
 column_value_pair	: column_name K_EQ value_scalar	{
 														$$			= $2;
 														$2->left	= $1;
 														$2->right	= $3;
 													}
 					;
-					
+
 //---------------------------------------------------
 delete_stmt	: K_DELETE K_FROM table_name
 			  K_WHERE column_value_list				{
@@ -1525,7 +1511,7 @@ truncate_stmt	: K_TRUNCATE K_TABLE table_name		{
 				;
 
 //---------------------------------------------------
-decode_specification	: K_DECODE K_LPAREN value_expression 
+decode_specification	: K_DECODE K_LPAREN value_expression
 						  K_COMMA search_result_list K_RPAREN {
 														$1->left	= $3;
 														$1->right	= $5;
@@ -1562,7 +1548,7 @@ search_result_pair	: value_scalar K_COMMA value_scalar {
 default_result	: value_scalar
 				;
 
-//---------------------------------------------------	
+//---------------------------------------------------
 union_minus_stmt	: union_minus_list
 
 union_minus_list	: query_exp K_UNION query_exp	{
@@ -1598,8 +1584,8 @@ union_minus_list	: query_exp K_UNION query_exp	{
 														$$			= $2;
 													}
 			;
-			
-//---------------------------------------------------	
+
+//---------------------------------------------------
 merge_stmt	: K_MERGE optional_into table_reference K_USING table_reference
 			  K_ON search_condition
 			  when_matched when_not_matched when_not_matched_by_source	{
@@ -1618,7 +1604,7 @@ merge_stmt	: K_MERGE optional_into table_reference K_USING table_reference
 														$$				= $1;
 													}
 			;
-			
+
 optional_into	: K_INTO
 				| /* nothing */ 					{	$$	= nullptr; }
 				;
@@ -1635,33 +1621,33 @@ when_not_matched	: K_WHEN K_NOT K_MATCHED optional_by_target
 													}
 					| /* nothing */ 				{	$$	= nullptr; }
 					;
-					
+
 optional_by_target	: K_BY K_TARGET					{	$$	= nullptr; }
 					| /* nothing */ 				{	$$	= nullptr; }
 					;
-					
-when_not_matched_by_source	: K_WHEN K_NOT K_MATCHED 
+
+when_not_matched_by_source	: K_WHEN K_NOT K_MATCHED
 							  K_BY K_SOURCE K_THEN merge_matched	{
 														$$	= $7;
 													}
 							| /* nothing */ 		{	$$	= nullptr; }
 							;
-							
+
 merge_matched	: K_UPDATE K_SET column_column_list	{
 														$1->left		= $3;
 														$$				= $1;
 													}
 				| K_DELETE
 				;
-				
-merge_not_matched	: K_INSERT K_LPAREN column_name_list K_RPAREN 
+
+merge_not_matched	: K_INSERT K_LPAREN column_name_list K_RPAREN
 					  K_VALUES K_LPAREN column_name_list K_RPAREN	{
 														$1->left		= $3;
 														$1->right		= $7;
 														$$				= $1;
 													}
 					;
-					
+
 column_column_list	: column_column_pair
 					| column_column_list K_COMMA column_column_pair	{
 														$2->left	= $1;
@@ -1669,7 +1655,7 @@ column_column_list	: column_column_pair
 														$$			= $2;
 													}
 					;
-																	
+
 column_column_pair	: column_reference K_EQ column_reference	{
 														$$			= $2;
 														$2->left	= $1;
@@ -1690,10 +1676,10 @@ namespace aq
 int SQLParse( const char *pszStr, aq::tnode*& pNode ) {
 	int rc = 0;
 	yy_scan_string( pszStr );
-	rc = yyparse( (void*)&pNode );
+	rc = yyparse(&pNode);
 
   // FIXME
-#ifndef __FreeBSD__ 
+#ifndef __FreeBSD__
   yylex_destroy();
 #endif
 

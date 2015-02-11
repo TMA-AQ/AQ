@@ -16,7 +16,7 @@
 #define STR_BUF_SIZE_ROUND_UP  4096
 #define EXIT_ON_MEM_ERROR    1
 
-int yyerror(const char *pszMsg)
+int yyerror(aq::tnode ** ppNode, const char *pszMsg)
 {
   aq::Logger::getInstance().log(AQ_ERROR, pszMsg);
   return -1;
@@ -30,7 +30,7 @@ namespace aq
 std::string tnode::indentStep("    ");
 
 tnode::tnode(tag_t _tag)
-  : 
+  :
   left(nullptr),
   right(nullptr),
   next(nullptr),
@@ -99,14 +99,14 @@ tnode& tnode::operator=(const tnode& source)
 }
 
 //------------------------------------------------------------------------------
-void tnode::set_string_data(const char* pszStr) 
+void tnode::set_string_data(const char* pszStr)
 {
   size_t nLen;
 
-  if ( pszStr == nullptr ) 
+  if ( pszStr == nullptr )
   {
     /* Call free */
-    if ((this->eNodeDataType == NODE_DATA_STRING) && (this->nStrBufCb != 0) && (this->data.val_str != nullptr)) 
+    if ((this->eNodeDataType == NODE_DATA_STRING) && (this->nStrBufCb != 0) && (this->data.val_str != nullptr))
     {
       free( this->data.val_str );
       this->data.val_str = nullptr;
@@ -117,7 +117,7 @@ void tnode::set_string_data(const char* pszStr)
   {
     nLen = strlen( pszStr ) + 1;    /* Include terminating nullptr char */
 
-    if ((this->eNodeDataType != NODE_DATA_STRING) || (this->nStrBufCb < nLen)) 
+    if ((this->eNodeDataType != NODE_DATA_STRING) || (this->nStrBufCb < nLen))
     {
       /* Need to allocate or reallocate the data buffer */
 
@@ -129,7 +129,7 @@ void tnode::set_string_data(const char* pszStr)
       nLen = nLen - nLen % STR_BUF_SIZE_ROUND_UP;
 
       this->data.val_str = (char*)malloc( sizeof( char ) * nLen );
-      if (this->data.val_str == nullptr) 
+      if (this->data.val_str == nullptr)
       {
         throw aq::generic_error(aq::generic_error::GENERIC, "Not enough memory [%u]", EXIT_ON_MEM_ERROR);
       }
@@ -142,7 +142,7 @@ void tnode::set_string_data(const char* pszStr)
 }
 
 //------------------------------------------------------------------------------
-void tnode::append_string_data(char* pszStr) 
+void tnode::append_string_data(char* pszStr)
 {
   size_t nLen, nLen1;
 
@@ -152,7 +152,7 @@ void tnode::append_string_data(char* pszStr)
     return;
   }
 
-  nLen = strlen(this->data.val_str);  
+  nLen = strlen(this->data.val_str);
   if ( nLen == 0 )  /* Empty String */
   {
     this->set_string_data(pszStr);
@@ -165,7 +165,7 @@ void tnode::append_string_data(char* pszStr)
 
   nLen += nLen1 + 1;  /* Include terminating nullptr char */
 
-  if (this->nStrBufCb < nLen) 
+  if (this->nStrBufCb < nLen)
   {
     /* Need to allocate or reallocate the data buffer */
     char *pszBuf;
@@ -193,7 +193,7 @@ void tnode::append_string_data(char* pszStr)
 }
 
 //------------------------------------------------------------------------------
-void tnode::set_int_data( llong nVal ) 
+void tnode::set_int_data( llong nVal )
 {
   if ( this->eNodeDataType == NODE_DATA_STRING )
       set_string_data( nullptr );    /* Free the String Buffer */
@@ -204,7 +204,7 @@ void tnode::set_int_data( llong nVal )
 }
 
 //------------------------------------------------------------------------------
-void tnode::set_double_data( double dVal ) 
+void tnode::set_double_data( double dVal )
 {
   if ( this->eNodeDataType == NODE_DATA_STRING )
     set_string_data( nullptr );    /* Free the String Buffer */
@@ -245,11 +245,11 @@ std::string tnode::to_string() const
   memset(szBuffer, 0, STR_BUF_SIZE);
   switch( this->eNodeDataType )
   {
-  case NODE_DATA_INT: 
+  case NODE_DATA_INT:
     sprintf(szBuffer, "%lld", this->data.val_int);
     return szBuffer;
     break;
-  case NODE_DATA_NUMBER: 
+  case NODE_DATA_NUMBER:
     util::doubleToString( szBuffer, this->data.val_number );
     return szBuffer;
     break;
@@ -285,7 +285,7 @@ bool tnode::cmp(const tnode * n2) const
     case NODE_DATA_NUMBER:
       return this->data.val_number == n2->data.val_number;
     case NODE_DATA_STRING:
-      return strcmp(this->data.val_str, n2->data.val_str) == 0; 
+      return strcmp(this->data.val_str, n2->data.val_str) == 0;
     }
   }
   return false;
@@ -363,7 +363,7 @@ namespace helper
   template <typename T>
   void find_nodes(T n, tnode::tag_t tag, std::vector<T>& l)
   {
-    if (n == nullptr) 
+    if (n == nullptr)
       return;
     if (n->getTag() == tag)
       l.push_back(n);
@@ -390,14 +390,14 @@ tnode * tnode::find_main(tag_t tag)
 {
   if (this->getTag() == tag)
     return this;
-  if (this->next != nullptr) 
+  if (this->next != nullptr)
     return this->next->find_main(tag);
   return nullptr;
 }
 
 //------------------------------------------------------------------------------
 tnode * tnode::find_first(tag_t tag)
-{  
+{
   tnode * pNodeFound = nullptr;
   if (this->getTag() == tag)
     return this;
@@ -412,7 +412,7 @@ tnode * tnode::find_first(tag_t tag)
 }
 //------------------------------------------------------------------------------
 tnode * tnode::find_first(const std::string& name)
-{  
+{
   tnode * pNodeFound = nullptr;
 
   if ((this->getTag() == K_COLUMN || this->getTag() == K_IDENT) && this->getData().val_str == name)
@@ -428,9 +428,9 @@ tnode * tnode::find_first(const std::string& name)
 }
 //------------------------------------------------------------------------------
 tnode * tnode::find_first(tag_t tag, tnode::tag_t diffTag)
-{  
+{
   tnode * pNodeFound = nullptr;
-  
+
   if (this->getTag() == tag && this->parent && (this->parent->getTag() != diffTag))
     return this;
 
@@ -464,7 +464,7 @@ bool tnode::isColumnReference() const
 {
   if ((this->tag == K_COLUMN) ||
       ((this->tag == K_PERIOD) &&
-       ((this->left != nullptr) && (this->right != nullptr)) && 
+       ((this->left != nullptr) && (this->right != nullptr)) &&
        (this->left->tag == K_IDENT) && (this->right->tag == K_COLUMN)))
   {
     return true;
@@ -475,9 +475,9 @@ bool tnode::isColumnReference() const
 //------------------------------------------------------------------------------
 void tnode::dump(std::ostream& os, std::string indent) const
 {
-  if (indent.size() > 100) 
+  if (indent.size() > 100)
   {
-      os << indent << "..."; 
+      os << indent << "...";
       return;
   }
 
@@ -485,18 +485,18 @@ void tnode::dump(std::ostream& os, std::string indent) const
 
   if ((this->left != nullptr) || (this->right != nullptr))
   {
-    if (this->left != nullptr) 
+    if (this->left != nullptr)
       this->left->dump(os, indent + tnode::indentStep);
-    else 
+    else
       os << "[address:" << (void*)0 << "] " << indent << tnode::indentStep << "[EMPTY LEFT]" << std::endl;
 
-    if (this->right != nullptr) 
+    if (this->right != nullptr)
       this->right->dump(os, indent + "    ");
     else
       os << "[address:" << (void*)0 << "] " << indent << tnode::indentStep << "[EMPTY RIGHT]" << std::endl;
   }
-  
-  if (this->next != nullptr) 
+
+  if (this->next != nullptr)
   {
     os << "[address:" << this->next << "] " << indent << "NEXT ->" << std::endl;
     this->next->dump(os, indent);
@@ -509,7 +509,7 @@ void tnode::dump(std::ostream& os, std::string indent) const
 // STATIC METHODS
 
 //------------------------------------------------------------------------------
-tnode* tnode::get_leftmost_child(tnode * pNode) 
+tnode* tnode::get_leftmost_child(tnode * pNode)
 {
   if (pNode == nullptr)
     return nullptr;
@@ -521,7 +521,7 @@ tnode* tnode::get_leftmost_child(tnode * pNode)
 }
 
 //------------------------------------------------------------------------------
-namespace helper 
+namespace helper
 {
   void checkTree(const tnode * tree, std::set<const tnode*>& nodes)
   {
@@ -540,8 +540,8 @@ namespace helper
     {
     case aq::tnode::tnodeDataType::NODE_DATA_INT: break;
     case aq::tnode::tnodeDataType::NODE_DATA_NUMBER: break;
-    case aq::tnode::tnodeDataType::NODE_DATA_STRING: 
-      //assert(tree->data.val_str != nullptr); 
+    case aq::tnode::tnodeDataType::NODE_DATA_STRING:
+      //assert(tree->data.val_str != nullptr);
       //assert((tree->nStrBufCb % STR_BUF_SIZE_ROUND_UP) == 0);
       //assert(tree->nStrBufCb >= strlen(tree->data.val_str));
       break;
@@ -560,7 +560,7 @@ void tnode::checkTree(const tnode * tree)
 }
 
 //------------------------------------------------------------------------------
-void tnode::delete_subtree(tnode *& pNode) 
+void tnode::delete_subtree(tnode *& pNode)
 {
   if (pNode == nullptr)
     return;
