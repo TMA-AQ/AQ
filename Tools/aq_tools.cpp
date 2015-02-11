@@ -251,11 +251,15 @@ int main(int argc, char**argv)
 
     //
     // if aq.ini exists in current directory, use it as default settings
-    settings->iniFile = "aq.ini";
-    boost::filesystem::path iniFile(settings->iniFile);
-    if (boost::filesystem::exists(iniFile))
+    if (boost::filesystem::exists(boost::filesystem::path("aq.ini")))
     {
-      settings->load(settings->iniFile);
+        settings->iniFile = "aq.ini";
+        settings->load(settings->iniFile);
+    }
+    else if (boost::filesystem::exists(boost::filesystem::path(aqHome + "/aq.ini")))
+    {
+        settings->iniFile = aqHome + "/aq.ini";
+        settings->load(settings->iniFile);
     }
 
     //
