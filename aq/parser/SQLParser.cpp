@@ -24,8 +24,26 @@ int yyerror(aq::tnode ** ppNode, const char *pszMsg)
 
 using namespace std;
 
+extern int yy_scan_string(const char *);
+extern int yylex_destroy (void);
+
 namespace aq
 {
+
+/// Returns 0 on success, 1 on error
+int SQLParse( const char *pszStr, aq::tnode*& pNode )
+{
+    int rc = 0;
+    yy_scan_string( pszStr );
+    rc = yyparse(&pNode);
+
+    // FIXME
+#ifndef __FreeBSD__
+    yylex_destroy();
+#endif
+
+    return rc;
+}
 
 std::string tnode::indentStep("    ");
 

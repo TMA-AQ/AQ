@@ -24,6 +24,11 @@ link_directories(
 )
 
 # TODO add mysql client
+find_package(FLEX 2.5.35)
+find_package(BISON 3.0.2)
+
+# include(CMakeUserFindMySQL)
+# find_package(MySQL )
 
 ################################################################################
 # system specifics
@@ -59,39 +64,24 @@ add_library(aq-util STATIC ${aq_util_source_files})
 ################################################################################
 # parser
 
-# Create target for the parser
-ADD_CUSTOM_TARGET(bison-sql-parser)
-
-# Create custom command for flex/lex
-ADD_CUSTOM_COMMAND(
-  TARGET bison-sql-parser
-  SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Tok.l
-  COMMAND echo "${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Tok.l"
-  COMMAND flex
-  ARGS --nounput -o${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/Lexer.cpp ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Tok.l
-  OUTPUTS ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/Lexer.cpp
-)
-
-# Create custom command for bison/yacc
-ADD_CUSTOM_COMMAND(
-  TARGET bison-sql-parser
-  SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Grm.y
-  COMMAND bison
-  ARGS -y -d ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Grm.y -o ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/Parser.cpp
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/Lexer.cpp
-  OUTPUTS ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/Parser.cpp ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/Parser.hpp
-)
-
-SET_SOURCE_FILES_PROPERTIES(aq/parser/lex.yy.cpp GENERATED)
-SET_SOURCE_FILES_PROPERTIES(aq/parser/Parser.cpp GENERATED)
-SET_SOURCE_FILES_PROPERTIES(aq/parser/Parser.hpp GENERATED)
+BISON_TARGET(parser
+             ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Grm.y
+             ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/Parser.cpp
+             COMPILE_FLAGS "-y")
+FLEX_TARGET(scanner
+            ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/SQL92_Tok.l
+            ${CMAKE_CURRENT_SOURCE_DIR}/aq/parser/Lexer.cpp
+            COMPILE_FLAGS "--nounput")
+ADD_FLEX_BISON_DEPENDENCY(scanner parser)
 
 # aq-parser static library
-add_library(aq-parser STATIC aq/parser/Parser.cpp
+add_library(aq-parser STATIC ${BISON_parser_OUTPUTS}
+                             ${FLEX_scanner_OUTPUTS}
                              aq/parser/JeqParser.cpp
                              aq/parser/SQLParser.cpp
                              aq/parser/ID2Str.cpp)
-add_dependencies(aq-parser bison-sql-parser)
+add_dependencies(aq-parser parser)
+add_dependencies(aq-parser scanner)
 
 ################################################################################
 # engine
@@ -117,10 +107,13 @@ add_library(aq-query-resolver STATIC ${aq_query_resolver_source_files})
 
 ################################################################################
 # tools
-file(GLOB aq_tools_source_files Tools/*.cpp)
-file(GLOB exclude_files "Tools/aq_tests_batch.cpp")
-list(REMOVE_ITEM aq_tools_source_files ${exclude_files})
-add_executable(aq-tools ${aq_tools_source_files})
+file(GLOB aq_tools_source_files Tools/AQEngineBasic.cpp
+                                Tools/AQEngineSimulate.cpp
+                                Tools/AQManager.cpp
+                                Tools/CommandHandler.cpp
+                                Tools/VerbBuilder.cpp)
+add_executable(aq-tools Tools/aq_tools.cpp ${aq_tools_source_files})
+add_dependencies(aq-tools aq-query-resolver aq-engine aq-parser aq-util)
 target_link_libraries(
     aq-tools
     aq-query-resolver
@@ -132,14 +125,23 @@ target_link_libraries(
 
 ################################################################################
 # tests
-file(GLOB aq_tests_source_files Tools/*.cpp)
-file(GLOB exclude_files "Tools/aq_tools.cpp")
-list(REMOVE_ITEM aq_tests_source_files ${exclude_files})
-add_executable(aq-tests ${aq_tools_source_files})
+add_executable(aq-tests Tools/aq_tests_batch.cpp ${aq_tools_source_files})
+add_dependencies(aq-tests aq-query-resolver aq-engine aq-parser aq-util)
 target_link_libraries(
     aq-tests
     aq-query-resolver
     aq-engine
+    aq-parser
+    aq-util
+    ${Boost_LIBRARIES}
+    -lmysqlcppconn)
+
+################################################################################
+# tests parser
+add_executable(sql-parser Tools/sql_parser.cpp)
+add_dependencies(sql-parser aq-parser aq-util)
+target_link_libraries(
+    sql-parser
     aq-parser
     aq-util
     ${Boost_LIBRARIES}

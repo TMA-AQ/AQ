@@ -1666,30 +1666,12 @@ column_column_pair	: column_reference K_EQ column_reference	{
 %%
 
 //------------------------------------------------------------------------------
-#include "Lexer.cpp"
-
-namespace aq
+extern "C"
 {
 
-//------------------------------------------------------------------------------
-/* Returns 0 on success, 1 on error */
-int SQLParse( const char *pszStr, aq::tnode*& pNode ) {
-	int rc = 0;
-	yy_scan_string( pszStr );
-	rc = yyparse(&pNode);
-
-  // FIXME
-#ifndef __FreeBSD__
-  yylex_destroy();
-#endif
-
-	return rc;
-}
-
-}
-
-//------------------------------------------------------------------------------
 int yywrap( void ) {
 	// return 0;		// To allow multi file ( ^Z - EOF )
 	return 1;		// To allow only one file ( EOF -> Exit )
+}
+
 }

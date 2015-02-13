@@ -1,7 +1,10 @@
 %{
 
-#include "SQLParser.h"
+#define YYSTYPE aq::tnode*
 #define YY_NO_UNISTD_H
+
+#include "SQLParser.h"
+#include "Parser.hpp"
 
 #ifdef WIN32
 #include <io.h>
@@ -9,6 +12,9 @@
 #include <stdio.h>
 #include <unistd.h>
 #endif
+
+int yyerror(aq::tnode ** ppNode, const char *pszMsg );
+using namespace aq;
 
 %}
 
