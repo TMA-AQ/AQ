@@ -1,5 +1,6 @@
 #include <aq/tests/TestRunner.h>
 #include <aq/tests/MySQLHelper.h>
+#include <aq/tests/PGSQLHelper.h>
 #include <aq/tests/QueryGenerator.h>
 #include <aq/tests/Report.h>
 #include "VerbBuilder.h"
@@ -60,7 +61,7 @@ struct Runner : public aq::DatabaseGenerator::handle_t
       bool log_pid_mode;
       bool aq_enabled = true;
       bool mysql_enabled = true;
-      bool pgsql_enabled = false;
+      bool pgsql_enabled = true;
 
       size_t workers;
       size_t aq_process_threads;
@@ -216,6 +217,7 @@ struct Runner : public aq::DatabaseGenerator::handle_t
       tc.reset(new aq::TestCase(report));
       if (aq_enabled)
       {
+          std::cout << "add algoquest test case" << std::endl;
           aq::Settings::Ptr settings(new aq::Settings);
           settings->initPath(opt->aq_path + "/" + opt->aq_name);
           settings->changeIdent("test");
@@ -226,13 +228,22 @@ struct Runner : public aq::DatabaseGenerator::handle_t
       }
       if (mysql_enabled)
       {
+          std::cout << "add mysql test case" << std::endl;
           boost::shared_ptr<aq::DatabaseIntf> db(new aq::MySQLDatabase(opt->mysql_host, opt->mysql_user, opt->mysql_pass, opt->mysql_name));
           tc->add(db);
       }
       if (pgsql_enabled)
       {
-          // boost::shared_ptr<aq::DatabaseIntf> db(new aq::PGSQLDatabase(opt->pgsql_host, opt->pgsql_user, opt->pgsql_pass, opt->pgsql_name));
-          // tc->add(db);
+          std::cout << "add postgresql test case" << std::endl;
+          try
+          {
+              boost::shared_ptr<aq::DatabaseIntf> db(new aq::PGSQLDatabase(opt->pgsql_host, opt->pgsql_user, opt->pgsql_pass, opt->pgsql_name));
+              tc->add(db);
+          }
+          catch (const pqxx::broken_connection& ex)
+          {
+              std::cerr << "ERROR while loading postgresql: " << ex.what() << std::endl;
+          }
       }
 
       std::fstream fin(opt->generator_filename.c_str());

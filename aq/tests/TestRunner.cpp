@@ -22,7 +22,7 @@ namespace helper
   bool get_opt_value(boost::property_tree::ptree& pt, const char * key, bool default_value)
   {
     boost::optional<std::string> opt = pt.get_optional<std::string>(boost::property_tree::ptree::path_type(key));
-    if (opt.is_initialized()) 
+    if (opt.is_initialized())
     {
       std::string s = opt.get();
       boost::to_upper(s);
@@ -33,7 +33,7 @@ namespace helper
 }
 
 TestCase::opt_t::opt_t()
-  : 
+  :
   generator_filename("queries.gen"),
   nb_tables(2),
   nb_rows(10),
@@ -74,6 +74,12 @@ void TestCase::opt_t::parse(std::istream& is)
     this->mysql_name = helper::get_opt_value(pt, "mysql.db-name", this->mysql_name);
     this->mysql_user = helper::get_opt_value(pt, "mysql.user", this->mysql_pass);
     this->mysql_pass = helper::get_opt_value(pt, "mysql.pass", this->mysql_user);
+
+    // pgsql options
+    this->pgsql_host = helper::get_opt_value(pt, "pgsql.db-host", this->pgsql_host);
+    this->pgsql_name = helper::get_opt_value(pt, "pgsql.db-name", this->pgsql_name);
+    this->pgsql_user = helper::get_opt_value(pt, "pgsql.user", this->pgsql_pass);
+    this->pgsql_pass = helper::get_opt_value(pt, "pgsql.pass", this->pgsql_user);
 
     // generation options
     this->generator_filename = helper::get_opt_value(pt, "generator.filename", this->generator_filename);
@@ -158,14 +164,14 @@ bool TestCase::execute(const aq::core::SelectStatement& ss, aq::DatabaseIntf::re
 
     nb_result += std::max(r1.size(), r2.size());
     // std::cout << nb_result << std::endl;
-    if (false && !this->compare(r1, r2))
+    if (!this->compare(r1, r2))
     {
-    // std::cout << std::endl;
-    dump_result(r1);
-    // std::cout << std::endl;
-    dump_result(r2);
-      nb_failure += 1;
-      return false;
+        // std::cout << std::endl;
+        // dump_result(r1);
+        // std::cout << std::endl;
+        // dump_result(r2);
+        nb_failure += 1;
+        return false;
     }
   }
   nb_success += 1;

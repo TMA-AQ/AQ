@@ -30,10 +30,13 @@ link_directories(
 ################################################################################
 # system specifics
 
+set(CMAKE_CXX_FLAGS "-O0 -ggdb -std=c++11 -Wall -DENABLE_AQL_PARSER")
+
 # Mac OS X specific code
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     SET(OperatingSystem "Darwin")
-    set(CMAKE_CXX_FLAGS "-O0 -ggdb -std=c++11 -stdlib=libc++ -Wall")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG -Werror")
     set(CMAKE_EXE_LINKER_FLAGS "-lc++")
     set(CMAKE_SHARED_LINKER_FLAGS "-lc++")
     set(CMAKE_MODULE_LINKER_FLAGS "-lc++")
@@ -42,7 +45,6 @@ ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 # Linux g++
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     SET(OperatingSystem "Linux")
-    set(CMAKE_CXX_FLAGS "-O0 -ggdb -std=c++11 -Wall")
     set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG -Werror")
 ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
@@ -111,6 +113,7 @@ file(GLOB aq_test_util_source_files aq/tests/AQEngineTests.cpp
                                     aq/tests/DatabaseGenerator.cpp
                                     aq/tests/DatabaseHelper.cpp
                                     aq/tests/MySQLHelper.cpp
+                                    aq/tests/PGSQLHelper.cpp
                                     aq/tests/QueryGenerator.cpp
                                     aq/tests/Report.cpp
                                     aq/tests/TestRunner.cpp
@@ -134,8 +137,7 @@ target_link_libraries(
     aq-engine
     aq-parser
     aq-util
-    ${Boost_LIBRARIES}
-    -lmysqlcppconn)
+    ${Boost_LIBRARIES})
 
 ################################################################################
 # tests
@@ -149,7 +151,9 @@ target_link_libraries(
     aq-parser
     aq-util
     ${Boost_LIBRARIES}
-    -lmysqlcppconn)
+    -lmysqlcppconn
+    -lpqxx
+    -lpq)
 
 ################################################################################
 # tests parser
@@ -159,5 +163,4 @@ target_link_libraries(
     sql-parser
     aq-parser
     aq-util
-    ${Boost_LIBRARIES}
-    -lmysqlcppconn)
+    ${Boost_LIBRARIES})
