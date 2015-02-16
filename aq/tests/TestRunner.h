@@ -10,7 +10,7 @@
 #include "DatabaseHelper.h"
 #include "Report.h"
 
-namespace aq 
+namespace aq
 {
   class TestCase : public DatabaseIntf
   {
@@ -36,6 +36,10 @@ namespace aq
       std::string mysql_user;
       std::string mysql_pass;
       std::string mysql_name;
+      std::string pgsql_host;
+      std::string pgsql_user;
+      std::string pgsql_pass;
+      std::string pgsql_name;
     bool stop_on_error;
     bool check_result;
     };

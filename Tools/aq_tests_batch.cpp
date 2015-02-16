@@ -58,6 +58,9 @@ struct Runner : public aq::DatabaseGenerator::handle_t
       bool log_lock_mode;
       bool log_date_mode;
       bool log_pid_mode;
+      bool aq_enabled = true;
+      bool mysql_enabled = true;
+      bool pgsql_enabled = false;
 
       size_t workers;
       size_t aq_process_threads;
@@ -65,12 +68,18 @@ struct Runner : public aq::DatabaseGenerator::handle_t
       std::string point_mode;
       std::string gen_mode;
       std::string value_mode;
-    std::string report_filename = "report.xml";
+      std::string report_filename = "report.xml";
 
-      boost::filesystem::path iniFile("aq.ini");
+      char * s = ::getenv("AQ_HOME");
+      if (s != NULL)
+          opt->aq_path = s;
+
+      auto iniFile = boost::filesystem::path(opt->aq_path + "/aq.ini");
+      std::cout << "check " << iniFile.native() << std::endl;
       if (boost::filesystem::exists(iniFile))
       {
-        std::ifstream fin("aq.ini");
+        std::cout << "parse " << iniFile.native() << std::endl;
+        std::ifstream fin(iniFile.native());
         opt->parse(fin);
       }
 
@@ -125,7 +134,15 @@ struct Runner : public aq::DatabaseGenerator::handle_t
         ("mysql-pass", po::value<std::string>(&opt->mysql_pass)->default_value(opt->mysql_pass), "")
         ("mysql-name", po::value<std::string>(&opt->mysql_name)->default_value(opt->mysql_name), "")
         ;
-      
+
+      po::options_description pgsql("PostrGreSQL");
+      pgsql.add_options()
+        ("pg-host", po::value<std::string>(&opt->pgsql_host)->default_value(opt->pgsql_host), "")
+        ("pg-user", po::value<std::string>(&opt->pgsql_user)->default_value(opt->pgsql_user), "")
+        ("pg-pass", po::value<std::string>(&opt->pgsql_pass)->default_value(opt->pgsql_pass), "")
+        ("pg-name", po::value<std::string>(&opt->pgsql_name)->default_value(opt->pgsql_name), "")
+        ;
+
       po::options_description generator("Generator");
       generator.add_options()
         ("query-generator", po::value<std::string>(&opt->generator_filename)->default_value(opt->generator_filename), "")
@@ -142,7 +159,7 @@ struct Runner : public aq::DatabaseGenerator::handle_t
 
       po::variables_map vm;
       po::store(po::command_line_parser(argc, argv).options(all).run(), vm);
-      po::notify(vm);    
+      po::notify(vm);
 
       if (vm.count("help"))
       {
@@ -152,16 +169,16 @@ struct Runner : public aq::DatabaseGenerator::handle_t
 
       aq::Logger::getInstance().setLevel(log_level);
       aq::verb::VerbFactory::GetInstance().setBuilder(boost::shared_ptr<aq::VerbBuilder>(new aq::VerbBuilder));
-    
+
     report.reset(new aq::Report(report_filename));
 
       opt->point_mode = (point_mode == "FULL") ? aq::DatabaseGenerator::point_mode_t::FULL : aq::DatabaseGenerator::point_mode_t::MIN_MAX;
       opt->gen_mode = (gen_mode == "ALL") ? aq::DatabaseGenerator::gen_mode_t::ALL : aq::DatabaseGenerator::gen_mode_t::INTERSECT;
-      opt->value_mode = 
+      opt->value_mode =
         (value_mode == "ALL") ? aq::DatabaseGenerator::value_mode_t::ALL_UNIQUE :
         (value_mode == "ALL_UNIQUE") ? aq::DatabaseGenerator::value_mode_t::ALL_MULTIPLE :
         aq::DatabaseGenerator::value_mode_t::RANDOM;
-      
+
       // check files
       char * path = ::getenv("PATH");
       std::vector<std::string> paths;
@@ -172,10 +189,12 @@ struct Runner : public aq::DatabaseGenerator::handle_t
         if (!boost::filesystem::exists(boost::filesystem::path(f)) && !in_path(paths, f))
         {
           std::cerr << "cannot find " << f << std::endl;
-          return EXIT_FAILURE;
+          std::cerr << "algoquest test will be disabled" << std::endl;
+          aq_enabled = false;
+          // return EXIT_FAILURE;
         }
       }
-      
+
       if (!boost::filesystem::exists(boost::filesystem::path(opt->generator_filename.c_str())))
       {
           std::cerr << "cannot find " << opt->generator_filename << std::endl;
@@ -191,24 +210,35 @@ struct Runner : public aq::DatabaseGenerator::handle_t
       }
 
       gen.reset(new aq::DatabaseGenerator(
-      tables, opt->nb_rows, opt->min_value, opt->max_value, 
+      tables, opt->nb_rows, opt->min_value, opt->max_value,
       opt->point_mode, opt->gen_mode, opt->value_mode, opt->stop_on_error));
-    
-      tc.reset(new aq::TestCase(report));
-      aq::Settings::Ptr settings(new aq::Settings);
-      settings->initPath(opt->aq_path + "/" + opt->aq_name);
-      settings->changeIdent("test");
-      settings->aqEngine = opt->aq_engine;
-      settings->aqLoader = opt->aq_loader;
-      boost::shared_ptr<aq::DatabaseIntf> db1(new aq::AlgoQuestDatabase(settings, true));
-      boost::shared_ptr<aq::DatabaseIntf> db2(new aq::MySQLDatabase(opt->mysql_host, opt->mysql_user, opt->mysql_pass, opt->mysql_name));
-      tc->add(db1);
-      tc->add(db2);
 
-      std::fstream fin(opt->generator_filename.c_str());  
+      tc.reset(new aq::TestCase(report));
+      if (aq_enabled)
+      {
+          aq::Settings::Ptr settings(new aq::Settings);
+          settings->initPath(opt->aq_path + "/" + opt->aq_name);
+          settings->changeIdent("test");
+          settings->aqEngine = opt->aq_engine;
+          settings->aqLoader = opt->aq_loader;
+          boost::shared_ptr<aq::DatabaseIntf> db(new aq::AlgoQuestDatabase(settings, true));
+          tc->add(db);
+      }
+      if (mysql_enabled)
+      {
+          boost::shared_ptr<aq::DatabaseIntf> db(new aq::MySQLDatabase(opt->mysql_host, opt->mysql_user, opt->mysql_pass, opt->mysql_name));
+          tc->add(db);
+      }
+      if (pgsql_enabled)
+      {
+          // boost::shared_ptr<aq::DatabaseIntf> db(new aq::PGSQLDatabase(opt->pgsql_host, opt->pgsql_user, opt->pgsql_pass, opt->pgsql_name));
+          // tc->add(db);
+      }
+
+      std::fstream fin(opt->generator_filename.c_str());
       this->queriesGenerators.clear();
       while (!fin.eof())
-      {   
+      {
         std::string genQuery;
         aq::QueryGenerator::ops_t ops;
         aq::QueryGenerator::idents_t idents;
@@ -237,7 +267,7 @@ struct Runner : public aq::DatabaseGenerator::handle_t
   }
 
   int push(const handle_t::tables_t& tables)
-  { 
+  {
     aq::Timer timer;
     std::ostringstream msg;
     size_t col = 0;
@@ -264,7 +294,7 @@ struct Runner : public aq::DatabaseGenerator::handle_t
     aq::DatabaseIntf::result_t result;
     size_t nb_queries = 0;
   std::cout << "check queries" << std::endl;
-    for (const auto& gen : queriesGenerators) 
+    for (const auto& gen : queriesGenerators)
     {
       gen->reset();
       nb_queries += gen->getNbQueries();
@@ -287,22 +317,22 @@ struct Runner : public aq::DatabaseGenerator::handle_t
           continue;
         }
 
-        if (!tc->execute(ss, result)) 
-        { 
+        if (!tc->execute(ss, result))
+        {
           std::cout << "E";
       report->error(ss);
         }
-        else 
-        { 
+        else
+        {
           std::cout << ".";
       // report->success(ss);
         }
       }
     }
-    std::cout 
-      << std::endl 
-      << nb_queries << " queries checked [ sucess => " << tc->getNbSuccess() 
-      << " | failure => " << tc->getNbFailure() 
+    std::cout
+      << std::endl
+      << nb_queries << " queries checked [ sucess => " << tc->getNbSuccess()
+      << " | failure => " << tc->getNbFailure()
       << " | average row => " << tc->getNbResult()
       << " ] in " << aq::Timer::getString(timer.getTimeElapsed())
       << std::endl;
@@ -332,4 +362,3 @@ int main(int argc, char * argv[])
   }
   return rc;
 }
-
