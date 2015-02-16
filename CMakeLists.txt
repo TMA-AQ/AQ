@@ -10,6 +10,10 @@ set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
 
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost 1.48.0 COMPONENTS program_options thread filesystem system timer regex REQUIRED)
+find_package(FLEX 2.5.35)
+find_package(BISON 3.0.2)
+# include(CMakeUserFindMySQL)
+# find_package(MySQL )
 
 include_directories(
   ${PROJECT_SOURCE_DIR}
@@ -22,13 +26,6 @@ link_directories(
   ${Boost_LIBRARY_DIRS}
   $ENV{AQUTIL_LIBRARY_DIR}
 )
-
-# TODO add mysql client
-find_package(FLEX 2.5.35)
-find_package(BISON 3.0.2)
-
-# include(CMakeUserFindMySQL)
-# find_package(MySQL )
 
 ################################################################################
 # system specifics
@@ -46,6 +43,7 @@ ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     SET(OperatingSystem "Linux")
     set(CMAKE_CXX_FLAGS "-O0 -ggdb -std=c++11 -Wall")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG -Werror")
 ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 # TODO add windows specifics
@@ -106,6 +104,22 @@ file(GLOB aq_query_resolver_source_files aq/*.cpp
 add_library(aq-query-resolver STATIC ${aq_query_resolver_source_files})
 
 ################################################################################
+# test util
+
+# source file
+file(GLOB aq_test_util_source_files aq/tests/AQEngineTests.cpp
+                                    aq/tests/DatabaseGenerator.cpp
+                                    aq/tests/DatabaseHelper.cpp
+                                    aq/tests/MySQLHelper.cpp
+                                    aq/tests/QueryGenerator.cpp
+                                    aq/tests/Report.cpp
+                                    aq/tests/TestRunner.cpp
+                                    aq/tests/Util.cpp)
+
+# aq-query-resolver static library
+add_library(aq-test-util STATIC ${aq_test_util_source_files})
+
+################################################################################
 # tools
 file(GLOB aq_tools_source_files Tools/AQEngineBasic.cpp
                                 Tools/AQEngineSimulate.cpp
@@ -129,6 +143,7 @@ add_executable(aq-tests Tools/aq_tests_batch.cpp ${aq_tools_source_files})
 add_dependencies(aq-tests aq-query-resolver aq-engine aq-parser aq-util)
 target_link_libraries(
     aq-tests
+    aq-test-util
     aq-query-resolver
     aq-engine
     aq-parser
