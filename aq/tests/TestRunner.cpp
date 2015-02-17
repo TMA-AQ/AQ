@@ -155,24 +155,27 @@ bool TestCase::execute(const aq::core::SelectStatement& ss, aq::DatabaseIntf::re
   ++it;
   for (;it != this->databases.end(); ++it)
   {
-  auto begin = std::chrono::system_clock::now();
-    (*it)->execute(ss, r2);
-    auto end = std::chrono::system_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
-  report->time_exec((*it)->get_name(), duration);
+      auto begin = std::chrono::system_clock::now();
+      (*it)->execute(ss, r2);
+      auto end = std::chrono::system_clock::now();
+      auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+      report->time_exec((*it)->get_name(), duration);
 
 
-    nb_result += std::max(r1.size(), r2.size());
-    // std::cout << nb_result << std::endl;
-    if (!this->compare(r1, r2))
-    {
-        // std::cout << std::endl;
-        // dump_result(r1);
-        // std::cout << std::endl;
-        // dump_result(r2);
-        nb_failure += 1;
-        return false;
-    }
+      nb_result += std::max(r1.size(), r2.size());
+      // std::cout << nb_result << std::endl;
+      if (!this->compare(r1, r2))
+      {
+          // std::cout << std::endl;
+          // dump_result(r1, std::cout);
+          dump_result(r1, report->report);
+          // std::cout << std::endl;
+          // dump_result(r2, std::cout);
+          dump_result(r2, report->report);
+          nb_failure += 1;
+          // exit(0);
+          return false;
+      }
   }
   nb_success += 1;
   return true;
@@ -207,25 +210,25 @@ bool TestCase::compare(const DatabaseIntf::result_t& result1, const DatabaseIntf
   return true;
 }
 
-void TestCase::dump_result(const DatabaseIntf::result_t& result)
+void TestCase::dump_result(const DatabaseIntf::result_t& result, std::ostream& os)
 {
   // std::ostream& os = report->report;
-  report->report << "<results size=\"" << result.size() << "\">" << std::endl;
+  os << "<results size=\"" << result.size() << "\">" << std::endl;
   for (auto it1 = result.begin(); it1 != result.end();)
   {
-    report->report << "(";
+    os << "(";
     for (auto it2 = (*it1).begin(); it2 != (*it1).end();)
     {
-      report->report << *it2;
+      os << *it2;
       ++it2;
       if (it2 != (*it1).end())
-        report->report << ", ";
+        os << ", ";
     }
-    report->report << ")";
+    os << ")";
     ++it1;
     if (it1 != result.end())
-      report->report << ", ";
+      os << ", ";
   }
-  report->report << std::endl;
-  report->report << "</results>" << std::endl;
+  os << std::endl;
+  os << "</results>" << std::endl;
 }

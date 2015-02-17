@@ -52,5 +52,29 @@ void PGSQLDatabase::insertValues(const DatabaseGenerator::handle_t::tables_t::va
 
 bool PGSQLDatabase::execute(const aq::core::SelectStatement& ss, DatabaseIntf::result_t& result)
 {
+    std::string query;
+    ss.setOutput(aq::core::SelectStatement::SQL);
+    ss.to_string(query);
+
+    pqxx::work txn(*connection);
+    auto res = txn.exec(query);
+    txn.commit();
+
+    this->columns.clear();
+    for (pqxx::tuple::size_type i = 0; i < res.columns(); ++i)
+    {
+        this->columns.push_back(res.column_name(i));
+    }
+
+    result.clear();
+    for (auto it = res.begin(); it != res.end(); ++it)
+    {
+        result.push_back(result_t::value_type());
+        auto& r = *result.rbegin();
+        for (auto field : *it)
+        {
+            r.push_back(field.is_null() ? "NULL" : field.c_str());
+        }
+    }
     return true;
 }
