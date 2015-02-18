@@ -123,7 +123,6 @@ struct Runner : public aq::DatabaseGenerator::handle_t
         ("aq-home,r", po::value<std::string>(&opt->aq_path)->default_value(opt->aq_path), "set AQ Home (AQ_HOME environment variable)")
         ("aq-name,n", po::value<std::string>(&opt->aq_name)->default_value(opt->aq_name), "")
         ("aq-engine,e", po::value<std::string>(&opt->aq_engine)->default_value(opt->aq_engine), "")
-        ("aq-loader,l", po::value<std::string>(&opt->aq_loader)->default_value(opt->aq_loader), "")
         ("worker,w", po::value<size_t>(&workers), "number of thread assigned to resolve the bunch of sql queries")
         ("paralell,p", po::value<size_t>(&aq_process_threads), "number of thread assigned resolve one sql queries")
         ;
@@ -184,14 +183,14 @@ struct Runner : public aq::DatabaseGenerator::handle_t
       char * path = ::getenv("PATH");
       std::vector<std::string> paths;
       boost::split(paths, path, boost::is_any_of(";"));
-      std::string files[] = { opt->aq_engine, opt->aq_loader };
+      std::string files[] = { opt->aq_engine };
       for (const auto& f : files)
       {
         if (!boost::filesystem::exists(boost::filesystem::path(f)) && !in_path(paths, f))
         {
           std::cerr << "cannot find " << f << std::endl;
           std::cerr << "algoquest test will be disabled" << std::endl;
-          aq_enabled = false;
+          // aq_enabled = false;
           // return EXIT_FAILURE;
         }
       }
@@ -222,7 +221,6 @@ struct Runner : public aq::DatabaseGenerator::handle_t
           settings->initPath(opt->aq_path + "/" + opt->aq_name);
           settings->changeIdent("test");
           settings->aqEngine = opt->aq_engine;
-          settings->aqLoader = opt->aq_loader;
           boost::shared_ptr<aq::DatabaseIntf> db(new aq::AlgoQuestDatabase(settings, true));
           tc->add(db);
       }

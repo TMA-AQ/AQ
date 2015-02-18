@@ -250,9 +250,7 @@ int transform_query(const std::string& query, aq::Settings::Ptr settings, aq::Ba
 // -------------------------------------------------------------------------------------------------
 int load_database(const aq::Settings::Ptr settings, aq::base_t& baseDesc, const std::string& tableNameToLoad)
 {
-  aq::DatabaseLoader loader(baseDesc, settings->aqLoader, settings->rootPath, settings->packSize, ','/*settings.fieldSeparator*/, settings->csvFormat); // FIXME
-  // aq::DatabaseLoader loader(baseDesc, settings.rootPath, settings.packSize',', settings.csvFormat);
-  loader.generate_ini();
+  aq::DatabaseLoader loader(baseDesc, settings->rootPath, settings->packSize, ',', settings->csvFormat);
   if (tableNameToLoad != "")
   {
     for (size_t t = 0; t < baseDesc.table.size(); ++t)

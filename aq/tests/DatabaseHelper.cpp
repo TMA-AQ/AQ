@@ -35,7 +35,7 @@ void AlgoQuestDatabase::clean()
 }
 
 void AlgoQuestDatabase::createTable(const DatabaseGenerator::handle_t::tables_t::key_type& table)
-{ 
+{
   base.table.push_back(base_t::table_t());
   auto& t = *base.table.rbegin();
   t.id = base.table.size();
@@ -50,7 +50,7 @@ void AlgoQuestDatabase::createTable(const DatabaseGenerator::handle_t::tables_t:
   t.colonne[0].size = 1;
   t.colonne[1].size = 1;
   t.colonne[0].type = aq::symbole::t_int;
-  t.colonne[1].type = aq::symbole::t_int; 
+  t.colonne[1].type = aq::symbole::t_int;
   db.create(base);
 }
 
@@ -63,7 +63,7 @@ void AlgoQuestDatabase::insertValues(const DatabaseGenerator::handle_t::tables_t
   size_t packet = 0;
   char column_filename[1024];
   ::memset(column_filename, 0, 1024);
-   
+
   for (const auto& table : base.table)
   {
     if (table.name == values.first)
@@ -77,26 +77,23 @@ void AlgoQuestDatabase::insertValues(const DatabaseGenerator::handle_t::tables_t
     throw;
   }
 
-  sprintf(column_filename, "%s/B%.3luT%.4luC%.4luP%.12lu", db.getTemporaryColumnLoadPath().c_str(), base_id, table_id, column_id, packet);
-  std::ofstream c1file(column_filename, std::ios::binary);
+  aq::DatabaseLoader loader(base, db.getRootPath(), aq::packet_size, ',', true); // FIXME
+  std::list<int32_t> column_values;
+
+  column_id = 0;
   for (int32_t v = 1; v <= static_cast<int32_t>(values.second.size()); v++)
   {
-    c1file.write(reinterpret_cast<const char*>(&v), sizeof(int32_t));
+    column_values.push_back(v);
   }
-  c1file.close();
+  loader.loadColumn(table_id, column_id, column_values);
+
+  column_values.clear();
   column_id += 1;
-  sprintf(column_filename, "%s/B%.3luT%.4luC%.4luP%.12lu", db.getTemporaryColumnLoadPath().c_str(), base_id, table_id, column_id, packet);
-  std::ofstream c2file(column_filename, std::ios::binary);
   for (const auto& value : values.second)
   {
-    c2file.write(reinterpret_cast<const char*>(&value), sizeof(int));
+    column_values.push_back(value);
   }
-  c2file.close();
-
-  // call algoquest loader
-  aq::DatabaseLoader loader(base, "aq-loader", db.getRootPath(), aq::packet_size, ',', true); // FIXME
-  loader.generate_ini();
-  loader.loadAllColumns();
+  loader.loadColumn(table_id, column_id, column_values);
 
   base.table[table_id - 1].nb_record = values.second.size();
   db.create(base);
@@ -106,12 +103,12 @@ class ResultHandler : public aq::RowWritter_Intf
 {
 public:
   ResultHandler(DatabaseIntf::result_t& _result) : result(_result) {}
-  
-  RowProcess_Intf * clone() { return nullptr; } 
+
+  RowProcess_Intf * clone() { return nullptr; }
   const std::vector<Column::Ptr>& getColumns() const { return columns; }
   void setColumn(std::vector<Column::Ptr> _columns) {}
   unsigned int getTotalCount() const { return 0; }
-  
+
   int process(std::vector<Row>& rows)
   {
     for (const auto& row : rows)
@@ -198,18 +195,18 @@ bool AlgoQuestDatabase::execute(const aq::core::SelectStatement& ss, DatabaseInt
       engine->call(ss);
     timer.stop();
     //std::cout << "engine:" << aq::Timer::getString(timer.getTimeElapsed()) << std::endl;
-      
+
     engine->clean();
       auto matrix = engine->getAQMatrix();
       if (matrix != nullptr)
       {
-        boost::shared_ptr<aq::display_cb> cb(new result_handler_t(result)); 
+        boost::shared_ptr<aq::display_cb> cb(new result_handler_t(result));
         std::vector<std::string> columns;
         aq::opt o;
         o.withCount = o.withIndex = false;
         for (const auto& c : ss.selectedTables)
           columns.push_back(c.table.name + "." + c.name);
-    
+
     static aq::Timer timer;
     timer.start();
         aq::display(cb.get(), matrix, base, settings, o, columns);
@@ -228,7 +225,7 @@ bool AlgoQuestDatabase::execute(const aq::core::SelectStatement& ss, DatabaseInt
     std::string query;
     aq::Base::Ptr bd(new aq::Base(settings->dbDesc));
     aq::engine::AQEngine_Intf::Ptr aqEngine(aq::engine::getAQEngineSystem(bd, settings));
-    const std::string ident; 
+    const std::string ident;
     bool keepFiles = false;
     bool force = false;
 
