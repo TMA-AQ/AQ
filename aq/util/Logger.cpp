@@ -57,12 +57,12 @@ Logger& Logger::getInstance(const char * ident, int mode)
 
 Logger::Logger(const char *_ident, int _mode)
   : level(-1),
-  localFile(0),
-  mode(_mode),
-  colorLog(false),
-  lockMode(false),
-  dateMode(false),
-  pidMode(false)
+    localFile(0),
+    mode(_mode),
+    colorLog(false),
+    lockMode(false),
+    dateMode(false),
+    pidMode(false)
 {
   ::strncpy(this->ident, _ident, sizeof(this->ident)-1);
   ident[sizeof(this->ident)-1] = '\0';

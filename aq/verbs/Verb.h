@@ -79,17 +79,17 @@ public:
   /// \brief Set the Base Description
   /// \param BaseDesc the base description
   virtual void setBaseDesc(Base::Ptr BaseDesc)
-  {
-    // empty by default
-  }
+    {
+      // empty by default
+    }
 
   /// \brief Set the settings
   /// \param settings the query settings
   /// \todo settings should be a const shared_ptr
   virtual void setSettings(Settings::Ptr settings)
-  {
-    // empty by default
-  }
+    {
+      // empty by default
+    }
 
   /// \brief Visitor defign pattern accept method
   /// \param visitor the visitor

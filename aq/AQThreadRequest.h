@@ -10,138 +10,138 @@
 namespace aq
 {
 
-  template <class T>
-  class AQThreadRequest
-  {
-  public:
+template <class T>
+class AQThreadRequest
+{
+public:
 
-    // creator
-    //--------------------------------------------------------------------------------------------
+  // creator
+  //--------------------------------------------------------------------------------------------
 
-    AQThreadRequest(int nbrThread, aq::Settings* settings, aq::engine::AQEngine_Intf* aqEngine, aq::Base& baseDesc)
-      : _nbrThread(nbrThread), _settings(settings), _aqEngine(aqEngine), _baseDesc(baseDesc)
+  AQThreadRequest(int nbrThread, aq::Settings* settings, aq::engine::AQEngine_Intf* aqEngine, aq::Base& baseDesc)
+    : _nbrThread(nbrThread), _settings(settings), _aqEngine(aqEngine), _baseDesc(baseDesc)
     {
       srand(static_cast<unsigned int>(time(nullptr))); //temporaire
     }
 
-    ~AQThreadRequest() {
-      for (size_t idx = 0; idx < this->_thread.size(); ++idx)
-        delete this->_thread[idx];
-    }
-    
-    //--------------------------------------------------------------------------------------------
+  ~AQThreadRequest() {
+    for (size_t idx = 0; idx < this->_thread.size(); ++idx)
+      delete this->_thread[idx];
+  }
+
+  //--------------------------------------------------------------------------------------------
 
 
-    // solve the request / cut / thread
-    //--------------------------------------------------------------------------------------------
+  // solve the request / cut / thread
+  //--------------------------------------------------------------------------------------------
 
-    void  solveRequest(aq::tnode* pNode) {
-      this->parseAndCutThread(pNode);
-      this->determinatePatern();
-      this->solveThread();
-    }
+  void  solveRequest(aq::tnode* pNode) {
+    this->parseAndCutThread(pNode);
+    this->determinatePatern();
+    this->solveThread();
+  }
 
-    void  parseAndCutThread(aq::tnode* pNode) {
-      if (pNode == nullptr)
-        return;
+  void  parseAndCutThread(aq::tnode* pNode) {
+    if (pNode == nullptr)
+      return;
 
-      if (pNode->getTag() == K_SELECT)
-        this->addThreadToList(pNode);
+    if (pNode->getTag() == K_SELECT)
+      this->addThreadToList(pNode);
 
-      this->parseAndCutThread(pNode->left);
-      this->parseAndCutThread(pNode->right);
-      this->parseAndCutThread(pNode->next);
-    }
+    this->parseAndCutThread(pNode->left);
+    this->parseAndCutThread(pNode->right);
+    this->parseAndCutThread(pNode->next);
+  }
 
-    void  addThreadToList(aq::tnode* pNode) {
-      //-----------------------------------------------
-      // ICI EST INSTANCIE LE QUERYRESOLVER
-      //-----------------------------------------------
-      T*  resolver = new T(pNode, this->_settings, this->_aqEngine, this->_baseDesc);
-      AQThread<T>* thread = new AQThread<T>(pNode, resolver);
-      //-----------------------------------------------
+  void  addThreadToList(aq::tnode* pNode) {
+    //-----------------------------------------------
+    // ICI EST INSTANCIE LE QUERYRESOLVER
+    //-----------------------------------------------
+    T*  resolver = new T(pNode, this->_settings, this->_aqEngine, this->_baseDesc);
+    AQThread<T>* thread = new AQThread<T>(pNode, resolver);
+    //-----------------------------------------------
 
-      for (typename std::vector<AQThread<T>*>::iterator it = this->_thread.begin();
-        it != this->_thread.end(); ++it)
-        if ((*it)->findNodeIn((*it)->getPNode(), pNode) == true && (*it)->getPNode() != pNode && *it != thread)
-          (*it)->addListThreadCondition(thread);
+    for (typename std::vector<AQThread<T>*>::iterator it = this->_thread.begin();
+         it != this->_thread.end(); ++it)
+      if ((*it)->findNodeIn((*it)->getPNode(), pNode) == true && (*it)->getPNode() != pNode && *it != thread)
+        (*it)->addListThreadCondition(thread);
 
-      this->_thread.push_back(thread);
-    }
-    
-    //--------------------------------------------------------------------------------------------
+    this->_thread.push_back(thread);
+  }
 
-
-    // determinate the patern of each thread
-    //--------------------------------------------------------------------------------------------
-
-    void  determinatePatern() {
-      this->deleteOverList();
-      this->assignPatern();
-    }
-
-    void  deleteOverList() {
-      this->_thread.front()->purgeOverList();
-    }
-
-    void  assignPatern() {
-      this->_thread.front()->assignPatern(nullptr);
-    }
-     
-    //--------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------
 
 
-    // lunch and solve each thread
-    //--------------------------------------------------------------------------------------------
+  // determinate the patern of each thread
+  //--------------------------------------------------------------------------------------------
 
-    void  solveThread() const {
-      int count = 0;
-      int nbrThread;
-      while (this->_thread.front()->threadOver() != true)
+  void  determinatePatern() {
+    this->deleteOverList();
+    this->assignPatern();
+  }
+
+  void  deleteOverList() {
+    this->_thread.front()->purgeOverList();
+  }
+
+  void  assignPatern() {
+    this->_thread.front()->assignPatern(nullptr);
+  }
+
+  //--------------------------------------------------------------------------------------------
+
+
+  // lunch and solve each thread
+  //--------------------------------------------------------------------------------------------
+
+  void  solveThread() const {
+    int count = 0;
+    int nbrThread;
+    while (this->_thread.front()->threadOver() != true)
+    {
+      ++count;
+      nbrThread = 0;
+      for (auto& th : this->_thread)
       {
-        ++count;
-        nbrThread = 0;
-        for (auto& th : this->_thread)
+        if (th->isReady() && !th->threadOver() && !th->isThreading() && (nbrThread < this->_nbrThread))
         {
-          if (th->isReady() && !th->threadOver() && !th->isThreading() && (nbrThread < this->_nbrThread))
-          {
-            th->start(count, (rand() % 5));
-            ++nbrThread;
-          }
+          th->start(count, (rand() % 5));
+          ++nbrThread;
         }
-        for (auto& th : this->_thread)
-          if (th->isInitialaze() == true)
-            th->join();
       }
+      for (auto& th : this->_thread)
+        if (th->isInitialaze() == true)
+          th->join();
     }
-     
-    //--------------------------------------------------------------------------------------------
+  }
+
+  //--------------------------------------------------------------------------------------------
 
 
-    // dump
-    //--------------------------------------------------------------------------------------------
+  // dump
+  //--------------------------------------------------------------------------------------------
 
-    void  dump(std::ostream& os)        const {
-      this->_thread.front()->dump(os, "  ");
-    }
-     
-    //--------------------------------------------------------------------------------------------
+  void  dump(std::ostream& os)        const {
+    this->_thread.front()->dump(os, "  ");
+  }
 
-  private:
-    
-    // attribute part
-    //--------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------
 
-    int                                           _nbrThread;
-    aq::Settings*                                 _settings;
-    aq::engine::AQEngine_Intf*                    _aqEngine;
-    aq::Base&                                     _baseDesc;
+private:
 
-    std::vector<AQThread<T>*> _thread;
-     
-    //--------------------------------------------------------------------------------------------
+  // attribute part
+  //--------------------------------------------------------------------------------------------
 
-  };
+  int                                           _nbrThread;
+  aq::Settings*                                 _settings;
+  aq::engine::AQEngine_Intf*                    _aqEngine;
+  aq::Base&                                     _baseDesc;
+
+  std::vector<AQThread<T>*> _thread;
+
+  //--------------------------------------------------------------------------------------------
+
+};
 
 }
 

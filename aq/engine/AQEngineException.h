@@ -4,16 +4,16 @@
 #include <aq/util/Exceptions.h>
 
 namespace aq {
-  namespace engine {
+namespace engine {
 
-    class AQEngineException : public aq::generic_error
-    {
-    public:
-      AQEngineException(const std::string& msg);
-      virtual ~AQEngineException() throw () {}
-    };
+class AQEngineException : public aq::generic_error
+{
+public:
+  AQEngineException(const std::string& msg);
+  virtual ~AQEngineException() throw () {}
+};
 
-  }
+}
 }
 
 #endif

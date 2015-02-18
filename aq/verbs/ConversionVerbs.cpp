@@ -25,10 +25,10 @@ bool CastVerb::preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* 
 }
 
 //------------------------------------------------------------------------------
-bool CastVerb::changeQuery(aq::tnode* pStart, 
+bool CastVerb::changeQuery(aq::tnode* pStart,
                            aq::tnode* pNode,
-                           VerbResult::Ptr resLeft, 
-                           VerbResult::Ptr resRight, 
+                           VerbResult::Ptr resLeft,
+                           VerbResult::Ptr resRight,
                            VerbResult::Ptr resNext )
 {
   // TODO
@@ -41,9 +41,9 @@ bool CastVerb::changeQuery(aq::tnode* pStart,
 }
 
 //------------------------------------------------------------------------------
-void CastVerb::changeResult(Table::Ptr table, 
+void CastVerb::changeResult(Table::Ptr table,
                             VerbResult::Ptr resLeft,
-                            VerbResult::Ptr resRight, 
+                            VerbResult::Ptr resRight,
                             VerbResult::Ptr resNext )
 {
   assert(false);
@@ -56,10 +56,10 @@ void CastVerb::accept(VerbVisitor* visitor)
 }
 
 //------------------------------------------------------------------------------
-void NvlVerb::changeResult( Table::Ptr table, 
-              VerbResult::Ptr resLeft, 
-              VerbResult::Ptr resRight, 
-              VerbResult::Ptr resNext )
+void NvlVerb::changeResult( Table::Ptr table,
+                            VerbResult::Ptr resLeft,
+                            VerbResult::Ptr resRight,
+                            VerbResult::Ptr resNext )
 {
   assert(false);
 }
@@ -77,10 +77,10 @@ bool DecodeVerb::preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode
 }
 
 //------------------------------------------------------------------------------
-void DecodeVerb::changeResult( Table::Ptr table, 
-                 VerbResult::Ptr resLeft, 
-                 VerbResult::Ptr resRight, 
-                 VerbResult::Ptr resNext )
+void DecodeVerb::changeResult( Table::Ptr table,
+                               VerbResult::Ptr resLeft,
+                               VerbResult::Ptr resRight,
+                               VerbResult::Ptr resNext )
 {
   assert(false);
 }

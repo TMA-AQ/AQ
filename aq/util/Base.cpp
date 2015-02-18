@@ -151,7 +151,7 @@ void Base::dumpRaw( std::ostream& os ) const
   {
     table->dumpRaw(os);
   }
- }
+}
 
 //------------------------------------------------------------------------------
 void Base::dumpXml( std::ostream& os ) const
@@ -161,6 +161,6 @@ void Base::dumpXml( std::ostream& os ) const
   std::for_each(this->Tables.begin(), this->Tables.end(), boost::bind(&Table::dumpXml, _1, boost::ref(os)));
   os << "</Tables>" << std::endl;
   os << "</Database>" << std::endl;
- }
+}
 
 }

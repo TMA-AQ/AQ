@@ -6,7 +6,7 @@
 #include "WIN32FileMapper.h"
 namespace aq
 {
-  typedef WIN32FileMapper FileMapper;
+typedef WIN32FileMapper FileMapper;
 }
 
 #else
@@ -14,7 +14,7 @@ namespace aq
 #include "GenericFileMapper.h"
 namespace aq
 {
-  typedef aq::GenericFileMapper FileMapper;
+typedef aq::GenericFileMapper FileMapper;
 }
 
 #endif

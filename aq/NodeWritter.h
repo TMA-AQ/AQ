@@ -6,28 +6,28 @@
 
 namespace aq
 {
-  
-  /// \ingroup row_writter
-  /// \brief write into tnode structure
-  /// used by nested queries
-  class NodeWritter : public RowWritter_Intf
-  {
-  public:
-    NodeWritter(aq::tnode& _result);
-    virtual ~NodeWritter();
-    
-    int process(std::vector<Row>& rows);
-    RowProcess_Intf * clone();
 
-    const std::vector<Column::Ptr>& getColumns() const;
-    void setColumn(std::vector<Column::Ptr> _columns);
-    unsigned int getTotalCount() const;
+/// \ingroup row_writter
+/// \brief write into tnode structure
+/// used by nested queries
+class NodeWritter : public RowWritter_Intf
+{
+public:
+  NodeWritter(aq::tnode& _result);
+  virtual ~NodeWritter();
 
-  private:
-    std::vector<Column::Ptr> columns;
-    aq::tnode& result;
-    aq::tnode * cur;
-  };
+  int process(std::vector<Row>& rows);
+  RowProcess_Intf * clone();
+
+  const std::vector<Column::Ptr>& getColumns() const;
+  void setColumn(std::vector<Column::Ptr> _columns);
+  unsigned int getTotalCount() const;
+
+private:
+  std::vector<Column::Ptr> columns;
+  aq::tnode& result;
+  aq::tnode * cur;
+};
 
 }
 

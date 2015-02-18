@@ -3,12 +3,12 @@
 using namespace aq;
 
 Timer::Timer()
-: begin(boost::posix_time::microsec_clock::local_time()),
-  end(boost::posix_time::neg_infin)
+  : begin(boost::posix_time::microsec_clock::local_time()),
+    end(boost::posix_time::neg_infin)
 {
 }
 
-  
+
 Timer::~Timer()
 {
 }

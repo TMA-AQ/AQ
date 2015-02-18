@@ -14,24 +14,24 @@ public:
 
   virtual int getVerbType() const { return K_PERIOD; };
   virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
-  virtual void changeResult( Table::Ptr table, 
-    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+                            VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual void changeResult( Table::Ptr table,
+                             VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
   virtual void addResult(aq::Row& row);
 
   std::string getTableName() const;
   std::string getColumnName() const;
   std::string getColumnOnlyName() const;
-  
-  virtual void setBaseDesc(Base::Ptr baseDesc) 
-  { 
-    m_baseDesc = baseDesc;
-  }
-  
-  virtual void setSettings(Settings::Ptr settings) 
-  {
-    m_settings = settings;
-  }
+
+  virtual void setBaseDesc(Base::Ptr baseDesc)
+    {
+      m_baseDesc = baseDesc;
+    }
+
+  virtual void setSettings(Settings::Ptr settings)
+    {
+      m_settings = settings;
+    }
 
   virtual void accept(VerbVisitor*);
 
@@ -51,9 +51,9 @@ public:
 
   virtual int getVerbType() const { return K_COMMA; };
   bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
-  virtual void changeResult( Table::Ptr table, 
-    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+                    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual void changeResult( Table::Ptr table,
+                             VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
   virtual void addResult(aq::Row& row);
   virtual void accept(VerbVisitor*);
 };
@@ -65,10 +65,10 @@ public:
   typedef boost::intrusive_ptr<CommaVerb> Ptr;
 
   virtual int getVerbType() const { return K_AND; };
-  virtual void changeResult(  Table::Ptr table, 
-                VerbResult::Ptr resLeft, 
-                VerbResult::Ptr resRight, 
-                VerbResult::Ptr resNext );
+  virtual void changeResult(  Table::Ptr table,
+                              VerbResult::Ptr resLeft,
+                              VerbResult::Ptr resRight,
+                              VerbResult::Ptr resNext );
   virtual void accept(VerbVisitor*);
 };
 
@@ -79,12 +79,12 @@ public:
   typedef boost::intrusive_ptr<InVerb> Ptr;
 
   virtual int getVerbType() const { return K_IN; };
-  virtual bool preprocessQuery(  aq::tnode* pStart, aq::tnode* pNode, 
-                  aq::tnode* pStartOriginal );
+  virtual bool preprocessQuery(  aq::tnode* pStart, aq::tnode* pNode,
+                                 aq::tnode* pStartOriginal );
   virtual bool changeQuery(  aq::tnode* pStart, aq::tnode* pNode,
-                VerbResult::Ptr resLeft, 
-                VerbResult::Ptr resRight, 
-                VerbResult::Ptr resNext );
+                             VerbResult::Ptr resLeft,
+                             VerbResult::Ptr resRight,
+                             VerbResult::Ptr resNext );
   virtual void accept(VerbVisitor*);
 };
 
@@ -130,8 +130,8 @@ public:
 
   virtual int getVerbType() const { return K_AS; };
   virtual bool preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal );
-  virtual void changeResult( Table::Ptr table, 
-    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual void changeResult( Table::Ptr table,
+                             VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
   void addResult(aq::Row& row);
   virtual void accept(VerbVisitor* visitor);
   const std::string& getIdent() const { return ident; }
@@ -158,8 +158,8 @@ public:
   typedef boost::intrusive_ptr<AscVerb> Ptr;
 
   virtual int getVerbType() const { return K_ASC; };
-  virtual void changeResult( Table::Ptr table, 
-    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual void changeResult( Table::Ptr table,
+                             VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
   virtual void accept(VerbVisitor*);
 };
 

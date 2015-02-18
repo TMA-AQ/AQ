@@ -11,25 +11,25 @@ using namespace aq;
 
 namespace helper
 {
-  template <class T>
-  T get_opt_value(boost::property_tree::ptree& pt, const char * key, T default_value)
-  {
-    boost::optional<T> opt = pt.get_optional<T>(boost::property_tree::ptree::path_type(key));
-    if (opt.is_initialized()) return opt.get();
-    else return default_value;
-  }
+template <class T>
+T get_opt_value(boost::property_tree::ptree& pt, const char * key, T default_value)
+{
+  boost::optional<T> opt = pt.get_optional<T>(boost::property_tree::ptree::path_type(key));
+  if (opt.is_initialized()) return opt.get();
+  else return default_value;
+}
 
-  bool get_opt_value(boost::property_tree::ptree& pt, const char * key, bool default_value)
+bool get_opt_value(boost::property_tree::ptree& pt, const char * key, bool default_value)
+{
+  boost::optional<std::string> opt = pt.get_optional<std::string>(boost::property_tree::ptree::path_type(key));
+  if (opt.is_initialized())
   {
-    boost::optional<std::string> opt = pt.get_optional<std::string>(boost::property_tree::ptree::path_type(key));
-    if (opt.is_initialized())
-    {
-      std::string s = opt.get();
-      boost::to_upper(s);
-      return s == "TRUE" || s == "YES" || s == "1";
-    }
-    else return default_value;
+    std::string s = opt.get();
+    boost::to_upper(s);
+    return s == "TRUE" || s == "YES" || s == "1";
   }
+  else return default_value;
+}
 }
 
 TestCase::opt_t::opt_t()
@@ -62,8 +62,8 @@ void TestCase::opt_t::parse(std::istream& is)
     boost::property_tree::ptree pt;
     boost::property_tree::ini_parser::read_ini(is, pt);
 
-  this->stop_on_error = helper::get_opt_value(pt, "stop-on-error", this->stop_on_error);
-  this->check_result = helper::get_opt_value(pt, "check-result", this->check_result);
+    this->stop_on_error = helper::get_opt_value(pt, "stop-on-error", this->stop_on_error);
+    this->check_result = helper::get_opt_value(pt, "check-result", this->check_result);
 
     // algoquest options
     this->aq_name = helper::get_opt_value(pt, "algoquest.db-name", this->aq_name);
@@ -99,10 +99,10 @@ void TestCase::opt_t::parse(std::istream& is)
 
 TestCase::TestCase(boost::shared_ptr<Report> _report)
   : nb_result(0),
-  nb_tests(0),
-  nb_success(0),
-  nb_failure(0),
-  report(_report)
+    nb_tests(0),
+    nb_success(0),
+    nb_failure(0),
+    report(_report)
 {
 }
 
@@ -155,27 +155,27 @@ bool TestCase::execute(const aq::core::SelectStatement& ss, aq::DatabaseIntf::re
   ++it;
   for (;it != this->databases.end(); ++it)
   {
-      auto begin = std::chrono::system_clock::now();
-      (*it)->execute(ss, r2);
-      auto end = std::chrono::system_clock::now();
-      auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
-      report->time_exec((*it)->get_name(), duration);
+    auto begin = std::chrono::system_clock::now();
+    (*it)->execute(ss, r2);
+    auto end = std::chrono::system_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+    report->time_exec((*it)->get_name(), duration);
 
 
-      nb_result += std::max(r1.size(), r2.size());
-      // std::cout << nb_result << std::endl;
-      if (!this->compare(r1, r2))
-      {
-          // std::cout << std::endl;
-          // dump_result(r1, std::cout);
-          dump_result(r1, report->report);
-          // std::cout << std::endl;
-          // dump_result(r2, std::cout);
-          dump_result(r2, report->report);
-          nb_failure += 1;
-          // exit(0);
-          return false;
-      }
+    nb_result += std::max(r1.size(), r2.size());
+    // std::cout << nb_result << std::endl;
+    if (!this->compare(r1, r2))
+    {
+      // std::cout << std::endl;
+      // dump_result(r1, std::cout);
+      dump_result(r1, report->report);
+      // std::cout << std::endl;
+      // dump_result(r2, std::cout);
+      dump_result(r2, report->report);
+      nb_failure += 1;
+      // exit(0);
+      return false;
+    }
   }
   nb_success += 1;
   return true;

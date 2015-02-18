@@ -15,7 +15,7 @@ namespace aq
 {
 
 Settings::Settings()
-  : 
+  :
   iniFile(""),
   queryIdent(""),
   outputFile(""),
@@ -35,7 +35,7 @@ Settings::Settings()
   worker(1),
   group_by_process_size(100000),
   process_thread(1),
-  packSize(aq::packet_size), 
+  packSize(aq::packet_size),
   computeAnswer(true),
   csvFormat(true),
   skipNestedQuery(false),
@@ -66,14 +66,14 @@ Settings::Settings(const Settings& obj)
   fieldSeparator(obj.fieldSeparator),
   worker(obj.worker),
   group_by_process_size(obj.group_by_process_size),
-  process_thread(obj.process_thread),
-  packSize(obj.packSize),
-  computeAnswer(obj.computeAnswer),
-  skipNestedQuery(obj.skipNestedQuery),
-  useBinAQMatrix(obj.useBinAQMatrix),
-  displayCount(obj.displayCount),
-  cmdLine(obj.cmdLine),
-  trace(obj.trace)
+process_thread(obj.process_thread),
+packSize(obj.packSize),
+computeAnswer(obj.computeAnswer),
+skipNestedQuery(obj.skipNestedQuery),
+useBinAQMatrix(obj.useBinAQMatrix),
+displayCount(obj.displayCount),
+cmdLine(obj.cmdLine),
+trace(obj.trace)
 {
 }
 
@@ -133,7 +133,7 @@ T get_opt_value(boost::property_tree::ptree& pt, const char * key, T default_val
 bool get_opt_value(boost::property_tree::ptree& pt, const char * key, bool default_value)
 {
   boost::optional<std::string> opt = pt.get_optional<std::string>(boost::property_tree::ptree::path_type(key));
-  if (opt.is_initialized()) 
+  if (opt.is_initialized())
   {
     std::string s = opt.get();
     boost::to_upper(s);
@@ -151,7 +151,7 @@ void Settings::load(const std::string& iniFile)
     this->load(fin);
   }
 }
-    
+
 void Settings::load(std::istream& is)
 {
   try
@@ -224,7 +224,7 @@ void Settings::initPath(const std::string& root)
 void Settings::changeIdent(const std::string& _queryIdent)
 {
   this->queryIdent = _queryIdent;
-  
+
   this->workingPath = this->rootPath + "calculus/" + queryIdent + "/";
   this->answerFile = this->workingPath + "Answer.txt";
 
@@ -232,7 +232,7 @@ void Settings::changeIdent(const std::string& _queryIdent)
   // tempory path
   this->tmpPath = this->tmpRootPath + queryIdent + "/";
   this->dpyPath = this->tmpPath + "dpy/";
-  
+
   //
   // change ini file
   this->iniFile = this->rootPath + "/calculus/" + queryIdent + "/aqengine.ini";
@@ -257,7 +257,7 @@ void Settings::dump(std::ostream& os) const
   os << "computeAnswer:        ["  << computeAnswer        <<  "]" << std::endl;
   os << "displayCount:         ["  << displayCount         <<  "]" << std::endl;
   os << "cmdLine:              ["  << cmdLine              <<  "]" << std::endl;
-  os << "trace:                ["  << trace                <<  "]" << std::endl; 
+  os << "trace:                ["  << trace                <<  "]" << std::endl;
 }
 
 std::string Settings::to_string() const

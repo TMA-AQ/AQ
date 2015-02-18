@@ -9,10 +9,10 @@ namespace aq {
 namespace verb {
 
 //------------------------------------------------------------------------------
-void CaseVerb::changeResult(  Table::Ptr table, 
-                VerbResult::Ptr resLeft, 
-                VerbResult::Ptr resRight, 
-                VerbResult::Ptr resNext )
+void CaseVerb::changeResult(  Table::Ptr table,
+                              VerbResult::Ptr resLeft,
+                              VerbResult::Ptr resRight,
+                              VerbResult::Ptr resNext )
 {
 }
 
@@ -23,10 +23,10 @@ void CaseVerb::accept(VerbVisitor* visitor)
 }
 
 //------------------------------------------------------------------------------
-void WhenVerb::changeResult(  Table::Ptr table, 
-                VerbResult::Ptr resLeft, 
-                VerbResult::Ptr resRight, 
-                VerbResult::Ptr resNext )
+void WhenVerb::changeResult(  Table::Ptr table,
+                              VerbResult::Ptr resLeft,
+                              VerbResult::Ptr resRight,
+                              VerbResult::Ptr resNext )
 {
 }
 
@@ -37,10 +37,10 @@ void WhenVerb::accept(VerbVisitor* visitor)
 }
 
 //------------------------------------------------------------------------------
-void ElseVerb::changeResult(  Table::Ptr table, 
-                VerbResult::Ptr resLeft, 
-                VerbResult::Ptr resRight, 
-                VerbResult::Ptr resNext )
+void ElseVerb::changeResult(  Table::Ptr table,
+                              VerbResult::Ptr resLeft,
+                              VerbResult::Ptr resRight,
+                              VerbResult::Ptr resNext )
 {
 }
 

@@ -24,61 +24,61 @@
 namespace aq
 {
 
-  /// \brief Logging singleton class
-  class Logger
-  {
-  public:
+/// \brief Logging singleton class
+class Logger
+{
+public:
 
-    static Logger& getInstance();
-    static Logger& getInstance(const char * ident, int mode);
+  static Logger& getInstance();
+  static Logger& getInstance(const char * ident, int mode);
 
-    ~Logger();
+  ~Logger();
 
-    void redirectToStream(std::ostream& os) { this->out = &os; }
-    void setLocalFile(const char *);
+  void redirectToStream(std::ostream& os) { this->out = &os; }
+  void setLocalFile(const char *);
 
-    void setLockMode(bool value)      { this->lockMode = value; }
-    void setColorMode(bool value)     { this->colorLog = value; }
-    void setDateMode(bool value)      { this->dateMode = value; }
-    void setPidMode(bool value)       { this->pidMode = value; }
-    void setMode(char _mode)          { this->mode = _mode; }
-    void setLevel(int _level)         { this->level = _level; }
-    void setIdent(const char *_ident) {
-      ::memset(this->ident, 0, sizeof(ident));
-      ::strncpy(this->ident, _ident, sizeof(this->ident));
-    }
+  void setLockMode(bool value)      { this->lockMode = value; }
+  void setColorMode(bool value)     { this->colorLog = value; }
+  void setDateMode(bool value)      { this->dateMode = value; }
+  void setPidMode(bool value)       { this->pidMode = value; }
+  void setMode(char _mode)          { this->mode = _mode; }
+  void setLevel(int _level)         { this->level = _level; }
+  void setIdent(const char *_ident) {
+    ::memset(this->ident, 0, sizeof(ident));
+    ::strncpy(this->ident, _ident, sizeof(this->ident));
+  }
 
-    char getMode() const { return this->mode; }
-    const char * getIdent() const { return this->ident; }
+  char getMode() const { return this->mode; }
+  const char * getIdent() const { return this->ident; }
 
-    void log(int facility, const char * format, ...) const;
-    void log(const char *file, const char *function, unsigned int line, int facility, const char * format, ...) const;
+  void log(int facility, const char * format, ...) const;
+  void log(const char *file, const char *function, unsigned int line, int facility, const char * format, ...) const;
 
-  private:
-    Logger(const char * ident, int mode);
-    Logger(const Logger& );
-    Logger& operator=(const Logger& source);
+private:
+  Logger(const char * ident, int mode);
+  Logger(const Logger& );
+  Logger& operator=(const Logger& source);
 
-    void printStdOut(const char * but, int facility) const;
-    void printWithColor(const char * buf, int facility) const;
-    int  openFile(const char *);
-    void closeFile(void);
+  void printStdOut(const char * but, int facility) const;
+  void printWithColor(const char * buf, int facility) const;
+  int  openFile(const char *);
+  void closeFile(void);
 
-    std::ostream * out;
-    int level;
-    FILE * localFile;
-    char mode;
-    char ident[64];
-    char statsIdent[64];
-    char httpIdent[64];
+  std::ostream * out;
+  int level;
+  FILE * localFile;
+  char mode;
+  char ident[64];
+  char statsIdent[64];
+  char httpIdent[64];
 
-    mutable boost::mutex mutex;
+  mutable boost::mutex mutex;
 
-    bool colorLog;
-    bool lockMode;
-    bool dateMode;
-    bool pidMode;
-  };
+  bool colorLog;
+  bool lockMode;
+  bool dateMode;
+  bool pidMode;
+};
 
 }
 
@@ -100,9 +100,9 @@ enum log_facilities {
 # define AQ_INFO __FILE__, __FUNCTION__, __LINE__, AQ_LOG_INFO
 # define AQ_DEBUG __FILE__, __FUNCTION__, __LINE__, AQ_LOG_DEBUG
 
-# define AQ_LOG_DEBUG(args) \
-  do {                   \
-    aq::Logger::getInstance().log(AQ_DEBUG, args);                \
+# define AQ_LOG_DEBUG(args)                         \
+  do {                                              \
+    aq::Logger::getInstance().log(AQ_DEBUG, args);  \
   } while (false) ;
 
 #else
@@ -114,9 +114,9 @@ enum log_facilities {
 # define AQ_INFO __FILE__, __FUNCTION__, __LINE__, AQ_LOG_INFO
 # define AQ_DEBUG __FILE__, __FUNCTION__, __LINE__, AQ_LOG_DEBUG
 
-# define AQ_LOG_DEBUG(args) \
-  do {                   \
-    aq::Logger::getInstance().log(AQ_DEBUG, args);                \
+# define AQ_LOG_DEBUG(args)                         \
+  do {                                              \
+    aq::Logger::getInstance().log(AQ_DEBUG, args);  \
   } while (false) ;
 
 //# define AQ_CRITICAL AQ_LOG_CRIT

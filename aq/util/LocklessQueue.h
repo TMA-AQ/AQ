@@ -5,26 +5,26 @@
 #include <cstring>
 #include <vector>
 
-namespace aq 
+namespace aq
 {
 
-  /// \brief Lockless queue for one thread pushing and one thread poping
-  template <class T> class LocklessQueue
-  {
-  private:
-    std::vector<T> queue;
-    size_t head;
-    size_t tail;
+/// \brief Lockless queue for one thread pushing and one thread poping
+template <class T> class LocklessQueue
+{
+private:
+  std::vector<T> queue;
+  size_t head;
+  size_t tail;
 
-  public:
-    LocklessQueue(size_t size)
-      : queue(size + 1), 
-      head(0), 
+public:
+  LocklessQueue(size_t size)
+    : queue(size + 1),
+      head(0),
       tail(0)
     {
     }
 
-    bool push(T data)
+  bool push(T data)
     {
       size_t h = this->head;
 
@@ -40,7 +40,7 @@ namespace aq
       return true;
     }
 
-    bool pop(T* data)
+  bool pop(T* data)
     {
       size_t t = this->tail;
 
@@ -56,26 +56,26 @@ namespace aq
       return true;
     }
 
-    bool empty() const
+  bool empty() const
     {
       return this->tail == this->head;
     }
 
-    bool full() const
+  bool full() const
     {
       return ((this->head+1) % this->queue.capacity()) == this->tail;
     }
 
-    size_t getSize() const
+  size_t getSize() const
     {
       return this->queue.capacity();
     }
 
-    /*! \brief Get remaind empty size
-    *
-    * Warning, this is just an estimation, because this function is not thread safe.
-    */
-    size_t getRemaindSize() const
+  /*! \brief Get remaind empty size
+   *
+   * Warning, this is just an estimation, because this function is not thread safe.
+   */
+  size_t getRemaindSize() const
     {
       size_t t = this->tail;
       size_t h = (this->head + 1) % this->queue.capacity();
@@ -85,7 +85,7 @@ namespace aq
       else            return 0; // head == tail
     }
 
-  };
+};
 
 }
 

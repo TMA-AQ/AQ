@@ -19,8 +19,8 @@ ColumnVerb::ColumnVerb()
 
 //------------------------------------------------------------------------------
 bool ColumnVerb::changeQuery(  aq::tnode* pStart, aq::tnode* pNode,
-                VerbResult::Ptr resLeft, 
-                VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+                               VerbResult::Ptr resLeft,
+                               VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
   assert( pNode->left->tag == K_IDENT );
   assert( pNode->right->tag == K_COLUMN );
@@ -46,9 +46,9 @@ bool ColumnVerb::changeQuery(  aq::tnode* pStart, aq::tnode* pNode,
 }
 
 //------------------------------------------------------------------------------
-void ColumnVerb::changeResult(  Table::Ptr table, 
-                VerbResult::Ptr resLeft,
-                VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+void ColumnVerb::changeResult(  Table::Ptr table,
+                                VerbResult::Ptr resLeft,
+                                VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
   assert(false);
 }
@@ -90,7 +90,7 @@ void ColumnVerb::addResult(aq::Row& row)
     assert(row.computedRow.size() <= std::numeric_limits<size_t>::max());
     this->computed_index = static_cast<int>(row.computedRow.size()) - 1;
   }
-  
+
   if (static_cast<size_t>(this->computed_index) >= row.computedRow.size())
   {
     row.computedRow.push_back(row_item);
@@ -116,8 +116,8 @@ void ColumnVerb::accept(VerbVisitor* visitor)
 
 //------------------------------------------------------------------------------
 bool CommaVerb::changeQuery(  aq::tnode* pStart, aq::tnode* pNode,
-                VerbResult::Ptr resLeft,
-                VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+                              VerbResult::Ptr resLeft,
+                              VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
   VerbResultArray::Ptr resArray = nullptr;
   if( resLeft && resLeft->getType() == VerbResult::ARRAY )
@@ -144,8 +144,8 @@ bool CommaVerb::changeQuery(  aq::tnode* pStart, aq::tnode* pNode,
 }
 
 //------------------------------------------------------------------------------
-void CommaVerb::changeResult(  Table::Ptr table, 
-                VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+void CommaVerb::changeResult(  Table::Ptr table,
+                               VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
   if( resLeft && resLeft->getType() == VerbResult::ARRAY )
   {
@@ -188,10 +188,10 @@ void CommaVerb::accept(VerbVisitor* visitor)
 }
 
 //------------------------------------------------------------------------------
-void AndVerb::changeResult(  Table::Ptr table, 
-              VerbResult::Ptr resLeft, 
-              VerbResult::Ptr resRight, 
-              VerbResult::Ptr resNext )
+void AndVerb::changeResult(  Table::Ptr table,
+                             VerbResult::Ptr resLeft,
+                             VerbResult::Ptr resRight,
+                             VerbResult::Ptr resNext )
 {
   if( this->getContext() != K_WHERE && this->getContext() != K_HAVING )
     return;
@@ -231,8 +231,8 @@ void AndVerb::accept(VerbVisitor* visitor)
 }
 
 //------------------------------------------------------------------------------
-bool InVerb::preprocessQuery(  aq::tnode* pStart, aq::tnode* pNode, 
-                aq::tnode* pStartOriginal )
+bool InVerb::preprocessQuery(  aq::tnode* pStart, aq::tnode* pNode,
+                               aq::tnode* pStartOriginal )
 {
   if( !pNode || !pNode->left )
     return false;
@@ -243,8 +243,8 @@ bool InVerb::preprocessQuery(  aq::tnode* pStart, aq::tnode* pNode,
 
 //------------------------------------------------------------------------------
 bool InVerb::changeQuery(  aq::tnode* pStart, aq::tnode* pNode,
-              VerbResult::Ptr resLeft,
-              VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+                           VerbResult::Ptr resLeft,
+                           VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
   return true;
 }
@@ -334,14 +334,14 @@ bool AsVerb::preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pS
   default:
     throw verb_error(generic_error::INVALID_QUERY, this->getVerbType());
   }
-  
+
   return false;
 }
 
 //------------------------------------------------------------------------------
-void AsVerb::changeResult(  Table::Ptr table, 
-              VerbResult::Ptr resLeft,
-              VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+void AsVerb::changeResult(  Table::Ptr table,
+                            VerbResult::Ptr resLeft,
+                            VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
   this->Result = resLeft;
 }
@@ -392,10 +392,10 @@ void AsteriskVerb::accept(VerbVisitor* visitor)
 }
 
 //------------------------------------------------------------------------------
-void AscVerb::changeResult(  Table::Ptr table, 
-              VerbResult::Ptr resLeft, 
-              VerbResult::Ptr resRight, 
-              VerbResult::Ptr resNext )
+void AscVerb::changeResult(  Table::Ptr table,
+                             VerbResult::Ptr resLeft,
+                             VerbResult::Ptr resRight,
+                             VerbResult::Ptr resNext )
 {
   //simply move the parameters up to the parent
   assert( resLeft && !resRight );

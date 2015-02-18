@@ -12,32 +12,32 @@ class ComparisonVerb: public VerbNode
 public:
   virtual int getVerbType() const { return -1; };
   virtual bool changeQuery(  aq::tnode* pStart, aq::tnode* pNode,
-                VerbResult::Ptr resLeft, 
-                VerbResult::Ptr resRight, 
-                VerbResult::Ptr resNext );
-  virtual void changeResult(  Table::Ptr table, 
-                VerbResult::Ptr resLeft, 
-                VerbResult::Ptr resRight, 
-                VerbResult::Ptr resNext );
+                             VerbResult::Ptr resLeft,
+                             VerbResult::Ptr resRight,
+                             VerbResult::Ptr resNext );
+  virtual void changeResult(  Table::Ptr table,
+                              VerbResult::Ptr resLeft,
+                              VerbResult::Ptr resRight,
+                              VerbResult::Ptr resNext );
   virtual void accept(VerbVisitor* visitor);
-  
+
   const std::string& getValue() const { return value; }
 
-  virtual void setBaseDesc(Base::Ptr baseDesc) 
-  { 
-    m_baseDesc = baseDesc;
-  }
+  virtual void setBaseDesc(Base::Ptr baseDesc)
+    {
+      m_baseDesc = baseDesc;
+    }
 
-  virtual void setSettings(Settings::Ptr settings) 
-  {
-    m_settings = settings;
-  }
+  virtual void setSettings(Settings::Ptr settings)
+    {
+      m_settings = settings;
+    }
 
 private:
   Base::Ptr m_baseDesc;
   Settings::Ptr m_settings;
-  //virtual bool compare(  ColumnItem* item1, 
-  //            ColumnItem* item2, 
+  //virtual bool compare(  ColumnItem* item1,
+  //            ColumnItem* item2,
   //            aq::ColumnType type );
   std::string value;
 };
@@ -48,8 +48,8 @@ class EqVerb: public ComparisonVerb
 public:
   virtual int getVerbType() const { return K_EQ; };
 private:
-  //bool compare(  ColumnItem* item1, 
-  //        ColumnItem* item2, 
+  //bool compare(  ColumnItem* item1,
+  //        ColumnItem* item2,
   //        aq::ColumnType type );
   virtual void accept(VerbVisitor* visitor);
 };
@@ -75,8 +75,8 @@ class LtVerb: public ComparisonVerb
 public:
   virtual int getVerbType() const { return K_LT; };
 private:
-  //bool compare(  ColumnItem* item1, 
-  //        ColumnItem* item2, 
+  //bool compare(  ColumnItem* item1,
+  //        ColumnItem* item2,
   //        aq::ColumnType type );
 };
 
@@ -86,8 +86,8 @@ class LeqVerb: public ComparisonVerb
 public:
   virtual int getVerbType() const { return K_LEQ; };
 private:
-  //bool compare(  ColumnItem* item1, 
-  //        ColumnItem* item2, 
+  //bool compare(  ColumnItem* item1,
+  //        ColumnItem* item2,
   //        aq::ColumnType type );
 };
 
@@ -97,8 +97,8 @@ class GtVerb: public ComparisonVerb
 public:
   virtual int getVerbType() const { return K_GT; };
 private:
-  //bool compare(  ColumnItem* item1, 
-  //        ColumnItem* item2, 
+  //bool compare(  ColumnItem* item1,
+  //        ColumnItem* item2,
   //        aq::ColumnType type );
 };
 
@@ -108,8 +108,8 @@ class GeqVerb: public ComparisonVerb
 public:
   virtual int getVerbType() const { return K_GEQ; };
 private:
-  //bool compare(  ColumnItem* item1, 
-  //        ColumnItem* item2, 
+  //bool compare(  ColumnItem* item1,
+  //        ColumnItem* item2,
   //        aq::ColumnType type );
 };
 
@@ -175,8 +175,8 @@ class NeqVerb: public ComparisonVerb
 public:
   virtual int getVerbType() const { return K_NEQ; };
 private:
-  //bool compare(  ColumnItem* item1, 
-  //        ColumnItem* item2, 
+  //bool compare(  ColumnItem* item1,
+  //        ColumnItem* item2,
   //        aq::ColumnType type );
 };
 
@@ -192,12 +192,12 @@ class IsVerb: public VerbNode
 {
 public:
   virtual int getVerbType() const { return K_IS; };
-  virtual bool preprocessQuery(  aq::tnode* pStart, aq::tnode* pNode, 
-                  aq::tnode* pStartOriginal );
-  virtual void changeResult(  Table::Ptr table, 
-                VerbResult::Ptr resLeft, 
-                VerbResult::Ptr resRight, 
-                VerbResult::Ptr resNext );
+  virtual bool preprocessQuery(  aq::tnode* pStart, aq::tnode* pNode,
+                                 aq::tnode* pStartOriginal );
+  virtual void changeResult(  Table::Ptr table,
+                              VerbResult::Ptr resLeft,
+                              VerbResult::Ptr resRight,
+                              VerbResult::Ptr resNext );
   virtual void accept(VerbVisitor* visitor);
 private:
   bool IsNot;

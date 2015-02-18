@@ -109,7 +109,7 @@ aq::TColumn2Tables * add_table_name(aq::TColumn2Tables * pC2T, const char * pszT
   if ( pC2T == nullptr || pszTableName == nullptr ) {
 #ifdef CREATE_LOG
     Log( "add_table_name() : One of the parameters is nullptr (pC2T:%u; pszTableName:<%u>)!\n",
-       (unsigned int)pC2T, (unsigned int)pszTableName );
+         (unsigned int)pC2T, (unsigned int)pszTableName );
 #endif
     return nullptr;
   }
@@ -276,7 +276,7 @@ int add_tnode_tables(aq::tnode * pNode, aq::Base * baseDesc, aq::TColumn2TablesA
     }
   }
   else if ( pNode->tag == K_INNER || pNode->tag == K_LEFT || pNode->tag == K_RIGHT ||
-    pNode->tag == K_FULL || pNode->tag == K_OUTER || pNode->tag == K_JOIN )
+            pNode->tag == K_FULL || pNode->tag == K_OUTER || pNode->tag == K_JOIN )
   {
     /* K_INNER, K_LEFT, K_RIGHT, K_FULL, K_OUTER, K_JOIN */
     if ( add_tnode_tables( pNode->left, baseDesc, parrC2T ) != 0 )
@@ -363,7 +363,7 @@ int enforce_qualified_column_reference(aq::tnode * pNode, aq::Base & baseDesc)
       nodes.push_back( pNode->left );
     //do not call on K_PERIOD's node right branch if the right tag is K_COLUMN !
     if(  pNode->right && (pNode->tag != K_PERIOD || pNode->right->tag != K_COLUMN ) )
-        nodes.push_back( pNode->right );
+      nodes.push_back( pNode->right );
 
     if ( pNode->tag != K_COLUMN )
       continue;

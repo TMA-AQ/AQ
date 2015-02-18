@@ -27,14 +27,14 @@ struct InCondition
   InCondition() {}
   InCondition(const InCondition& o) : column(o.column), values(o.values) {}
   InCondition& operator=(const InCondition& o)
-  {
-    if (this != &o)
     {
-      this->column = o.column;
-      this->values = o.values;
+      if (this != &o)
+      {
+        this->column = o.column;
+        this->values = o.values;
+      }
+      return *this;
     }
-    return *this;
-  }
 
 };
 
@@ -45,7 +45,7 @@ struct JoinCondition
     K_ACTIVE,
     K_FILTER,
     K_NEUTRAL,
-  };
+    };
 
   enum class join_t
   {
@@ -53,7 +53,7 @@ struct JoinCondition
     LEFT_OUTER,
     RIGHT_OUTER,
     FULL_OUTER,
-  };
+    };
 
   enum class op_t
   {
@@ -64,7 +64,7 @@ struct JoinCondition
     IEQ,
     SEQ,
     SUP,
-  };
+    };
 
   std::string op;
   boost::optional<std::string> type_left, type_right;
@@ -73,22 +73,22 @@ struct JoinCondition
 
   JoinCondition() {}
   JoinCondition(const JoinCondition& o) : op(o.op), type_left(o.type_left), type_right(o.type_right), jt_left(o.jt_left), jt_right(o.jt_right), left(o.left), right(o.right)
-  {
-  }
-  JoinCondition& operator=(const JoinCondition& o)
-  {
-    if (this != &o)
     {
-      this->op = o.op;
-      this->type_left = o.type_left;
-      this->type_right = o.type_right;
-      this->jt_left = o.jt_left;
-      this->jt_right = o.jt_right;
-      this->left = o.left;
-      this->right = o.right;
     }
-    return *this;
-  }
+  JoinCondition& operator=(const JoinCondition& o)
+    {
+      if (this != &o)
+      {
+        this->op = o.op;
+        this->type_left = o.type_left;
+        this->type_right = o.type_right;
+        this->jt_left = o.jt_left;
+        this->jt_right = o.jt_right;
+        this->left = o.left;
+        this->right = o.right;
+      }
+      return *this;
+    }
 
 };
 

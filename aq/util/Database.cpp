@@ -43,15 +43,15 @@ bool Database::isValid() const
 void Database::create(aq::base_t& base)
 {
   boost::filesystem::path paths[] =
-  {
-    boost::filesystem::path(this->path),
-    boost::filesystem::path(this->path + "base_struct"),
-    boost::filesystem::path(this->getWorkingPath()),
-    boost::filesystem::path(this->getDataPath()),
-    boost::filesystem::path(this->getTemporaryColumnLoadPath()),
-    boost::filesystem::path(this->getTemporaryTableLoadPath()),
-    boost::filesystem::path(this->getTemporaryWorkingPath()),
-  };
+    {
+      boost::filesystem::path(this->path),
+      boost::filesystem::path(this->path + "base_struct"),
+      boost::filesystem::path(this->getWorkingPath()),
+      boost::filesystem::path(this->getDataPath()),
+      boost::filesystem::path(this->getTemporaryColumnLoadPath()),
+      boost::filesystem::path(this->getTemporaryTableLoadPath()),
+      boost::filesystem::path(this->getTemporaryWorkingPath()),
+    };
 
   for (auto& p : paths)
   {

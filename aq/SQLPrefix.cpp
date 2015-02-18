@@ -41,7 +41,7 @@ std::string& syntax_tree_to_aql_form(const aq::tnode * const pNode, std::string&
   {
     std::ostringstream stmp;
 
-    if (pNode->tag == K_JNO) 
+    if (pNode->tag == K_JNO)
     {
       assert(pNode->left);
       query += " " + std::string(id_to_string(pNode->tag));
@@ -65,11 +65,11 @@ std::string& syntax_tree_to_aql_form(const aq::tnode * const pNode, std::string&
         stmp << "K_VALUE "  << pNode->getData().val_number;
         break;
       case K_DATE_VALUE:
-        {
-          DateConversion dateConverter;
-          stmp << "K_VALUE " << dateConverter.bigIntToDate(pNode->getData().val_int);
-        }
-        break;
+      {
+        DateConversion dateConverter;
+        stmp << "K_VALUE " << dateConverter.bigIntToDate(pNode->getData().val_int);
+      }
+      break;
       case K_STRING:
         stmp << "K_VALUE '" <<  pNode->getData().val_str << "'";
         break;
@@ -107,7 +107,7 @@ std::string& syntax_tree_to_sql_form(const aq::tnode * const pNode, std::string&
     query += " ... ";
     return query;
   }
-  
+
   bool bill = false;
 
   if (tnode::isMainTag(pNode->tag))
@@ -143,7 +143,7 @@ std::string& syntax_tree_to_sql_form(const aq::tnode * const pNode, std::string&
       DateConversion dateConverter;
       stmp << dateConverter.bigIntToDate(pNode->getData().val_int);
     }
-      break;
+    break;
     case K_STRING:
     case K_IDENT:
     case K_COLUMN:
@@ -155,7 +155,7 @@ std::string& syntax_tree_to_sql_form(const aq::tnode * const pNode, std::string&
     }
     query += " " + stmp.str();
     if ( bill == true && pNode->tag != K_IDENT && pNode->tag != K_STRING && pNode->tag != K_COLUMN
-      && pNode->tag != K_REAL && pNode->tag != K_INTEGER && pNode->tag != K_DATE_VALUE && pNode->tag != K_STAR )
+         && pNode->tag != K_REAL && pNode->tag != K_INTEGER && pNode->tag != K_DATE_VALUE && pNode->tag != K_STAR )
     {
       query += " (";
       aq::syntax_tree_to_sql_form(pNode->left, query, ++level);
@@ -166,7 +166,7 @@ std::string& syntax_tree_to_sql_form(const aq::tnode * const pNode, std::string&
     bill = false;
 
     aq::syntax_tree_to_sql_form(pNode->right, query, ++level);
-    aq::syntax_tree_to_sql_form(pNode->next, query, ++level); 
+    aq::syntax_tree_to_sql_form(pNode->next, query, ++level);
   }
   return query;
 }
@@ -181,7 +181,7 @@ std::string& syntax_tree_to_sql_form_nonext(const aq::tnode * const pNode, std::
     query += " ... ";
     return query;
   }
-  
+
   if (tnode::isMainTag(pNode->tag))
   {
     query += " " + std::string(id_to_string(pNode->tag)) + " ";
@@ -205,7 +205,7 @@ std::string& syntax_tree_to_sql_form_nonext(const aq::tnode * const pNode, std::
       DateConversion dateConverter;
       stmp << dateConverter.bigIntToDate(pNode->getData().val_int);
     }
-      break;
+    break;
     case K_STRING:
       stmp <<  pNode->getData().val_str;
       break;

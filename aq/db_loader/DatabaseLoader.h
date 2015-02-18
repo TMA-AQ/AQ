@@ -25,9 +25,9 @@ public:
   public:
     item_cmp_t(size_t _size) : size(_size) {}
     bool operator()(const void * buf1, const void * buf2) const
-    {
-      return ::memcmp(buf1, buf2, size) < 0;
-    }
+      {
+        return ::memcmp(buf1, buf2, size) < 0;
+      }
   private:
     size_t size;
   };

@@ -21,15 +21,15 @@ namespace util {
 //------------------------------------------------------------------------------
 namespace helper {
 
-  void markAsDeleted(aq::tnode* pNode)
-  {
-    if( !pNode )
-      return;
-    pNode->tag = K_DELETED;
-    markAsDeleted(pNode->left);
-    markAsDeleted(pNode->right);
-    markAsDeleted(pNode->next);
-  }
+void markAsDeleted(aq::tnode* pNode)
+{
+  if( !pNode )
+    return;
+  pNode->tag = K_DELETED;
+  markAsDeleted(pNode->left);
+  markAsDeleted(pNode->right);
+  markAsDeleted(pNode->next);
+}
 
 }
 
@@ -373,7 +373,7 @@ void solveSelectStar(aq::tnode* pNode, Base::Ptr BaseDesc, std::vector<std::stri
       for( size_t idx2 = 0; idx2 < columns.size(); ++idx2 )
       {
         if ( ( alias = tables[idx]->find_first(K_AS)) != nullptr &&
-          alias->right && alias->right->getTag() == K_IDENT )
+             alias->right && alias->right->getTag() == K_IDENT )
           colRef = createPeriodColumn( columns[idx2]->getName().c_str(), alias->right->getData().val_str );
         else
           colRef = createPeriodColumn( columns[idx2]->getName().c_str(), column->getData().val_str );
@@ -422,7 +422,7 @@ void solveIdentRequest(aq::tnode* pNode, Base::Ptr BaseDesc)
         assignIdentRequest(assign, tables, BaseDesc);
         assign = assign->next;
       }
-      assignIdentRequest(pNode, tables, BaseDesc);
+    assignIdentRequest(pNode, tables, BaseDesc);
   }
   if ((assign = pNode->find_main(K_WHERE)))
   {
@@ -699,31 +699,31 @@ void changeColumnNames(  aq::tnode* pIntSelectAs, aq::tnode* pInteriorSelect, aq
     switch( extCol->tag )
     {
     case K_PERIOD:
+    {
+      assert( extCol->left && extCol->left->tag == K_IDENT &&
+              extCol->right->tag == K_COLUMN );
+      if( tableName != std::string(extCol->left->getData().val_str) )
+        continue;
+      std::string columnName = extCol->right->getData().val_str;
+      aq::tnode* replCol = findColumn( columnName, interiorColumns, keepAlias );
+      if( replCol )
       {
-        assert( extCol->left && extCol->left->tag == K_IDENT &&
-          extCol->right->tag == K_COLUMN );
-        if( tableName != std::string(extCol->left->getData().val_str) )
-          continue;
-        std::string columnName = extCol->right->getData().val_str;
-        aq::tnode* replCol = findColumn( columnName, interiorColumns, keepAlias );
-        if( replCol )
-        {
-          aq::tnode::delete_subtree(extCol);
-          extCol = replCol->clone_subtree();
-        }
+        aq::tnode::delete_subtree(extCol);
+        extCol = replCol->clone_subtree();
       }
-      break;
+    }
+    break;
     case K_COLUMN:
+    {
+      std::string columnName = extCol->getData().val_str;
+      aq::tnode* replCol = findColumn( columnName, interiorColumns, keepAlias );
+      if( replCol )
       {
-        std::string columnName = extCol->getData().val_str;
-        aq::tnode* replCol = findColumn( columnName, interiorColumns, keepAlias );
-        if( replCol )
-        {
-          aq::tnode::delete_subtree(extCol);
-          extCol = replCol->aq::tnode::clone_subtree();
-        }
+        aq::tnode::delete_subtree(extCol);
+        extCol = replCol->aq::tnode::clone_subtree();
       }
-      break;
+    }
+    break;
     default:
       assert( 0 );
     }
@@ -762,7 +762,7 @@ aq::tnode * getJoin(aq::tnode* pNode)
     }
   }
   else if (!((pNode->tag == K_JEQ) || (pNode->tag == K_JAUTO) ||
-    (pNode->tag == K_JIEQ) || (pNode->tag == K_JSEQ))) // TODO : some join type are missing
+             (pNode->tag == K_JIEQ) || (pNode->tag == K_JSEQ))) // TODO : some join type are missing
   {
     delete pNode;
     pNode = nullptr;
@@ -1207,7 +1207,7 @@ void getAllColumns(aq::tnode* pNode, std::vector<aq::tnode*>& columns)
       boost::to_upper(col2);
 
       if( columns[idx]->tag == K_PERIOD &&
-        table1 == table2 && col1 == col2 )
+          table1 == table2 && col1 == col2 )
       {
         found = true;
         break;
@@ -1285,30 +1285,30 @@ void processNot( aq::tnode*& pNode, bool applyNot )
   switch( pNode->tag )
   {
   case K_NOT:
-    {
-      aq::tnode* auxNode = pNode;
-      pNode = pNode->left;
-      auxNode->left = nullptr;
-      delete auxNode ;
-      processNot( pNode, !applyNot );
-    }
-    break;
+  {
+    aq::tnode* auxNode = pNode;
+    pNode = pNode->left;
+    auxNode->left = nullptr;
+    delete auxNode ;
+    processNot( pNode, !applyNot );
+  }
+  break;
   case K_AND:
-    {
-      if( applyNot )
-        pNode->tag = K_OR;
-      processNot( pNode->left, applyNot );
-      processNot( pNode->right, applyNot );
-    }
-    break;
+  {
+    if( applyNot )
+      pNode->tag = K_OR;
+    processNot( pNode->left, applyNot );
+    processNot( pNode->right, applyNot );
+  }
+  break;
   case K_OR:
-    {
-      if( applyNot )
-        pNode->tag = K_AND;
-      processNot( pNode->left, applyNot );
-      processNot( pNode->right, applyNot );
-    }
-    break;
+  {
+    if( applyNot )
+      pNode->tag = K_AND;
+    processNot( pNode->left, applyNot );
+    processNot( pNode->right, applyNot );
+  }
+  break;
   case K_LT:
     if( applyNot )
       pNode->tag = K_GEQ;

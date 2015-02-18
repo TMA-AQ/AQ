@@ -46,7 +46,7 @@
 namespace fs = boost::filesystem;
 
 #ifdef AQ_TRACE
-  std::string sql_query; // FIXME : should belong to class QueryResolver
+std::string sql_query; // FIXME : should belong to class QueryResolver
 #endif
 
 boost::mutex aq::QueryResolver::parserMutex;
@@ -63,21 +63,21 @@ QueryResolver::QueryResolver(
   unsigned int& _id,
   unsigned int _level)
   :  settings(_settings),
-    baseDesc(_baseDesc),
-    aqEngine(_aqEngine),
-    sqlStatement(_sqlStatement),
-    originalSqlStatement(nullptr),
-    outerSelect(nullptr),
-    id_generator(_id),
-    id(_id),
-    nestedId(0),
-    level(_level),
-    nested(id > 1),
-    inWhereClause(false),
-    hasGroupBy(false),
-    hasOrderBy(false),
-    hasPartitionBy(false),
-    compressable(boost::none)
+     baseDesc(_baseDesc),
+     aqEngine(_aqEngine),
+     sqlStatement(_sqlStatement),
+     originalSqlStatement(nullptr),
+     outerSelect(nullptr),
+     id_generator(_id),
+     id(_id),
+     nestedId(0),
+     level(_level),
+     nested(id > 1),
+     inWhereClause(false),
+     hasGroupBy(false),
+     hasOrderBy(false),
+hasPartitionBy(false),
+compressable(boost::none)
 {
   this->sqlStatement->to_upper();
   this->originalSqlStatement = this->sqlStatement->clone_subtree();

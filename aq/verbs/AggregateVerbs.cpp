@@ -13,10 +13,10 @@ AggregateVerb::AggregateVerb()
 {}
 
 //------------------------------------------------------------------------------
-bool AggregateVerb::changeQuery(aq::tnode* pStart, 
+bool AggregateVerb::changeQuery(aq::tnode* pStart,
                                 aq::tnode* pNode,
                                 VerbResult::Ptr resLeft,
-                                VerbResult::Ptr resRight, 
+                                VerbResult::Ptr resRight,
                                 VerbResult::Ptr resNext )
 {
   if ((this->getContext() != K_SELECT) && (this->getContext() != K_HAVING))
@@ -28,10 +28,10 @@ bool AggregateVerb::changeQuery(aq::tnode* pStart,
 }
 
 //------------------------------------------------------------------------------
-void AggregateVerb::changeResult(  Table::Ptr table, 
-                  VerbResult::Ptr resLeft,
-                  VerbResult::Ptr resRight,
-                  VerbResult::Ptr resNext )
+void AggregateVerb::changeResult(  Table::Ptr table,
+                                   VerbResult::Ptr resLeft,
+                                   VerbResult::Ptr resRight,
+                                   VerbResult::Ptr resNext )
 {
 }
 

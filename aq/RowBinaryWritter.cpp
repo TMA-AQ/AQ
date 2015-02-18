@@ -2,7 +2,7 @@
 
 namespace aq
 {
-  
+
 RowBinaryWritter::RowBinaryWritter(const std::string& filePath)
   : RowWritter(filePath)
 {
@@ -38,26 +38,26 @@ int RowBinaryWritter::process(Row& row)
       switch (row_item.type)
       {
       case aq::ColumnType::COL_TYPE_VARCHAR:
-        {
-          write<aq::ColumnItem<int32_t> >(row_item, pFOut);
-        }
-        break;
+      {
+        write<aq::ColumnItem<int32_t> >(row_item, pFOut);
+      }
+      break;
       case aq::ColumnType::COL_TYPE_INT:
-        {
-          write<aq::ColumnItem<int64_t> >(row_item, pFOut);
-        }
-        break;
+      {
+        write<aq::ColumnItem<int64_t> >(row_item, pFOut);
+      }
+      break;
       case aq::ColumnType::COL_TYPE_DOUBLE:
-        {
-          write<aq::ColumnItem<double> >(row_item, pFOut);
-        }
-        break;
+      {
+        write<aq::ColumnItem<double> >(row_item, pFOut);
+      }
+      break;
       case aq::ColumnType::COL_TYPE_BIG_INT:
       case aq::ColumnType::COL_TYPE_DATE:
-        {
-          write<aq::ColumnItem<int64_t> >(row_item, pFOut);
-        }
-        break;
+      {
+        write<aq::ColumnItem<int64_t> >(row_item, pFOut);
+      }
+      break;
       }
     }
   }

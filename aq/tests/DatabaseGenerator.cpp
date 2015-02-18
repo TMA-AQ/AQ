@@ -17,12 +17,12 @@ DatabaseGenerator::DatabaseGenerator(
   value_mode_t _value_mode,
   bool _stop_on_error)
   : nb_rows(_nb_rows),
-  min_values(_min_values),
-  max_values(_max_values),
-  mode(_mode),
-  gen_mode(_gen_mode),
-  value_mode(_value_mode),
-  stop_on_error(_stop_on_error)
+    min_values(_min_values),
+    max_values(_max_values),
+    mode(_mode),
+    gen_mode(_gen_mode),
+    value_mode(_value_mode),
+    stop_on_error(_stop_on_error)
 {
   for (const auto& table : _tables)
   {
@@ -73,7 +73,7 @@ size_t DatabaseGenerator::generate(handle_t * cb)
       }
     }
     if ((cb->push(this->tables_values) != 0) && (stop_on_error))
-        return 0;
+      return 0;
     return 1;
   }
   std::vector<int> pts;
@@ -116,8 +116,8 @@ size_t DatabaseGenerator::generate(handle_t * cb)
     it_table++;
     if ((this->generate(cb) == 0) && (stop_on_error))
     {
-        std::cerr << "STOP ON ERROR" << std::endl;
-        break;
+      std::cerr << "STOP ON ERROR" << std::endl;
+      break;
     }
 
     // break; // FIXME

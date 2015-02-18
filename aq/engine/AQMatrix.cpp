@@ -11,26 +11,26 @@
 #include <boost/bind.hpp>
 
 using namespace aq::engine;
- 
+
 #define STR_BIG_BUF_SIZE 128
 
 namespace
 {
-  
-  struct inner_column_cmp_t
-  {
-  public:
-    inner_column_cmp_t(const std::vector<size_t>& lessThanColumn)
-      : m_lessThanColumn(lessThanColumn)
+
+struct inner_column_cmp_t
+{
+public:
+  inner_column_cmp_t(const std::vector<size_t>& lessThanColumn)
+    : m_lessThanColumn(lessThanColumn)
     {
     }
-    bool operator()(size_t idx1, size_t idx2)
+  bool operator()(size_t idx1, size_t idx2)
     {
       return m_lessThanColumn[idx1] < m_lessThanColumn[idx2];
     }
-  private:
-    const std::vector<size_t>& m_lessThanColumn;
-  };
+private:
+  const std::vector<size_t>& m_lessThanColumn;
+};
 
 }
 
@@ -103,7 +103,7 @@ void AQMatrix::write(const char * filePath)
     value = this->matrix[i].table_id;
     fwrite(&value, sizeof(uint64_t), 1, fd);
   }
-  
+
   fwrite(&size, sizeof(uint64_t), 1, fd);
   for (size_t i = 0; i < size; ++i)
   {
@@ -153,7 +153,7 @@ void AQMatrix::loadHeader(const char * filePath, std::vector<long long>& tableID
     this->matrix[this->matrix.size() - 1].table_id = tableId;
     tableIDs.push_back(tableId);
   }
-  
+
   fread(&this->totalCount, sizeof(uint64_t), 1, fd);
   fread(&this->nbRows, sizeof(uint64_t), 1, fd);
   // fread(&nbGroups, sizeof(uint64_t), 1, fd);
@@ -165,22 +165,22 @@ void AQMatrix::loadHeader(const char * filePath, std::vector<long long>& tableID
   uint64_t grpCount, grpRows;
 
   /*
-  for (uint64_t i = 0; i < nbGroups; ++i)
-  {
+    for (uint64_t i = 0; i < nbGroups; ++i)
+    {
     fread(&grpCount, sizeof(uint64_t), 1, fd);
     fread(&grpRows, sizeof(uint64_t), 1, fd);
-    
+
     if ((grpCount == 0) || (grpRows == 0))
-      throw aq::generic_error(aq::generic_error::AQ_ENGINE, "bad value in result");
+    throw aq::generic_error(aq::generic_error::AQ_ENGINE, "bad value in result");
 
     this->groupByIndex.push_back(std::make_pair(grpCount, grpRows));
     countCheck += grpCount;
     rowCheck += grpRows;
     assert(grpCount);
     assert(grpRows);
-  }
+    }
   */
-  
+
   // group by not managed yet
   countCheck = grpCount = this->totalCount;
   rowCheck = grpRows = this->nbRows;
@@ -190,7 +190,7 @@ void AQMatrix::loadHeader(const char * filePath, std::vector<long long>& tableID
     throw aq::generic_error(aq::generic_error::AQ_ENGINE, "mismatch values in result [%u != %u] [%u != %u]", this->totalCount, countCheck, this->nbRows, rowCheck);
 
   fclose(fd);
-  
+
   this->hasCount = true;
 }
 
@@ -211,9 +211,9 @@ void AQMatrix::prepareData(const char * filePath)
 {
   this->nbRowsParsed = 0;
   this->packet = 0;
-  this->nbPacket = (this->nbRows / aq::packet_size) + 1; 
+  this->nbPacket = (this->nbRows / aq::packet_size) + 1;
   this->answerFormatC = std::string(filePath);
-  this->answerFormatC += "/AnswerData%.5u.a_c"; 
+  this->answerFormatC += "/AnswerData%.5u.a_c";
   this->answerFormatP = std::string(filePath);
   this->answerFormatP += "/AnswerData%.5u.a_p";
 }
@@ -227,7 +227,7 @@ void AQMatrix::loadNextPacket()
   {
     throw aq::generic_error(aq::generic_error::AQ_ENGINE, "cannot find aq matrix data file %s", answerDataC.get());
   }
-  
+
   boost::scoped_array<char> answerDataP(new char[this->answerFormatP.size() + 128]); // FIXME
   sprintf(answerDataP.get(), this->answerFormatP.c_str(), this->packet);
   FILE * fdp = fopen(answerDataP.get(), "rb");
@@ -246,7 +246,7 @@ void AQMatrix::loadNextPacket()
       this->matrix[c].indexes.push_back(index);
     }
     fread(&value, sizeof(uint64_t), 1, fdc);
-  this->count.push_back(value);
+    this->count.push_back(value);
     this->rowCountCheck += value;
   }
 
@@ -261,13 +261,13 @@ void AQMatrix::loadNextPacket()
     assert(this->nbRows == this->count.size());
     if (this->totalCount != this->rowCountCheck)
     {
-    Logger::getInstance().log(AQ_WARNING, "bad matrix data file [count_expected:%u] [count_get:%u]", this->totalCount, this->rowCountCheck);
-    // exit(EXIT_FAILURE);
+      Logger::getInstance().log(AQ_WARNING, "bad matrix data file [count_expected:%u] [count_get:%u]", this->totalCount, this->rowCountCheck);
+      // exit(EXIT_FAILURE);
       // throw aq::generic_error(aq::generic_error::AQ_ENGINE, "bad matrix data file [count_expected:%u] [count_get:%u]", this->totalCount, this->rowCountCheck);
     }
     if (this->nbRows != this->count.size())
     {
-    Logger::getInstance().log(AQ_WARNING, "bad matrix data file [nb_rows:%u] [nb_count:%u]", this->nbRows, this->count.size());
+      Logger::getInstance().log(AQ_WARNING, "bad matrix data file [nb_rows:%u] [nb_count:%u]", this->nbRows, this->count.size());
       // throw aq::generic_error(aq::generic_error::AQ_ENGINE, "bad matrix data file [nb_rows:%u] [nb_count:%u]", this->nbRows, this->count.size());
     }
   }
@@ -335,12 +335,12 @@ void AQMatrix::writeTemporaryTable()
       {
         fd = it->second;
       }
-      
+
       fwrite(&invalid, sizeof(uint32_t), 1, fd);
       fwrite(&pos, sizeof(uint32_t), 1, fd);
     }
   }
-  
+
   for (size_t c = 0; c < this->matrix.size(); ++c)
   {
     for (auto& v : fds[c])
@@ -348,7 +348,7 @@ void AQMatrix::writeTemporaryTable()
       fclose(v.second);
     }
   }
-  
+
   // FIXME : generate empty file => this is temporary
   char tableName[128];
   for (auto it = this->matrix.begin(); it != this->matrix.end(); ++it)
@@ -370,7 +370,7 @@ void AQMatrix::writeTemporaryTable()
 void AQMatrix::dump(std::ostream& os) const
 {
   size_t size = (*this->matrix.begin()).indexes.size();
-  
+
   for (size_t c = 0; c < this->matrix.size(); ++c)
   {
     os << this->matrix[c].table_id << " ";

@@ -34,26 +34,26 @@ class Scalar: public VerbResult
 {
 public:
   typedef boost::intrusive_ptr<Scalar<T> > Ptr;
-  
+
   Scalar(aq::ColumnType type)
-    : Type(type), aggFunc(aq::aggregate_function_t::NONE) 
-  {
-  }
-  
+    : Type(type), aggFunc(aq::aggregate_function_t::NONE)
+    {
+    }
+
   Scalar(aq::ColumnType type, unsigned int size)
-    : Type(type), Size(size), aggFunc(aq::aggregate_function_t::NONE) 
-  {
-  }
-  
+    : Type(type), Size(size), aggFunc(aq::aggregate_function_t::NONE)
+    {
+    }
+
   Scalar(aq::ColumnType type, unsigned int size, const aq::ColumnItem<T>& item)
-    : Type(type), Item(item), Size(size), aggFunc(aq::aggregate_function_t::NONE) 
-  {
-  }
-  
-  virtual int getType() const 
-  { 
-    return VerbResult::SCALAR; 
-  }
+    : Type(type), Item(item), Size(size), aggFunc(aq::aggregate_function_t::NONE)
+    {
+    }
+
+  virtual int getType() const
+    {
+      return VerbResult::SCALAR;
+    }
 
   const aq::data_holder_t getValue() const;
 
@@ -121,11 +121,11 @@ public:
   TablePartition()
     : FrameUnits(ROWS),
       FrameStart(0), FrameEnd(0),
-  FrameStartType(AQ_UNBOUNDED),
-  FrameEndType(AQ_UNBOUNDED),
-  FrameUnitsInitialized(false)
-  {
-  }
+      FrameStartType(AQ_UNBOUNDED),
+      FrameEndType(AQ_UNBOUNDED),
+      FrameUnitsInitialized(false)
+    {
+    }
 
   std::vector<size_t>  Rows;
   //Column::Ptr  LastColumn; //last column by which partitioning was done

@@ -15,8 +15,8 @@ class QueryReader
 {
 public:
   QueryReader(std::istream& stream, std::string _prompt = "") : queriesStream(stream), prompt(_prompt), n(1)
-  {
-  }
+    {
+    }
 
   const char * getSuite() const { return this->suite.c_str(); }
   const char * getIdent() const { return this->ident.c_str(); }
@@ -38,7 +38,7 @@ private:
   unsigned int n;
 };
 
-template <typename T> 
+template <typename T>
 T QueryReader::extract_value(const std::string& key, const T default_value) const
 {
   T value = default_value;

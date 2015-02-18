@@ -13,11 +13,11 @@ namespace aq
 {
 struct opt
 {
-  opt() : 
+  opt() :
     packetSize(aq::packet_size), limit(0), execute(false), stopOnError(false), checkResult(false), checkCondition(false),
     jeqParserActivated(false), aql2sql(false), display(true), withCount(false), withIndex(false), force(false)
-  {
-  }
+    {
+    }
   std::string dbPath;
   std::string workingPath;
   std::string queryIdent;
@@ -53,7 +53,7 @@ int generate_working_directories(const struct opt& o, std::string& iniFilename);
 int run_aq_engine(const std::string& aq_engine, const std::string& iniFilename, const std::string& ident);
 
 void get_columns(std::vector<std::string>& columns, const std::string& query, const std::string& key);
-int check_answer_validity(const struct opt& o, aq::engine::AQMatrix& matrix, 
+int check_answer_validity(const struct opt& o, aq::engine::AQMatrix& matrix,
                           const uint64_t count, const uint64_t nbRows, const uint64_t nbGroups);
 //int check_answer_data(std::ostream& os,
 //                      const std::string& answerPath,

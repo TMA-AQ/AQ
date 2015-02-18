@@ -6,21 +6,21 @@
 namespace aq
 {
 
-  typedef std::pair<std::pair<size_t, size_t>, std::vector<int> > pairPair_Vector;
+typedef std::pair<std::pair<size_t, size_t>, std::vector<int> > pairPair_Vector;
 
-  class WhereIn : public AWhereCondition
-  {
-  public:
-    WhereIn(const std::string& query);
-    ~WhereIn() {}
+class WhereIn : public AWhereCondition
+{
+public:
+  WhereIn(const std::string& query);
+  ~WhereIn() {}
 
-    bool  checkCondition(const aq::AQMatrix& matrix, mapMap& mapper, size_t i) const;
+  bool  checkCondition(const aq::AQMatrix& matrix, mapMap& mapper, size_t i) const;
 
-    void  setValues(const aq::Base& baseDesc);
+  void  setValues(const aq::Base& baseDesc);
 
-  private:
-    pairPair_Vector  _values;
-  };
+private:
+  pairPair_Vector  _values;
+};
 
 }
 

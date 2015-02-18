@@ -64,24 +64,24 @@ typename ColumnItem<T>::Ptr getMinMaxFromThesaurus(Column::Ptr column, size_t ta
   switch( column->getType() )
   {
   case COL_TYPE_INT:
-    {
-      int *pItemData = (int*)( pTmpBuf );
-      minMax = new ColumnItem<int32_t>( *pItemData );
-    }
-    break;
+  {
+    int *pItemData = (int*)( pTmpBuf );
+    minMax = new ColumnItem<int32_t>( *pItemData );
+  }
+  break;
   case COL_TYPE_BIG_INT:
   case COL_TYPE_DATE:
-    {
-      int64_t *pItemData = (int64_t*)( pTmpBuf );
-      minMax = new ColumnItem<int64_t>(*pItemData );
-    }
-    break;
+  {
+    int64_t *pItemData = (int64_t*)( pTmpBuf );
+    minMax = new ColumnItem<int64_t>(*pItemData );
+  }
+  break;
   case COL_TYPE_DOUBLE:
-    {
-      double *pItemData = (double*)( pTmpBuf );
-      minMax = new ColumnItem<double>( *pItemData );
-    }
-    break;
+  {
+    double *pItemData = (double*)( pTmpBuf );
+    minMax = new ColumnItem<double>( *pItemData );
+  }
+  break;
   case COL_TYPE_VARCHAR:
     pTmpBuf[column->getSize()] = '\0';
     minMax = new ColumnItem<char*>( (char*) pTmpBuf );

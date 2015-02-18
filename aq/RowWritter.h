@@ -8,7 +8,7 @@
 
 namespace aq
 {
-  
+
 /// \ingroup row_writter
 /// \brief write row into a file
 class RowWritter : public RowWritter_Intf
@@ -22,16 +22,16 @@ public:
   void setColumn(std::vector<Column::Ptr> _columns) { this->columns = _columns; }
   int process(std::vector<Row>& rows);
   unsigned int getTotalCount() const { return this->totalCount; }
-  
+
   RowProcess_Intf * clone()
-  {
-    return new RowWritter(*this);
-  }
+    {
+      return new RowWritter(*this);
+    }
 
 protected:
   virtual int process(Row& row);
   void write_value(const aq::row_item_t& row_item) const;
-  
+
   std::vector<size_t> widths;
   aq::verb::VerbNode::Ptr spTree;
   std::vector<Column::Ptr> columns;

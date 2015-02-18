@@ -14,15 +14,15 @@ public:
   virtual int getVerbType() const { return K_SELECT; };
   virtual bool preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal );
   virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
-  virtual void changeResult( Table::Ptr table, 
-    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+                            VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual void changeResult( Table::Ptr table,
+                             VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
 
-  virtual void setBaseDesc(Base::Ptr baseDesc) 
-  { 
-    m_baseDesc = baseDesc;
-  }
-  
+  virtual void setBaseDesc(Base::Ptr baseDesc)
+    {
+      m_baseDesc = baseDesc;
+    }
+
   virtual void accept(VerbVisitor* visitor);
 
 private:
@@ -38,9 +38,9 @@ public:
   virtual int getVerbType() const { return K_WHERE; };
   virtual bool preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal );
   virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
-  virtual void changeResult( Table::Ptr table, 
-    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+                            VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual void changeResult( Table::Ptr table,
+                             VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
   virtual void accept(VerbVisitor* visitor);
 };
 
@@ -51,9 +51,9 @@ public:
   virtual int getVerbType() const { return K_ORDER; };
   virtual bool preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal );
   virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
-  virtual void changeResult( Table::Ptr table, 
-    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+                            VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual void changeResult( Table::Ptr table,
+                             VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
   virtual void accept(VerbVisitor* visitor);
 };
 
@@ -63,9 +63,9 @@ class ByVerb: public VerbNode
 public:
   virtual int getVerbType() const { return K_BY; };
   virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
-  virtual void changeResult( Table::Ptr table, 
-    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+                            VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual void changeResult( Table::Ptr table,
+                             VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
   void accept(VerbVisitor* visitor);
 };
 
@@ -76,11 +76,11 @@ public:
   virtual int getVerbType() const { return K_FROM; };
   virtual bool preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal );
   virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
-  virtual void setBaseDesc(Base::Ptr baseDesc) 
-  { 
-    m_baseDesc = baseDesc;
-  }
+                            VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual void setBaseDesc(Base::Ptr baseDesc)
+    {
+      m_baseDesc = baseDesc;
+    }
   virtual void accept(VerbVisitor* visitor);
   const std::list<std::string>& getTables() const { return this->tables; };
 private:
@@ -95,15 +95,15 @@ public:
   virtual int getVerbType() const { return K_GROUP; };
   virtual bool preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal );
   virtual bool changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
-  virtual void changeResult( Table::Ptr table, 
-    VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+                            VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
+  virtual void changeResult( Table::Ptr table,
+                             VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext );
   virtual void addResult(aq::Row& row);
   void accept(VerbVisitor* visitor);
   virtual void setSettings(Settings::Ptr settings)
-  {
-    this->useRowResolver = true;
-  }
+    {
+      this->useRowResolver = true;
+    }
 private:
   aq::Row row_prv;
   aq::Row row_acc;
@@ -116,12 +116,12 @@ class HavingVerb: public VerbNode
 {
 public:
   virtual int getVerbType() const { return K_HAVING; };
-  virtual bool preprocessQuery(  aq::tnode* pStart, aq::tnode* pNode, 
-                  aq::tnode* pStartOriginal );
-  virtual void changeResult(  Table::Ptr table, 
-                VerbResult::Ptr resLeft, 
-                VerbResult::Ptr resRight, 
-                VerbResult::Ptr resNext );
+  virtual bool preprocessQuery(  aq::tnode* pStart, aq::tnode* pNode,
+                                 aq::tnode* pStartOriginal );
+  virtual void changeResult(  Table::Ptr table,
+                              VerbResult::Ptr resLeft,
+                              VerbResult::Ptr resRight,
+                              VerbResult::Ptr resNext );
   virtual void accept(VerbVisitor* visitor);
 };
 

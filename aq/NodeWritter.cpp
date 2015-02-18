@@ -4,7 +4,7 @@
 using namespace aq;
 
 NodeWritter::NodeWritter(aq::tnode& _result)
-   : result(_result), cur(&_result)
+  : result(_result), cur(&_result)
 {
   aq::tnode::delete_subtree(result.left);
   aq::tnode::delete_subtree(result.right);

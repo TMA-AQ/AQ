@@ -26,9 +26,9 @@ template <class V>
 struct Visitable
 {
   virtual void accept(V * v)
-  {
-    v->visit(this);
-  }
+    {
+      v->visit(this);
+    }
 };
 
 //------------------------------------------------------------------------------

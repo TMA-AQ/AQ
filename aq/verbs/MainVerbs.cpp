@@ -30,9 +30,9 @@ bool SelectVerb::preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode
 
 //------------------------------------------------------------------------------
 bool SelectVerb::changeQuery(  aq::tnode* pStart, aq::tnode* pNode,
-                VerbResult::Ptr resLeft, 
-                VerbResult::Ptr resRight, 
-                VerbResult::Ptr resNext )
+                               VerbResult::Ptr resLeft,
+                               VerbResult::Ptr resRight,
+                               VerbResult::Ptr resNext )
 {
 
   if( resLeft && resLeft->getType() == VerbResult::ASTERISK )
@@ -72,19 +72,19 @@ bool SelectVerb::changeQuery(  aq::tnode* pStart, aq::tnode* pNode,
   //add extra columns
   if( this->Columns.size() == columns.size() )
     return false; //no extra columns
-    
+
   if( pNode->left->tag == K_COMMA )
   {
     pNode = pNode->left;
     while( pNode->left && pNode->left->tag == K_COMMA )
       pNode = pNode->left;
   }
-  
+
   aq::tnode* pAuxNode = pNode->left;
   pNode->left = new aq::tnode( K_COMMA );
   pNode = pNode->left;
   pNode->right = pAuxNode;
-  
+
   for( size_t idx = this->Columns.size(); idx < columns.size() - 1; ++idx )
   {
     pNode->left = new aq::tnode( K_COMMA );
@@ -97,9 +97,9 @@ bool SelectVerb::changeQuery(  aq::tnode* pStart, aq::tnode* pNode,
 }
 
 //------------------------------------------------------------------------------
-void SelectVerb::changeResult(Table::Ptr table, 
+void SelectVerb::changeResult(Table::Ptr table,
                               VerbResult::Ptr resLeft,
-                              VerbResult::Ptr resRight, 
+                              VerbResult::Ptr resRight,
                               VerbResult::Ptr resNext )
 {
   assert(false);
@@ -120,15 +120,15 @@ bool WhereVerb::preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode*
 
 //------------------------------------------------------------------------------
 bool WhereVerb::changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-  VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+                             VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
   aq::util::addInnerOuterNodes( pNode->left, K_INNER, K_INNER );
   return false;
 }
 
 //------------------------------------------------------------------------------
-void WhereVerb::changeResult( Table::Ptr table, 
-  VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+void WhereVerb::changeResult( Table::Ptr table,
+                              VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
   assert(false);
 }
@@ -147,16 +147,16 @@ bool OrderVerb::preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode*
   aq::util::getColumnsList( pStart->left, selectColumns );
   for( size_t idx = 0; idx < columns.size(); ++idx )
   {
-    if( columns[idx]->tag == K_IDENT || 
-      columns[idx]->tag == K_COLUMN )
+    if( columns[idx]->tag == K_IDENT ||
+        columns[idx]->tag == K_COLUMN )
     {
       int colIdx = -1;
       for( size_t idx2 = 0; idx2 < selectColumns.size(); ++idx2 )
       {
         if( selectColumns[idx2] &&
-          selectColumns[idx2]->tag == K_AS &&
-          strcmp( selectColumns[idx2]->right->getData().val_str,
-            columns[idx]->getData().val_str ) == 0
+            selectColumns[idx2]->tag == K_AS &&
+            strcmp( selectColumns[idx2]->right->getData().val_str,
+                    columns[idx]->getData().val_str ) == 0
           )
         {
           colIdx = (int) idx2;
@@ -176,15 +176,15 @@ bool OrderVerb::preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode*
 
 //------------------------------------------------------------------------------
 bool OrderVerb::changeQuery(  aq::tnode* pStart, aq::tnode* pNode,
-                VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+                              VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
   // pNode->tag = K_DELETED;
   return false;
 }
 
 //------------------------------------------------------------------------------
-void OrderVerb::changeResult(  Table::Ptr table, 
-                VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+void OrderVerb::changeResult(  Table::Ptr table,
+                               VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
   assert(false);
 }
@@ -197,14 +197,14 @@ void OrderVerb::accept(VerbVisitor* visitor)
 
 //------------------------------------------------------------------------------
 bool ByVerb::changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-              VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+                          VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
   return false;
 }
 
 //------------------------------------------------------------------------------
-void ByVerb::changeResult(  Table::Ptr table, 
-              VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+void ByVerb::changeResult(  Table::Ptr table,
+                            VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
   assert(false);
 }
@@ -228,7 +228,7 @@ bool FromVerb::preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* 
 
 //------------------------------------------------------------------------------
 bool FromVerb::changeQuery( aq::tnode* pStart, aq::tnode* pNode,
-  VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
+                            VerbResult::Ptr resLeft, VerbResult::Ptr resRight, VerbResult::Ptr resNext )
 {
   aq::util::solveOneTableInFrom( pStart, this->m_baseDesc );
   aq::util::moveFromJoinToWhere( pStart, this->m_baseDesc );
@@ -249,8 +249,8 @@ bool GroupVerb::preprocessQuery(aq::tnode* pStart, aq::tnode* pNode, aq::tnode* 
 
 //------------------------------------------------------------------------------
 bool GroupVerb::changeQuery(aq::tnode* pStart, aq::tnode* pNode,
-                            VerbResult::Ptr resLeft, 
-                            VerbResult::Ptr resRight, 
+                            VerbResult::Ptr resLeft,
+                            VerbResult::Ptr resRight,
                             VerbResult::Ptr resNext )
 {
   pNode->tag = K_DELETED;
@@ -258,10 +258,10 @@ bool GroupVerb::changeQuery(aq::tnode* pStart, aq::tnode* pNode,
 }
 
 //------------------------------------------------------------------------------
-void GroupVerb::changeResult(  Table::Ptr table, 
-                             VerbResult::Ptr resLeft, 
-                             VerbResult::Ptr resRight, 
-                             VerbResult::Ptr resNext )
+void GroupVerb::changeResult(  Table::Ptr table,
+                               VerbResult::Ptr resLeft,
+                               VerbResult::Ptr resRight,
+                               VerbResult::Ptr resNext )
 {
   assert(false);
 }
@@ -272,34 +272,34 @@ bool is_new_group(const aq::row_item_t::item_t& i1, const aq::row_item_t::item_t
   switch (type)
   {
   case aq::ColumnType::COL_TYPE_INT:
-    {
-      const aq::ColumnItem<int32_t>& i1_tmp = boost::get<aq::ColumnItem<int32_t> >(i1);
-      const aq::ColumnItem<int32_t>& i2_tmp = boost::get<aq::ColumnItem<int32_t> >(i2);
-      new_group = !ColumnItem<int32_t>::equal(i1_tmp, i2_tmp);
-    }
-    break;
+  {
+    const aq::ColumnItem<int32_t>& i1_tmp = boost::get<aq::ColumnItem<int32_t> >(i1);
+    const aq::ColumnItem<int32_t>& i2_tmp = boost::get<aq::ColumnItem<int32_t> >(i2);
+    new_group = !ColumnItem<int32_t>::equal(i1_tmp, i2_tmp);
+  }
+  break;
   case aq::ColumnType::COL_TYPE_BIG_INT:
   case aq::ColumnType::COL_TYPE_DATE:
-    {
-      const aq::ColumnItem<int64_t>& i1_tmp = boost::get<aq::ColumnItem<int64_t> >(i1);
-      const aq::ColumnItem<int64_t>& i2_tmp = boost::get<aq::ColumnItem<int64_t> >(i2);
-      new_group = !ColumnItem<int64_t>::equal(i1_tmp, i2_tmp);
-    }
-    break;
+  {
+    const aq::ColumnItem<int64_t>& i1_tmp = boost::get<aq::ColumnItem<int64_t> >(i1);
+    const aq::ColumnItem<int64_t>& i2_tmp = boost::get<aq::ColumnItem<int64_t> >(i2);
+    new_group = !ColumnItem<int64_t>::equal(i1_tmp, i2_tmp);
+  }
+  break;
   case aq::ColumnType::COL_TYPE_DOUBLE:
-    {
-      const aq::ColumnItem<double>& i1_tmp = boost::get<aq::ColumnItem<double> >(i1);
-      const aq::ColumnItem<double>& i2_tmp = boost::get<aq::ColumnItem<double> >(i2);
-      new_group = !ColumnItem<double>::equal(i1_tmp, i2_tmp);
-    }
-    break;
+  {
+    const aq::ColumnItem<double>& i1_tmp = boost::get<aq::ColumnItem<double> >(i1);
+    const aq::ColumnItem<double>& i2_tmp = boost::get<aq::ColumnItem<double> >(i2);
+    new_group = !ColumnItem<double>::equal(i1_tmp, i2_tmp);
+  }
+  break;
   case aq::ColumnType::COL_TYPE_VARCHAR:
-    {
-      const aq::ColumnItem<char*>& i1_tmp = boost::get<aq::ColumnItem<char*> >(i1);
-      const aq::ColumnItem<char*>& i2_tmp = boost::get<aq::ColumnItem<char*> >(i2);
-      new_group = !ColumnItem<char*>::equal(i1_tmp, i2_tmp);
-    }
-    break;
+  {
+    const aq::ColumnItem<char*>& i1_tmp = boost::get<aq::ColumnItem<char*> >(i1);
+    const aq::ColumnItem<char*>& i2_tmp = boost::get<aq::ColumnItem<char*> >(i2);
+    new_group = !ColumnItem<char*>::equal(i1_tmp, i2_tmp);
+  }
+  break;
   }
   return new_group;
 }
@@ -310,7 +310,7 @@ void GroupVerb::addResult(aq::Row& row)
   assert((this->row_acc.computedRow.size() == 0) || (row.flush) || (row.computedRow.size() == this->row_acc.computedRow.size()));
   assert((this->row_prv.initialRow.size() == 0) || (row.flush) || (row.initialRow.size() == this->row_prv.initialRow.size()));
   assert(this->row_prv.computedRow.size() == this->row_acc.computedRow.size());
-  
+
   row.completed = false;
 
   // flush
@@ -347,7 +347,7 @@ void GroupVerb::addResult(aq::Row& row)
     std::copy(this->row_acc.computedRow.begin(), this->row_acc.computedRow.end(), std::back_inserter<aq::Row::row_t>(row.computedRow));
     this->row_acc.computedRow.clear();
   }
-   
+
   // compute and store in row_acc
   if (row_acc.computedRow.empty())
   {
@@ -361,7 +361,7 @@ void GroupVerb::addResult(aq::Row& row)
 
         // FIXME : TODO
         // row_acc.computedRow[i].item->numval *= row_acc.count;
-        
+
         break;
       default:
 
@@ -378,34 +378,34 @@ void GroupVerb::addResult(aq::Row& row)
       switch (row.computedRow[i].type)
       {
       case aq::ColumnType::COL_TYPE_INT:
-        {
-          auto& i1 = boost::get<aq::ColumnItem<int32_t> >(row_acc.computedRow[i].item);
-          auto& i2 = boost::get<aq::ColumnItem<int32_t> >(row_acc.computedRow[i].item);
-          i1.applyAggregate(row.computedRow[i].aggFunc, i2);
-        }
-        break;
+      {
+        auto& i1 = boost::get<aq::ColumnItem<int32_t> >(row_acc.computedRow[i].item);
+        auto& i2 = boost::get<aq::ColumnItem<int32_t> >(row_acc.computedRow[i].item);
+        i1.applyAggregate(row.computedRow[i].aggFunc, i2);
+      }
+      break;
       case aq::ColumnType::COL_TYPE_BIG_INT:
       case aq::ColumnType::COL_TYPE_DATE:
-        {
-          auto& i1 = boost::get<aq::ColumnItem<int64_t> >(row_acc.computedRow[i].item);
-          auto& i2 = boost::get<aq::ColumnItem<int64_t> >(row_acc.computedRow[i].item);
-          i1.applyAggregate(row.computedRow[i].aggFunc, i2);
-        }
-        break;
+      {
+        auto& i1 = boost::get<aq::ColumnItem<int64_t> >(row_acc.computedRow[i].item);
+        auto& i2 = boost::get<aq::ColumnItem<int64_t> >(row_acc.computedRow[i].item);
+        i1.applyAggregate(row.computedRow[i].aggFunc, i2);
+      }
+      break;
       case aq::ColumnType::COL_TYPE_DOUBLE:
-        {
-          auto& i1 = boost::get<aq::ColumnItem<double> >(row_acc.computedRow[i].item);
-          auto& i2 = boost::get<aq::ColumnItem<double> >(row_acc.computedRow[i].item);
-          i1.applyAggregate(row.computedRow[i].aggFunc, i2);
-        }
-        break;
+      {
+        auto& i1 = boost::get<aq::ColumnItem<double> >(row_acc.computedRow[i].item);
+        auto& i2 = boost::get<aq::ColumnItem<double> >(row_acc.computedRow[i].item);
+        i1.applyAggregate(row.computedRow[i].aggFunc, i2);
+      }
+      break;
       case aq::ColumnType::COL_TYPE_VARCHAR:
-        {
-          auto& i1 = boost::get<aq::ColumnItem<char*> >(row_acc.computedRow[i].item);
-          auto& i2 = boost::get<aq::ColumnItem<char*> >(row_acc.computedRow[i].item);
-          i1.applyAggregate(row.computedRow[i].aggFunc, i2);
-        }
-        break;
+      {
+        auto& i1 = boost::get<aq::ColumnItem<char*> >(row_acc.computedRow[i].item);
+        auto& i2 = boost::get<aq::ColumnItem<char*> >(row_acc.computedRow[i].item);
+        i1.applyAggregate(row.computedRow[i].aggFunc, i2);
+      }
+      break;
       }
     }
     this->row_acc.count += this->row_prv.count;
@@ -420,8 +420,8 @@ void GroupVerb::accept(VerbVisitor* visitor)
 }
 
 //------------------------------------------------------------------------------
-bool HavingVerb::preprocessQuery(  aq::tnode* pStart, aq::tnode* pNode, 
-                  aq::tnode* pStartOriginal )
+bool HavingVerb::preprocessQuery(  aq::tnode* pStart, aq::tnode* pNode,
+                                   aq::tnode* pStartOriginal )
 {
   //eliminate K_NOT
   aq::util::processNot( pNode->left, false );
@@ -429,10 +429,10 @@ bool HavingVerb::preprocessQuery(  aq::tnode* pStart, aq::tnode* pNode,
 }
 
 //------------------------------------------------------------------------------
-void HavingVerb::changeResult(  Table::Ptr table, 
-                VerbResult::Ptr resLeft, 
-                VerbResult::Ptr resRight, 
-                VerbResult::Ptr resNext )
+void HavingVerb::changeResult(  Table::Ptr table,
+                                VerbResult::Ptr resLeft,
+                                VerbResult::Ptr resRight,
+                                VerbResult::Ptr resNext )
 {
   assert(false);
 }

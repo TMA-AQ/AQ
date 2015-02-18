@@ -110,45 +110,45 @@ public:
   unsigned int getTotalCount() const { return 0; }
 
   int process(std::vector<Row>& rows)
-  {
-    for (const auto& row : rows)
     {
-      result.push_back(DatabaseIntf::result_t::value_type());
-      auto& r = *result.rbegin();
-      if (row.completed)
+      for (const auto& row : rows)
       {
-        std::string value;
-        for (aq::Row::row_t::const_reverse_iterator it = row.computedRow.rbegin(); it != row.computedRow.rend(); ++it)
+        result.push_back(DatabaseIntf::result_t::value_type());
+        auto& r = *result.rbegin();
+        if (row.completed)
         {
-          if ((*it).null)
+          std::string value;
+          for (aq::Row::row_t::const_reverse_iterator it = row.computedRow.rbegin(); it != row.computedRow.rend(); ++it)
           {
-            value = "NULL";
-          }
-          else
-          {
-            switch((*it).type)
+            if ((*it).null)
             {
-            case aq::ColumnType::COL_TYPE_INT:
-              value = boost::get<aq::ColumnItem<int32_t> >((*it).item).toString();
-              break;
-            case aq::ColumnType::COL_TYPE_DOUBLE:
-              value = boost::get<aq::ColumnItem<double> >((*it).item).toString();
-              break;
-            case aq::ColumnType::COL_TYPE_DATE:
-            case aq::ColumnType::COL_TYPE_BIG_INT:
-              value = boost::get<aq::ColumnItem<int64_t> >((*it).item).toString();
-              break;
-            case aq::ColumnType::COL_TYPE_VARCHAR:
-              value = boost::get<aq::ColumnItem<char*> >((*it).item).toString();
-              break;
+              value = "NULL";
             }
+            else
+            {
+              switch((*it).type)
+              {
+              case aq::ColumnType::COL_TYPE_INT:
+                value = boost::get<aq::ColumnItem<int32_t> >((*it).item).toString();
+                break;
+              case aq::ColumnType::COL_TYPE_DOUBLE:
+                value = boost::get<aq::ColumnItem<double> >((*it).item).toString();
+                break;
+              case aq::ColumnType::COL_TYPE_DATE:
+              case aq::ColumnType::COL_TYPE_BIG_INT:
+                value = boost::get<aq::ColumnItem<int64_t> >((*it).item).toString();
+                break;
+              case aq::ColumnType::COL_TYPE_VARCHAR:
+                value = boost::get<aq::ColumnItem<char*> >((*it).item).toString();
+                break;
+              }
+            }
+            r.push_back(value);
           }
-          r.push_back(value);
         }
       }
+      return 0;
     }
-    return 0;
-  }
 
 private:
   std::vector<Column::Ptr> columns;
@@ -159,23 +159,23 @@ struct result_handler_t : public aq::display_cb
 {
   result_handler_t(DatabaseIntf::result_t& _result)
     : result(_result)
-  {
-    it = result.rend();
-  }
+    {
+      it = result.rend();
+    }
   ~result_handler_t()
-  {
-    it = result.rend();
-  }
+    {
+      it = result.rend();
+    }
   void push(const std::string& value)
-  {
-    if (it != result.rend())
-      (*it).push_back(value);
-  }
+    {
+      if (it != result.rend())
+        (*it).push_back(value);
+    }
   void next()
-  {
-    result.push_back(DatabaseIntf::result_t::value_type());
-    it = result.rbegin();
-  }
+    {
+      result.push_back(DatabaseIntf::result_t::value_type());
+      it = result.rbegin();
+    }
   DatabaseIntf::result_t& result;
   DatabaseIntf::result_t::reverse_iterator it;
 };
@@ -190,13 +190,13 @@ bool AlgoQuestDatabase::execute(const aq::core::SelectStatement& ss, DatabaseInt
       aq::engine::AQEngine_Intf::Ptr engine(aq::engine::getAQEngineSystem(base, settings));
       engine->prepare();
 
-    static aq::Timer timer;
-    timer.start();
+      static aq::Timer timer;
+      timer.start();
       engine->call(ss);
-    timer.stop();
-    //std::cout << "engine:" << aq::Timer::getString(timer.getTimeElapsed()) << std::endl;
+      timer.stop();
+      //std::cout << "engine:" << aq::Timer::getString(timer.getTimeElapsed()) << std::endl;
 
-    engine->clean();
+      engine->clean();
       auto matrix = engine->getAQMatrix();
       if (matrix != nullptr)
       {
@@ -207,11 +207,11 @@ bool AlgoQuestDatabase::execute(const aq::core::SelectStatement& ss, DatabaseInt
         for (const auto& c : ss.selectedTables)
           columns.push_back(c.table.name + "." + c.name);
 
-    static aq::Timer timer;
-    timer.start();
+        static aq::Timer timer;
+        timer.start();
         aq::display(cb.get(), matrix, base, settings, o, columns);
-    timer.stop();
-    //std::cout << "display:" << aq::Timer::getString(timer.getTimeElapsed()) << std::endl;
+        timer.stop();
+        //std::cout << "display:" << aq::Timer::getString(timer.getTimeElapsed()) << std::endl;
       }
     }
     catch (const aq::generic_error& ge)

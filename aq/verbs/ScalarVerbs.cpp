@@ -54,10 +54,10 @@ void ScalarVerb::computeResult( VerbResult::Ptr param )
 }
 
 //------------------------------------------------------------------------------
-bool ScalarVerb::changeQuery(aq::tnode* pStart, 
+bool ScalarVerb::changeQuery(aq::tnode* pStart,
                              aq::tnode* pNode,
-                             VerbResult::Ptr resLeft, 
-                             VerbResult::Ptr resRight, 
+                             VerbResult::Ptr resLeft,
+                             VerbResult::Ptr resRight,
                              VerbResult::Ptr resNext )
 {
   throw aq::generic_error(aq::generic_error::NOT_IMPLEMENTED, "scalar verb are not supported");
@@ -78,12 +78,12 @@ bool ScalarVerb::changeQuery(aq::tnode* pStart,
   // {
   //  return false;
   // }
-  // 
+  //
   // // this->computeResult(scalar);
   //
   // scalar = boost::dynamic_pointer_cast<Scalar>(this->Result);
   // assert( scalar );
-  
+
   pNode->inf = 1;
   this->disable();
   aq::tnode::delete_subtree(pNode->left);
@@ -93,10 +93,10 @@ bool ScalarVerb::changeQuery(aq::tnode* pStart,
 }
 
 //------------------------------------------------------------------------------
-void ScalarVerb::changeResult(  Table::Ptr table, 
-                VerbResult::Ptr resLeft, 
-                VerbResult::Ptr resRight, 
-                VerbResult::Ptr resNext )
+void ScalarVerb::changeResult(  Table::Ptr table,
+                                VerbResult::Ptr resLeft,
+                                VerbResult::Ptr resRight,
+                                VerbResult::Ptr resNext )
 {
   assert(false);
   // this->computeResult( resLeft );
@@ -126,8 +126,8 @@ void ScalarVerb::accept(VerbVisitor* visitor)
 ColumnType SqrtVerb::outputType( ColumnType inputType )
 {
   if( inputType != COL_TYPE_BIG_INT &&
-    inputType != COL_TYPE_INT &&
-    inputType != COL_TYPE_DOUBLE
+      inputType != COL_TYPE_INT &&
+      inputType != COL_TYPE_DOUBLE
     )
     throw verb_error(generic_error::VERB_TYPE_MISMATCH, this->getVerbType() );
   return COL_TYPE_DOUBLE;
@@ -137,8 +137,8 @@ ColumnType SqrtVerb::outputType( ColumnType inputType )
 ColumnType AbsVerb::outputType( ColumnType inputType )
 {
   if( inputType != COL_TYPE_BIG_INT &&
-    inputType != COL_TYPE_INT &&
-    inputType != COL_TYPE_DOUBLE
+      inputType != COL_TYPE_INT &&
+      inputType != COL_TYPE_DOUBLE
     )
     throw verb_error(generic_error::VERB_TYPE_MISMATCH, this->getVerbType() );
   return inputType;
@@ -210,7 +210,7 @@ ColumnType ToDateVerb::outputType( ColumnType inputType )
 {
   if( inputType != COL_TYPE_VARCHAR )
     throw verb_error(generic_error::VERB_TYPE_MISMATCH, this->getVerbType() );
-  
+
   return this->OutputType;
 }
 
@@ -243,9 +243,9 @@ ColumnType DayVerb::outputType( ColumnType inputType )
 
 //------------------------------------------------------------------------------
 bool ToCharVerb::changeQuery(  aq::tnode* pStart, aq::tnode* pNode,
-                VerbResult::Ptr resLeft, 
-                VerbResult::Ptr resRight, 
-                VerbResult::Ptr resNext )
+                               VerbResult::Ptr resLeft,
+                               VerbResult::Ptr resRight,
+                               VerbResult::Ptr resNext )
 {
   throw aq::generic_error(aq::generic_error::NOT_IMPLEMENTED, "to char verb not supported");
   return false;
@@ -255,9 +255,9 @@ bool ToCharVerb::changeQuery(  aq::tnode* pStart, aq::tnode* pNode,
 ColumnType ToCharVerb::outputType( ColumnType inputType )
 {
   if (inputType != COL_TYPE_DATE &&
-    inputType != COL_TYPE_DOUBLE &&
-    inputType != COL_TYPE_INT &&
-    inputType != COL_TYPE_BIG_INT )
+      inputType != COL_TYPE_DOUBLE &&
+      inputType != COL_TYPE_INT &&
+      inputType != COL_TYPE_BIG_INT )
     throw verb_error(generic_error::VERB_TYPE_MISMATCH, this->getVerbType() );
 
   this->InputType = inputType;

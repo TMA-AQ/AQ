@@ -183,9 +183,9 @@ private:
 struct node_cmp_t
 {
   bool operator()(const tnode * n1, const tnode * n2)
-  {
-    return n1->cmp(n2);
-  }
+    {
+      return n1->cmp(n2);
+    }
 };
 
 inline std::ostream& operator<<(std::ostream& os, const tnode& pNode)
@@ -202,13 +202,13 @@ tnode * tnode::find_DFS(CMP& cmp, bool withNext)
 
   tnode * pNodeFound = nullptr;
 
-   if ((this->left != nullptr) && ((pNodeFound = this->left->find_DFS(cmp)) != nullptr))
-     return pNodeFound;
-
-   if ((this->right != nullptr) && ((pNodeFound = this->right->find_DFS(cmp)) != nullptr))
+  if ((this->left != nullptr) && ((pNodeFound = this->left->find_DFS(cmp)) != nullptr))
     return pNodeFound;
 
-   if (withNext && (this->next != nullptr) && ((pNodeFound = this->next->find_DFS(cmp)) != nullptr))
+  if ((this->right != nullptr) && ((pNodeFound = this->right->find_DFS(cmp)) != nullptr))
+    return pNodeFound;
+
+  if (withNext && (this->next != nullptr) && ((pNodeFound = this->next->find_DFS(cmp)) != nullptr))
     return pNodeFound;
 
   return nullptr;
@@ -222,13 +222,13 @@ tnode * tnode::find_BFS(CMP& cmp, bool withNext)
 
   tnode * pNodeFound = nullptr;
 
-   if ((this->left != nullptr) && ((pNodeFound = this->left->find_BFS(cmp)) != nullptr))
-     return pNodeFound;
-
-   if ((this->right != nullptr) && ((pNodeFound = this->right->find_BFS(cmp)) != nullptr))
+  if ((this->left != nullptr) && ((pNodeFound = this->left->find_BFS(cmp)) != nullptr))
     return pNodeFound;
 
-   if (withNext && (this->next != nullptr) && ((pNodeFound = this->next->find_BFS(cmp)) != nullptr))
+  if ((this->right != nullptr) && ((pNodeFound = this->right->find_BFS(cmp)) != nullptr))
+    return pNodeFound;
+
+  if (withNext && (this->next != nullptr) && ((pNodeFound = this->next->find_BFS(cmp)) != nullptr))
     return pNodeFound;
 
   return nullptr;
@@ -238,9 +238,9 @@ struct node_cmp_tag_t
 {
   node_cmp_tag_t(tnode::tag_t _tag) : tag(_tag) {}
   bool operator()(const tnode * n)
-  {
-    return n->getTag() == tag;
-  }
+    {
+      return n->getTag() == tag;
+    }
   tnode::tag_t tag;
 };
 
@@ -248,10 +248,10 @@ struct node_cmp_name_t
 {
   node_cmp_name_t(std::string _name) : name(_name) {}
   bool operator()(const tnode * n)
-  {
-    // return (((n->getTag() == K_COLUMN) || (n->getTag() == K_IDENT)) && (n->getData().val_str == name));
-    return true; // TODO
-  }
+    {
+      // return (((n->getTag() == K_COLUMN) || (n->getTag() == K_IDENT)) && (n->getData().val_str == name));
+      return true; // TODO
+    }
   std::string name;
 };
 
@@ -259,9 +259,9 @@ struct node_cmp_diff_tag_t
 {
   node_cmp_diff_tag_t(tnode::tag_t _tag, tnode::tag_t _diff) : tag(_tag), diff(_diff) {}
   bool operator()(const tnode * n)
-  {
-    return (n->getTag() == tag) && n->parent && (n->parent->getTag() != diff);
-  }
+    {
+      return (n->getTag() == tag) && n->parent && (n->parent->getTag() != diff);
+    }
   tnode::tag_t tag;
   tnode::tag_t diff;
 };

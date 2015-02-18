@@ -13,9 +13,9 @@ namespace verb {
 
 //------------------------------------------------------------------------------
 bool ComparisonVerb::changeQuery(  aq::tnode* pStart, aq::tnode* pNode,
-                  VerbResult::Ptr resLeft, 
-                  VerbResult::Ptr resRight, 
-                  VerbResult::Ptr resNext )
+                                   VerbResult::Ptr resLeft,
+                                   VerbResult::Ptr resRight,
+                                   VerbResult::Ptr resNext )
 {
   assert( pNode );
   assert( pNode->getDataType() != aq::tnode::tnodeDataType::NODE_DATA_STRING );
@@ -34,13 +34,13 @@ bool ComparisonVerb::changeQuery(  aq::tnode* pStart, aq::tnode* pNode,
     oss << "expression_transform elapsed time: " << (end - begin) << " ms";
     aq::Logger::getInstance().log(AQ_INFO, "%s\n", oss.str().c_str());
   }
-  
+
   if( newNode == pNodeClone ) //expression not transformed
   {
     delete pNodeClone ;
     if( !pNode->left || !pNode->right )
       throw verb_error(generic_error::GENERIC, this->getVerbType());
-    if (this->getContext() == K_WHERE && 
+    if (this->getContext() == K_WHERE &&
         (((pNode->left->tag == K_PERIOD) && (pNode->right->tag == K_PERIOD)) ||
          ((pNode->left->tag == K_PERIOD) && resRight && (resRight->getType() == VerbResult::SCALAR)) ||
          ((pNode->right->tag == K_PERIOD) && resLeft && (resLeft->getType() == VerbResult::SCALAR)) ||
@@ -69,10 +69,10 @@ bool ComparisonVerb::changeQuery(  aq::tnode* pStart, aq::tnode* pNode,
 }
 
 //------------------------------------------------------------------------------
-void ComparisonVerb::changeResult(  Table::Ptr table, 
-                  VerbResult::Ptr resLeft, 
-                  VerbResult::Ptr resRight, 
-                  VerbResult::Ptr resNext )
+void ComparisonVerb::changeResult(  Table::Ptr table,
+                                    VerbResult::Ptr resLeft,
+                                    VerbResult::Ptr resRight,
+                                    VerbResult::Ptr resNext )
 {
   assert(false);
 }
@@ -96,8 +96,8 @@ void JeqVerb::accept(VerbVisitor* visitor)
 }
 
 //------------------------------------------------------------------------------
-bool IsVerb::preprocessQuery(  aq::tnode* pStart, aq::tnode* pNode, 
-                aq::tnode* pStartOriginal )
+bool IsVerb::preprocessQuery(  aq::tnode* pStart, aq::tnode* pNode,
+                               aq::tnode* pStartOriginal )
 {
 
   if (!pNode->right || !((pNode->right->tag == K_NOT && pNode->right->left && pNode->right->left->tag == K_NULL) || (pNode->right->tag == K_NULL)) ) // FIXME
@@ -108,10 +108,10 @@ bool IsVerb::preprocessQuery(  aq::tnode* pStart, aq::tnode* pNode,
 }
 
 //------------------------------------------------------------------------------
-void IsVerb::changeResult(  Table::Ptr table, 
-              VerbResult::Ptr resLeft, 
-              VerbResult::Ptr resRight, 
-              VerbResult::Ptr resNext )
+void IsVerb::changeResult(  Table::Ptr table,
+                            VerbResult::Ptr resLeft,
+                            VerbResult::Ptr resRight,
+                            VerbResult::Ptr resNext )
 {
   assert(false);
 }

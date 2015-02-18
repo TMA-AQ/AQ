@@ -37,63 +37,63 @@ public:
 
 public:
   stream_cb(std::ostream& _os) : os(_os), index(0), align(RIGHT), headers(false)
-  {
-  }
+    {
+    }
   void push(const std::string& value)
-  {
-    if (index > 0)
     {
-      os << " | ";
-    }
-    if (index == widths.size())
-    {
-      if (value.size() < 8)
+      if (index > 0)
       {
-        for (size_t i = 0; i < 8 - value.size(); i++)
-        {
-          os << " ";
-        }
+        os << " | ";
       }
-      os << value;
-      widths.push_back(value.size() < 8 ? 8 : value.size());
-    }
-    else
-    {
-      if (value.size() < this->widths[this->index])
+      if (index == widths.size())
       {
-        if (this->align == RIGHT)
+        if (value.size() < 8)
         {
-          for (size_t i = 0; i < this->widths[this->index] - value.size(); i++)
+          for (size_t i = 0; i < 8 - value.size(); i++)
           {
             os << " ";
           }
-          os << value;
         }
+        os << value;
+        widths.push_back(value.size() < 8 ? 8 : value.size());
       }
-    }
-    index += 1;
-  }
-  void next()
-  {
-    os << std::endl;
-    if (!this->headers)
-    {
-      for (size_t i = 0; i < this->widths.size(); i++)
+      else
       {
-        for (size_t j = 0; j < this->widths[i]; j++)
+        if (value.size() < this->widths[this->index])
         {
-          os << "-";
-        }
-        if ((i + 1) != this->widths.size())
-        {
-          os << "---";
+          if (this->align == RIGHT)
+          {
+            for (size_t i = 0; i < this->widths[this->index] - value.size(); i++)
+            {
+              os << " ";
+            }
+            os << value;
+          }
         }
       }
-      os << std::endl;
-      this->headers = true;
+      index += 1;
     }
-    index = 0;
-  }
+  void next()
+    {
+      os << std::endl;
+      if (!this->headers)
+      {
+        for (size_t i = 0; i < this->widths.size(); i++)
+        {
+          for (size_t j = 0; j < this->widths[i]; j++)
+          {
+            os << "-";
+          }
+          if ((i + 1) != this->widths.size())
+          {
+            os << "---";
+          }
+        }
+        os << std::endl;
+        this->headers = true;
+      }
+      index = 0;
+    }
 private:
   std::ostream& os;
   std::vector<size_t> widths;
@@ -117,7 +117,7 @@ uint64_t functional_tests(const struct opt& o)
   if (o.queriesFilename != "")
   {
     boost::filesystem::path p(o.queriesFilename);
-    if (!boost::filesystem::exists(p)) 
+    if (!boost::filesystem::exists(p))
     {
       std::cerr << "cannot find file " << p << std::endl;
       return -1;
@@ -141,7 +141,7 @@ uint64_t functional_tests(const struct opt& o)
       std::string::size_type pos = o.filter.find("/");
       if (pos != std::string::npos)
       {
-        if ((reader->getSuite() + std::string("/") + reader->getIdent()) != o.filter) 
+        if ((reader->getSuite() + std::string("/") + reader->getIdent()) != o.filter)
         {
           continue;
         }
@@ -151,23 +151,23 @@ uint64_t functional_tests(const struct opt& o)
         continue;
       }
     }
-    
+
     boost::to_upper(query); // FIXME : this can have a bad side effect on characters values
-  
+
     std::string::size_type pos = query.find(";");
     assert(pos != std::string::npos);
     query.erase(pos);
 
     // add eof on each important keyword (FROM, WHERE, GROUP, ORDER, K_JXXX, IN)
     boost::replace_all(query, "\n", " ");
-    std::string keywords[] = { 
+    std::string keywords[] = {
       "FROM", "WHERE", "GROUP", "ORDER",
       "IN ", "K_JNO ", "K_JEQ ", "K_JNEQ ", "K_JINF ", "K_JIEQ ", "K_JSEQ ", "K_JSUP " };
     for (auto& kw : keywords)
     {
       boost::replace_all(query, kw, "\n" + kw);
     }
-    
+
     // parse query
     aq::core::SelectStatement ss;
     if (o.aql2sql)
@@ -185,11 +185,11 @@ uint64_t functional_tests(const struct opt& o)
     // check for group
     std::vector<std::string> groupedColumns;
     aq::get_columns(groupedColumns, query, "GROUP");
-    
+
     // check for order
     std::vector<std::string> orderedColumns;
     aq::get_columns(orderedColumns, query, "ORDER");
-    
+
     // FIXME : should be in k_jeq_parser
     pos = query.find("WHERE");
     if (pos == std::string::npos)
@@ -226,7 +226,7 @@ uint64_t functional_tests(const struct opt& o)
     }
 
     boost::trim(query);
-    
+
     aq::Logger::getInstance().log(AQ_INFO, "processing query: \n%s\n", query.c_str());
 
     // execute query
@@ -282,14 +282,14 @@ uint64_t functional_tests(const struct opt& o)
         }
         else
         {
-          // display_cb * cb = new stream_cb(std::cout); 
+          // display_cb * cb = new stream_cb(std::cout);
           std::string answerPath(o.dbPath);
           answerPath += "/data_orga/tmp/" + std::string(o.queryIdent) + "/dpy/";
           // rc = aq::display(cb, answerPath, o, selectedColumns); // TODO
           std::cout << std::endl << std::endl;
         }
       }
-      
+
       ++nb_queries_tested;
 
       // clean tmp directory
@@ -321,9 +321,9 @@ uint64_t functional_tests(const struct opt& o)
         }
 
       }
-      
+
     }
-    
+
   }
 
   aq::Logger::getInstance().log(AQ_INFO, "%u queries tested: [ success : %u ; failed : %u ; \n", nb_queries_tested, nb_success, nb_errors);

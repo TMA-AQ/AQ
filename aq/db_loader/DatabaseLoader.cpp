@@ -33,76 +33,76 @@
 namespace aq
 {
 
-  namespace helper
+namespace helper
+{
+
+template <typename T>
+struct pointer_type_handler
+{
+  typedef T type;
+  static T cast(const char * field)
+    {
+      return (T)field;
+    }
+  static size_t write(T& value, size_t size, FILE * fd)
+    {
+      return fwrite(value, sizeof(typename boost::remove_pointer<T>::type), size, fd);
+    }
+};
+
+template <typename T>
+struct raw_type_handler
+{
+  typedef T type;
+  static T cast(const char * field)
+    {
+      return boost::lexical_cast<T>(field);
+    }
+  static size_t write(T& value, size_t size, FILE * fd)
+    {
+      return fwrite(&value, sizeof(T), size, fd);
+    }
+};
+
+template <typename T>
+void write_record(const char * field, size_t size, DatabaseLoader::column_info_t& ci)
+{
+  typedef typename helper::pointer_type_handler<T> ptr_handler;
+  typedef typename helper::raw_type_handler<T> raw_handler;
+  typedef typename boost::mpl::if_<boost::is_pointer<T>, ptr_handler, raw_handler>::type handler_type_t;
+  typename handler_type_t::type value;
+
+  if (strcmp(field, "nullptr") == 0)
   {
-
-    template <typename T>
-    struct pointer_type_handler
+    value = 0; // FIXME : handle nullptr properly
+  }
+  else
+  {
+    value = handler_type_t::cast(field);
+  }
+  if (ci.fd)
+  {
+    handler_type_t::write(value, size, ci.fd);
+  }
+  else if (ci.thesaurus && ci.prm)
+  {
+    auto it = ci.thesaurus->insert(new T(value));
+    uint32_t pos = static_cast<uint32_t>(std::distance(ci.thesaurus->begin(), it.first));
+    if (it.second)
     {
-      typedef T type;
-      static T cast(const char * field)
+      for (auto& p : *ci.prm)
       {
-        return (T)field;
-      }
-      static size_t write(T& value, size_t size, FILE * fd)
-      {
-        return fwrite(value, sizeof(typename boost::remove_pointer<T>::type), size, fd);
-      }
-    };
-
-    template <typename T>
-    struct raw_type_handler
-    {
-      typedef T type;
-      static T cast(const char * field)
-      {
-        return boost::lexical_cast<T>(field);
-      }
-      static size_t write(T& value, size_t size, FILE * fd)
-      {
-        return fwrite(&value, sizeof(T), size, fd);
-      }
-    };
-
-    template <typename T>
-    void write_record(const char * field, size_t size, DatabaseLoader::column_info_t& ci)
-    {
-      typedef typename helper::pointer_type_handler<T> ptr_handler;
-      typedef typename helper::raw_type_handler<T> raw_handler;
-      typedef typename boost::mpl::if_<boost::is_pointer<T>, ptr_handler, raw_handler>::type handler_type_t;
-      typename handler_type_t::type value;
-
-      if (strcmp(field, "nullptr") == 0)
-      {
-        value = 0; // FIXME : handle nullptr properly
-      }
-      else
-      {
-        value = handler_type_t::cast(field);
-      }
-      if (ci.fd)
-      {
-        handler_type_t::write(value, size, ci.fd);
-      }
-      else if (ci.thesaurus && ci.prm)
-      {
-        auto it = ci.thesaurus->insert(new T(value));
-        uint32_t pos = static_cast<uint32_t>(std::distance(ci.thesaurus->begin(), it.first));
-        if (it.second)
+        if (p >= pos)
         {
-          for (auto& p : *ci.prm)
-          {
-            if (p >= pos)
-            {
-              p += 1;
-            }
-          }
+          p += 1;
         }
-        ci.prm->push_back(pos);
       }
     }
-
+    ci.prm->push_back(pos);
   }
+}
+
+}
 
 // ---------------------------------------------------------------------------------------------
 DatabaseLoader::DatabaseLoader(const aq::base_t bd, const std::string& _path, const size_t _packet_size, const char _end_of_field_c, bool _csv_format)
@@ -127,8 +127,8 @@ void DatabaseLoader::load()
   time_t t = time (nullptr);
   struct tm * tb = localtime(&t);
   aq::Logger::getInstance().log(AQ_INFO, "Start loading database [%s] on  %d/%02d/%02d H %02d:%02d:%02d\n",
-    this->my_base.name.c_str(),
-    tb->tm_year +1900, tb->tm_mon +1 ,tb->tm_mday, tb->tm_hour, tb->tm_min, tb->tm_sec);
+                                this->my_base.name.c_str(),
+                                tb->tm_year +1900, tb->tm_mon +1 ,tb->tm_mday, tb->tm_hour, tb->tm_min, tb->tm_sec);
 
   boost::thread_group grp;
   for (auto& table : my_base.table)
@@ -144,7 +144,7 @@ void DatabaseLoader::load()
   t = time ( nullptr );
   tb = localtime( &t );
   aq::Logger::getInstance().log(AQ_INFO, "End on %d/%02d/%02d H %02d:%02d:%02d\n",
-    tb->tm_year +1900, tb->tm_mon +1 ,tb->tm_mday, tb->tm_hour, tb->tm_min, tb->tm_sec);
+                                tb->tm_year +1900, tb->tm_mon +1 ,tb->tm_mday, tb->tm_hour, tb->tm_min, tb->tm_sec);
 }
 
 //-------------------------------------------------------------------------------

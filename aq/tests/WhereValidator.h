@@ -14,81 +14,81 @@
 namespace aq
 {
 
-  class WhereValidator
+class WhereValidator
+{
+public:
+
+  enum KeyWord
   {
-  public:
+    K_NULL = 0,
+    K_IN = 2,
+    K_COMP = 4,
+    K_KEYWORD = K_IN | K_COMP
+  };
 
-    enum KeyWord
-    {
-      K_NULL = 0,
-      K_IN = 2,
-      K_COMP = 4,
-      K_KEYWORD = K_IN | K_COMP
-    };
+  //-------------------------------------------------------------------------
+  // Constructor/Destructor
+  //-------------------------------------------------------------------------
 
-    //-------------------------------------------------------------------------
-    // Constructor/Destructor
-    //-------------------------------------------------------------------------
+  WhereValidator();
+  ~WhereValidator();
 
-    WhereValidator();
-    ~WhereValidator();
+  //-------------------------------------------------------------------------
+  // Parse and cut the query to different condition(s) for the key word WHERE
+  //-------------------------------------------------------------------------
 
-    //-------------------------------------------------------------------------
-    // Parse and cut the query to different condition(s) for the key word WHERE
-    //-------------------------------------------------------------------------
+  void  parseQuery(const std::string& query); /// \deprecated
+  void  addJoinConditions(const std::vector<aq::core::JoinCondition>& jcs);
+  void  addInConditions(const std::vector<aq::core::InCondition>& ics);
+  void  createCondition(const std::string& vacheQuery, WhereValidator::KeyWord ref);
 
-    void  parseQuery(const std::string& query); /// \deprecated
-    void  addJoinConditions(const std::vector<aq::core::JoinCondition>& jcs);
-    void  addInConditions(const std::vector<aq::core::InCondition>& ics);
-    void  createCondition(const std::string& vacheQuery, WhereValidator::KeyWord ref);
-
-    static AWhereCondition*  createInCondition(const std::string& vacheQuery)
+  static AWhereCondition*  createInCondition(const std::string& vacheQuery)
     {
       return new WhereIn(vacheQuery);
     }
 
-    static AWhereCondition*  createComparatorCondition(const std::string& vacheQuery)
+  static AWhereCondition*  createComparatorCondition(const std::string& vacheQuery)
     {
       return new WhereComparator(vacheQuery);
     }
 
-    //-------------------------------------------------------------------------
-    // Check if the condition(s) mate with the answer
-    //-------------------------------------------------------------------------
+  //-------------------------------------------------------------------------
+  // Check if the condition(s) mate with the answer
+  //-------------------------------------------------------------------------
 
-    bool  check(const aq::AQMatrix& matrix, mapMap& mapper, size_t i) const;
+  bool  check(const aq::AQMatrix& matrix, mapMap& mapper, size_t i) const;
 
-    //-------------------------------------------------------------------------
-    // Setter
-    //-------------------------------------------------------------------------
+  //-------------------------------------------------------------------------
+  // Setter
+  //-------------------------------------------------------------------------
 
-    void  setBaseDesc(const aq::Base& baseDesc)
+  void  setBaseDesc(const aq::Base& baseDesc)
     {
       for (auto& c : this->_condition)
         c->setValues(baseDesc);
     }
 
-    //-------------------------------------------------------------------------
-    // Dump
-    //-------------------------------------------------------------------------
+  //-------------------------------------------------------------------------
+  // Dump
+  //-------------------------------------------------------------------------
 
-    void  dump(std::ostream& os)                                      const;
+  void  dump(std::ostream& os)                                      const;
 
-    //-------------------------------------------------------------------------
+  //-------------------------------------------------------------------------
 
-  private:
+private:
 
-    KeyWord getKeyWord(const std::string& word)                       const;
+  KeyWord getKeyWord(const std::string& word)                       const;
 
-  private:
+private:
 
-    //-------------------------------------------------------------------------
-    // Attribute
-    //-------------------------------------------------------------------------
+  //-------------------------------------------------------------------------
+  // Attribute
+  //-------------------------------------------------------------------------
 
-    std::map<WhereValidator::KeyWord, boost::function<AWhereCondition* (const std::string&)> >  _creator;
-    std::vector<AWhereCondition*>                                                               _condition;
-  };
+  std::map<WhereValidator::KeyWord, boost::function<AWhereCondition* (const std::string&)> >  _creator;
+  std::vector<AWhereCondition*>                                                               _condition;
+};
 
 }
 #endif // __WHEREVALIDATOR_H__

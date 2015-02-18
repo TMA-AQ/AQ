@@ -13,17 +13,17 @@ namespace aq
 
 //------------------------------------------------------------------------------
 Column::Column()
-  :  
+  :
   TableID(0),
-  ID(0), 
-  Size(0), 
-  Type(COL_TYPE_INT), 
+  ID(0),
+  Size(0),
+  Type(COL_TYPE_INT),
   prmFileItemSize(4),
   currentNumPack(-1),
   packOffset(0),
   nBinItemSize(0),
-  Invisible(false), 
-  GroupBy(false), 
+  Invisible(false),
+  GroupBy(false),
   OrderBy(false),
   Temporary(false)
 {
@@ -32,17 +32,17 @@ Column::Column()
 
 //------------------------------------------------------------------------------
 Column::Column(  const std::string& name, unsigned int ID, unsigned int size, ColumnType type)
-  : 
+  :
   TableID(0),
-  ID(ID), 
-  Size(size), 
+  ID(ID),
+  Size(size),
   Type(type),
   prmFileItemSize(4),
   currentNumPack(-1),
   packOffset(0),
   nBinItemSize(0),
-  Invisible(false), 
-  GroupBy(false), 
+  Invisible(false),
+  GroupBy(false),
   OrderBy(false),
   Temporary(false)
 {
@@ -52,7 +52,7 @@ Column::Column(  const std::string& name, unsigned int ID, unsigned int size, Co
 
 //------------------------------------------------------------------------------
 Column::Column( ColumnType type )
-  : 
+  :
   TableID(0),
   ID(0),
   Size(0),
@@ -61,7 +61,7 @@ Column::Column( ColumnType type )
   currentNumPack(-1),
   packOffset(0),
   nBinItemSize(0),
-  Invisible(false), 
+  Invisible(false),
   GroupBy(false),
   OrderBy(false),
   Temporary(false)
@@ -94,7 +94,7 @@ Column::Column( const Column& source )
 }
 
 //----------------------------------------------------------------------------
-Column::~Column() 
+Column::~Column()
 {
 }
 
@@ -118,7 +118,7 @@ Column& Column::operator=(const Column& source)
     this->TableName = source.TableName;
     this->prmFileItemSize = source.prmFileItemSize;
     this->currentNumPack = source.currentNumPack,
-    this->packOffset = source.packOffset;
+      this->packOffset = source.packOffset;
     this->nBinItemSize = source.nBinItemSize;
     this->setBinItemSize();
   }

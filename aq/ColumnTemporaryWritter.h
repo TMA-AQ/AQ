@@ -8,7 +8,7 @@
 
 namespace aq
 {
-  
+
 /// \ingroup row_writter
 /// \deprecated
 class ColumnTemporaryWritter
@@ -18,8 +18,8 @@ public:
 
   ColumnTemporaryWritter()
     : nbEl(0)
-  {
-  }
+    {
+    }
 
   Column::Ptr column;
   std::string filename;

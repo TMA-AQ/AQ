@@ -113,26 +113,26 @@ void AQEngine::renameResult(unsigned int id, std::vector<std::pair<std::string, 
   for (auto& file : files)
   {
     if (((file).length() == 32)
-      && ((file)[0] == 'B')
-      && ((file)[4] == 'T')
-      && ((file)[9] == 'T')
-      && ((file)[10] == 'P')
-      && ((file)[11] == 'N')
-      && ((file)[17] == 'P')
-      && ((file)[30] == '.')
-      && (((file)[31] == 's') || ((file)[31] == 't'))) // BxxxTxxxxTPNxxxxPxxxxxxxxxxxx.[st]
+        && ((file)[0] == 'B')
+        && ((file)[4] == 'T')
+        && ((file)[9] == 'T')
+        && ((file)[10] == 'P')
+        && ((file)[11] == 'N')
+        && ((file)[17] == 'P')
+        && ((file)[30] == '.')
+        && (((file)[31] == 's') || ((file)[31] == 't'))) // BxxxTxxxxTPNxxxxPxxxxxxxxxxxx.[st]
     {
       reg = boost::lexical_cast<size_t>((file).substr(5, 4));
       packet = boost::lexical_cast<size_t>((file).substr(18, 12));
     }
     else if (((file).length() == 26)
-      && ((file)[0] == 'B')
-      && ((file)[4] == 'R')
-      && ((file)[5] == 'E')
-      && ((file)[6] == 'G')
-      && ((file)[11] == 'P')
-      && ((file)[24] == '.')
-      && (((file)[25] == 's') || ((file)[25] == 't'))) // BxxxREGTxxxxPxxxxxxxxxxxx.[st]
+             && ((file)[0] == 'B')
+             && ((file)[4] == 'R')
+             && ((file)[5] == 'E')
+             && ((file)[6] == 'G')
+             && ((file)[11] == 'P')
+             && ((file)[24] == '.')
+             && (((file)[25] == 's') || ((file)[25] == 't'))) // BxxxREGTxxxxPxxxxxxxxxxxx.[st]
     {
       reg = boost::lexical_cast<size_t>((file).substr(7, 4));
       packet = boost::lexical_cast<size_t>((file).substr(12, 12));
@@ -216,7 +216,7 @@ AQEngineWindows::AQEngineWindows(const aq::Base::Ptr _baseDesc, const aq::Settin
 }
 
 int AQEngineWindows::run(const char * prg, const char * args) const
-{    
+{
   aq::Logger::getInstance().log(AQ_NOTICE, "call: '%s %s'\n", prg, args);
   int rc = 1;
   STARTUPINFOW si;
