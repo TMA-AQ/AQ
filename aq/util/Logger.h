@@ -9,9 +9,8 @@
 #include <boost/cstdint.hpp>
 #include <boost/thread/mutex.hpp>
 
-#if defined(__FreeBSD__)
+#if defined (__SYSLOG__)
 # include <syslog.h>
-# include <pthread.h>
 #endif
 
 #define LOG_FILE  -1
@@ -44,18 +43,18 @@ namespace aq
     void setPidMode(bool value)       { this->pidMode = value; }
     void setMode(char _mode)          { this->mode = _mode; }
     void setLevel(int _level)         { this->level = _level; }
-    void setIdent(const char *_ident) { 
-      ::memset(this->ident, 0, sizeof(ident)); 
-      ::strncpy(this->ident, _ident, sizeof(this->ident)); 
+    void setIdent(const char *_ident) {
+      ::memset(this->ident, 0, sizeof(ident));
+      ::strncpy(this->ident, _ident, sizeof(this->ident));
     }
 
     char getMode() const { return this->mode; }
     const char * getIdent() const { return this->ident; }
-    
+
     void log(int facility, const char * format, ...) const;
     void log(const char *file, const char *function, unsigned int line, int facility, const char * format, ...) const;
 
-  private:  
+  private:
     Logger(const char * ident, int mode);
     Logger(const Logger& );
     Logger& operator=(const Logger& source);

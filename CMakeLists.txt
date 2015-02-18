@@ -30,7 +30,7 @@ link_directories(
 ################################################################################
 # system specifics
 
-set(CMAKE_CXX_FLAGS "-O0 -ggdb -std=c++11 -Wall -DENABLE_AQL_PARSER")
+set(CMAKE_CXX_FLAGS "-O0 -ggdb -std=c++11 -Wall -DENABLE_AQL_PARSER -D__SYSLOG__")
 
 # Mac OS X specific code
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")

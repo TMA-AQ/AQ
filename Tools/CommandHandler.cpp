@@ -38,7 +38,7 @@ int CommandHandler::process(const std::string& cmd)
     // process command
     if (words.size() >= 2 && boost::iequals(words[0], "SHOW"))
     {
-      if (words[1] == "TABLES")
+      if (boost::iequals(words[1], "TABLES"))
       {
         for (auto& table : baseDesc->getTables())
         {
@@ -118,6 +118,25 @@ int CommandHandler::process(const std::string& cmd)
       else
       {
         std::cout << "invalid database " << words[1] << std::endl;
+      }
+    }
+    else if (boost::iequals(words[0], "DUMP"))
+    {
+      if ((words.size() >= 2) && (words[1] != ""))
+      {
+        std::string tname = words[1];
+        boost::trim(tname);
+        auto table = baseDesc->getTable(tname);
+        std::cout << "TODO" << std::endl;
+        // table->dumpRawData(std::cout);
+      }
+      else
+      {
+        for (auto& table : baseDesc->getTables())
+        {
+          std::cout << "TODO" << std::endl;
+          // table->dumpRawData(std::cout);
+        }
       }
     }
     else

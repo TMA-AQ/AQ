@@ -14,24 +14,24 @@
 #define BRIGHT 1
 
 // Foreground colors
-#define FG_BLACK           30    
-#define FG_RED             31    
-#define FG_GREEN           32    
-#define FG_YELLOW          33    
-#define FG_BLUE            34    
-#define FG_MAGENTA         35    
-#define FG_CYAN            36    
-#define FG_WHITE           37    
+#define FG_BLACK           30
+#define FG_RED             31
+#define FG_GREEN           32
+#define FG_YELLOW          33
+#define FG_BLUE            34
+#define FG_MAGENTA         35
+#define FG_CYAN            36
+#define FG_WHITE           37
 
 //    Background colors
-#define BG_BLACK           40    
-#define BG_RED             41    
-#define BG_GREEN           42    
-#define BG_YELLOW          43    
-#define BG_BLUE            44    
-#define BG_MAGENTA         45    
-#define BG_CYAN            46    
-#define BG_WHITE           47    
+#define BG_BLACK           40
+#define BG_RED             41
+#define BG_GREEN           42
+#define BG_YELLOW          43
+#define BG_BLUE            44
+#define BG_MAGENTA         45
+#define BG_CYAN            46
+#define BG_WHITE           47
 
 using namespace aq;
 
@@ -55,7 +55,7 @@ Logger& Logger::getInstance(const char * ident, int mode)
   return *systemLog;
 }
 
-Logger::Logger(const char *_ident, int _mode) 
+Logger::Logger(const char *_ident, int _mode)
   : level(-1),
   localFile(0),
   mode(_mode),
@@ -66,7 +66,7 @@ Logger::Logger(const char *_ident, int _mode)
 {
   ::strncpy(this->ident, _ident, sizeof(this->ident)-1);
   ident[sizeof(this->ident)-1] = '\0';
-  if (this->mode & SYSLOG) 
+  if (this->mode & SYSLOG)
   {
 #if defined (__SYSLOG__)
     ::openlog(this->ident, LOG_NDELAY, LOG_USER);
@@ -86,7 +86,7 @@ Logger::~Logger()
   ::memset(this->ident, 0, sizeof(this->ident));
   if (this->mode & SYSLOG)
   {
-#if defined (__SYSLOG__FreeBSD)
+#if defined (__SYSLOG__)
     ::closelog();
 #endif
   }
@@ -175,14 +175,14 @@ void Logger::log(int facility, const char * format, ...) const
   //
 
 #if defined (__SYSLOG__)
-  if (this->mode & SYSLOG) 
+  if (this->mode & SYSLOG)
   {
     boost::mutex::scoped_lock lock(this->mutex);
     ::syslog(facility, "%s", buf1);
   }
 #endif
 
-  if (this->mode & LOCALFILE) 
+  if (this->mode & LOCALFILE)
   {
     boost::mutex::scoped_lock lock(this->mutex);
     ::fwrite(buf1, sizeof(char), strlen(buf1), this->localFile);
@@ -190,7 +190,7 @@ void Logger::log(int facility, const char * format, ...) const
 
   if (this->mode & STDOUT)
   {
-    if (this->lockMode) 
+    if (this->lockMode)
     {
       boost::mutex::scoped_lock lock(this->mutex);
       this->printStdOut(buf1, facility);
@@ -256,7 +256,7 @@ int Logger::openFile(const char * name)
 }
 
 void Logger::closeFile(void)
-{  
+{
   boost::mutex::scoped_lock lock(this->mutex);
   fclose(this->localFile);
 }

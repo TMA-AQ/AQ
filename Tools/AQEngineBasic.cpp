@@ -1,4 +1,5 @@
 #include "AQEngineBasic.h"
+#include <aq/util/Logger.h>
 #include <aq/util/AQLQuery.h>
 #include <aq/util/AQLParser.h>
 #include <iostream>
@@ -21,11 +22,17 @@ void AQEngineBasic::clean() const
 void AQEngineBasic::call(const std::string& query, aq::engine::AQEngine_Intf::mode_t mode)
 {
 
-  aq::core::SelectStatement stmt;
-  aq::parser::parse(query, stmt);
+  std::string aql_query = query;
+  if (query.find(";") == std::string::npos)
+  {
+    aql_query += ";";
+  }
 
-  std::cout << stmt.to_string(aq::core::SelectStatement::output_t::AQL) << std::endl;
-  std::cout << stmt.to_string(aq::core::SelectStatement::output_t::SQL) << std::endl;
+  aq::core::SelectStatement stmt;
+  aq::parser::parse(aql_query, stmt);
+
+  aq::Logger::getInstance().log(AQ_INFO, stmt.to_string(aq::core::SelectStatement::output_t::AQL).c_str());
+  aq::Logger::getInstance().log(AQ_INFO, stmt.to_string(aq::core::SelectStatement::output_t::SQL).c_str());
 
   this->call(stmt, mode);
 }

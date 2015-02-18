@@ -21,7 +21,7 @@ bool operator==(const aq::core::InCondition& ic1, const aq::core::InCondition& i
 
 bool operator==(const aq::core::JoinCondition& jc1, const aq::core::JoinCondition& jc2)
 {
-  bool rc =  
+  bool rc =
     (jc1.op == jc2.op) &&
     (jc1.left == jc2.left) &&
     (jc1.right == jc2.right) &&
@@ -115,19 +115,19 @@ void print_aql(std::ostream& os, const aq::core::SelectStatement& query)
   os << "SELECT ";
   for (size_t i = 1; i < query.selectedTables.size(); ++i) os << ", ";
   for (auto& c : query.selectedTables) os << ". " << c.table.name << " " << c.name << " ";
-  os << std::endl;
+  os << query.eol;
 
   os << "FROM ";
   for (size_t i = 1; i < query.fromTables.size(); ++i) os << ", ";
   for (auto& t : query.fromTables) os << t.name << " ";
-  os << std::endl;
+  os << query.eol;
 
   if (!query.joinConditions.empty())
   {
     os << "WHERE ";
     for (size_t i = 1; i < query.joinConditions.size() + query.inConditions.size(); ++i) os << "AND ";
-    os << std::endl;
-    for (auto& w : query.joinConditions) 
+    os << query.eol;
+    for (auto& w : query.joinConditions)
     {
       os << "  " << w.op << " ";
       if (w.type_left.is_initialized())
@@ -136,7 +136,7 @@ void print_aql(std::ostream& os, const aq::core::SelectStatement& query)
       if (w.type_right.is_initialized())
         os << w.type_right.get() << " ";
       os << w.jt_right << " . " << w.right.table.name << " " << w.right.name << " ";
-      os << std::endl;
+      os << query.eol;
     }
     for (auto& w : query.inConditions)
     {
@@ -151,7 +151,7 @@ void print_aql(std::ostream& os, const aq::core::SelectStatement& query)
         }
         os << " K_VALUE " << *it;
       }
-      os << std::endl;
+      os << query.eol;
     }
   }
 
@@ -160,7 +160,7 @@ void print_aql(std::ostream& os, const aq::core::SelectStatement& query)
     os << "GROUP ";
     for (size_t i = 1; i < query.groupedColumns.size(); ++i) os << ", ";
     for (auto& c : query.groupedColumns) os << ". " << c.table.name << " " << c.name << " ";
-    os << std::endl;
+    os << query.eol;
   }
 
   if (!query.orderedColumns.empty())
@@ -168,7 +168,7 @@ void print_aql(std::ostream& os, const aq::core::SelectStatement& query)
     os << "ORDER ";
     for (size_t i = 1; i < query.orderedColumns.size(); ++i) os << ", ";
     for (auto& c : query.orderedColumns) os << ". " << c.table.name << " " << c.name << " ";
-    os << std::endl;
+    os << query.eol;
   }
 }
 
@@ -176,36 +176,36 @@ void print_aql_infix(std::ostream& os, const aq::core::SelectStatement& query)
 {
   os << "SELECT ";
   print_list(os, query.selectedTables);
-  os << std::endl;
+  os << query.eol;
 
   os << "FROM ";
   print_list(os, query.fromTables);
-  os << std::endl;
+  os << query.eol;
 
   if (!query.joinConditions.empty())
   {
     os << "WHERE ";
     size_t i = 0;
     size_t n = query.joinConditions.size() + query.inConditions.size();
-    os << std::endl;
-    for (auto& w : query.joinConditions) 
+    os << query.eol;
+    for (auto& w : query.joinConditions)
     {
       os << " ";
 
       if (w.type_left.is_initialized())
         os << w.type_left.get() << " ";
       os << w.jt_left << " " << w.left.table.name << "." << w.left.name;
-      
+
       os << " " << w.op << " ";
 
       if (w.type_right.is_initialized())
         os << w.type_right.get() << " ";
       os << w.jt_right << " " << w.right.table.name << "." << w.right.name;
-      
+
       if (++i < n)
         os << " AND";
-      
-      os << std::endl;
+
+      os << query.eol;
     }
     for (auto& w : query.inConditions)
     {
@@ -222,7 +222,7 @@ void print_aql_infix(std::ostream& os, const aq::core::SelectStatement& query)
       os << ")";
       if (++i < n)
         os << " AND";
-      os << std::endl;
+      os << query.eol;
     }
   }
 
@@ -230,14 +230,14 @@ void print_aql_infix(std::ostream& os, const aq::core::SelectStatement& query)
   {
     os << "GROUP ";
     print_list(os, query.groupedColumns);
-    os << std::endl;
+    os << query.eol;
   }
 
   if (!query.orderedColumns.empty())
   {
     os << "ORDER ";
     print_list(os, query.orderedColumns);
-    os << std::endl;
+    os << query.eol;
   }
 }
 
@@ -252,7 +252,7 @@ void print_sql(std::ostream& os, const aq::core::SelectStatement& ss)
   // Select
   os << "SELECT " ;
   print_list(os, ss.selectedTables);
-  os << std::endl;
+  os << ss.eol;
 
   // From
   std::vector<aq::core::InCondition> condToAddToWhere;
@@ -264,7 +264,7 @@ void print_sql(std::ostream& os, const aq::core::SelectStatement& ss)
   }
   else
   {
-    os << "FROM " << *ss.fromTables.begin() << std::endl;
+    os << "FROM " << *ss.fromTables.begin() << ss.eol;
     auto p = (*ss.fromTables.begin());
     for (auto it = ss.fromTables.begin() + 1; it != ss.fromTables.end(); ++it)
     {
@@ -303,7 +303,7 @@ void print_sql(std::ostream& os, const aq::core::SelectStatement& ss)
             }
           }
 
-          os << ")" << std::endl;
+          os << ")" << ss.eol;
           p = t;
         }
       }
@@ -324,11 +324,11 @@ void print_sql(std::ostream& os, const aq::core::SelectStatement& ss)
   // Where
   if (!joinConditionsTmp.empty() || !inConditionsTmp.empty())
   {
-    os << "WHERE " << std::endl;
+    os << "WHERE " << ss.eol;
   }
   if (!condToAddToWhere.empty())
   {
-    os << "  (" << std::endl; 
+    os << "  (" << ss.eol;
     for (auto it = condToAddToWhere.begin(); it != condToAddToWhere.end();)
     {
       auto& cond = *it;
@@ -340,14 +340,14 @@ void print_sql(std::ostream& os, const aq::core::SelectStatement& ss)
       {
         os << " OR";
       }
-      os << std::endl;
+      os << ss.eol;
     }
-    os << "  )"; 
+    os << "  )";
     if (!inConditionsTmp.empty())
     {
       os << " AND";
-    } 
-    os << std::endl;
+    }
+    os << ss.eol;
   }
   if (!inConditionsTmp.empty())
   {
@@ -362,7 +362,7 @@ void print_sql(std::ostream& os, const aq::core::SelectStatement& ss)
       {
         os << " AND";
       }
-      os << std::endl;
+      os << ss.eol;
     }
   }
 
@@ -371,7 +371,7 @@ void print_sql(std::ostream& os, const aq::core::SelectStatement& ss)
   {
     os << "GROUP BY ";
     print_list(os, ss.groupedColumns);
-    os << std::endl;
+    os << ss.eol;
   }
 
   // Order
@@ -379,10 +379,10 @@ void print_sql(std::ostream& os, const aq::core::SelectStatement& ss)
   {
     os << "ORDER BY ";
     print_list(os, ss.orderedColumns);
-    os << std::endl;
+    os << ss.eol;
   }
 
-  os << ";" << std::endl;
+  os << ";" << ss.eol;
 }
 
 std::string aq::core::SelectStatement::to_string(output_t o) const

@@ -65,14 +65,14 @@ struct JoinCondition
     SEQ,
     SUP,
   };
-  
+
   std::string op;
   boost::optional<std::string> type_left, type_right;
   std::string jt_left, jt_right;
   ColumnReference left, right;
 
   JoinCondition() {}
-  JoinCondition(const JoinCondition& o) : op(o.op), type_left(o.type_left), type_right(o.type_right), jt_left(o.jt_left), jt_right(o.jt_right), left(o.left), right(o.right) 
+  JoinCondition(const JoinCondition& o) : op(o.op), type_left(o.type_left), type_right(o.type_right), jt_left(o.jt_left), jt_right(o.jt_right), left(o.left), right(o.right)
   {
   }
   JoinCondition& operator=(const JoinCondition& o)
@@ -101,6 +101,7 @@ struct SelectStatement
     SQL,
   };
   mutable output_t output;
+  mutable std::string eol;
   inline void setOutput(output_t o) const { this->output = o; }
   std::string to_string(output_t o = output_t::SQL) const;
   void to_string(std::string& str) const;
@@ -110,6 +111,8 @@ struct SelectStatement
   std::vector<JoinCondition> joinConditions;
   std::vector<InCondition> inConditions;
   std::vector<ColumnReference> groupedColumns, orderedColumns;
+
+  SelectStatement() : output(output_t::SQL), eol("\n") {}
 
 };
 

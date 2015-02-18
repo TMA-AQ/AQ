@@ -26,6 +26,8 @@
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 #include <boost/algorithm/string/replace.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
 
 #define AQ_TOOLS_VERSION "0.1.0"
 
@@ -60,15 +62,24 @@ int processSQLQueries(const std::string       & query,
     aq::Logger::getInstance().log(AQ_INFO, "Do not use aq engine\n");
     aq_engine.reset(new aq::AQEngineSimulate(baseDesc, settings));
   }
-  else if (basicAQEngine)
+  else if (!basicAQEngine)
+  {
+    if (!boost::filesystem::exists(boost::filesystem::path(settings->aqEngine)))
+    {
+      aq::Logger::getInstance().log(AQ_WARNING, "cannot find aq engine: '%s'\n", settings->aqEngine.c_str());
+      basicAQEngine = true;
+    }
+    else
+    {
+      aq::Logger::getInstance().log(AQ_INFO, "Use aq engine: '%s'\n", settings->aqEngine.c_str());
+      aq_engine.reset(aq::engine::getAQEngineSystem(baseDesc, settings));
+    }
+  }
+
+  if (basicAQEngine)
   {
     aq::Logger::getInstance().log(AQ_INFO, "Use basic aq engine\n");
     aq_engine.reset(new aq::AQEngineBasic(baseDesc, settings));
-  }
-  else
-  {
-    aq::Logger::getInstance().log(AQ_INFO, "Use aq engine: '%s'\n", settings->aqEngine.c_str());
-    aq_engine.reset(aq::engine::getAQEngineSystem(baseDesc, settings));
   }
 
   //
@@ -288,7 +299,11 @@ int main(int argc, char**argv)
 
     po::options_description log_options("Logging");
     log_options.add_options()
-      ("log-output", po::value<std::string>(&mode)->default_value("STDOUT"), "[STDOUT|LOCALFILE|SYSLOG]")
+#if defined (__SYSLOG__)
+      ("log-output", po::value<std::string>(&mode)->default_value("SYSLOG"), "[STDOUT|LOCALFILE|SYSLOG]")
+#else
+      ("log-output", po::value<std::string>(&mode)->default_value("STDOUT"), "[STDOUT|LOCALFILE]")
+#endif
       ("log-level,v", po::value<unsigned int>(&level)->default_value(AQ_LOG_WARNING), "CRITICAL(2), ERROR(3), WARNING(4), NOTICE(5), INFO(6), DEBUG(7)")
       ("log-lock", po::bool_switch(&lock_mode), "for multithread program")
       ("log-date", po::bool_switch(&date_mode), "add date to log")
@@ -403,7 +418,16 @@ int main(int argc, char**argv)
 
     //
     // print Project Settings
-    aq::Logger::getInstance().log(AQ_DEBUG, "Settings:\n%s\n", settings->to_string().c_str());
+    {
+      auto settings_str = settings->to_string();
+      std::vector<std::string> vsettings;
+      boost::split(vsettings, settings_str, boost::is_any_of("\n"));
+      aq::Logger::getInstance().log(AQ_DEBUG, "Settings:");
+      for (const auto & line : vsettings)
+      {
+        aq::Logger::getInstance().log(AQ_DEBUG, line.c_str());
+      }
+    }
 
     //
     // If Load database is invoked
