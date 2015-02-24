@@ -1,4 +1,5 @@
 #include "Util.h"
+#include <aq/engine/AQRawMatrix.h>
 #include <aq/util/FileMapper.h>
 #include <aq/util/Base.h>
 #include <aq/util/Timer.h>
@@ -394,7 +395,7 @@ int check_answer_data(std::ostream& os,
   // Set the baseDesc for the Where Conditions
   // whereValidator.setBaseDesc(baseDesc);
 
-  aq::engine::AQMatrix matrix(settings, baseDesc);
+  aq::engine::AQRawMatrix matrix(settings, baseDesc);
 
   std::vector<long long> tableIDs;
   matrix.load(answerPath.c_str(), tableIDs);

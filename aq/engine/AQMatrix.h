@@ -19,7 +19,7 @@ namespace aq
 
 class Base;
 
-namespace engine 
+namespace engine
 {
 
 /// \brief representation of aq engine result. See aq engine specification for more explanations.
@@ -53,7 +53,7 @@ public:
   /// \brief set join path
   /// \param jp
   AQENGINE_API void setJoinPath(const std::vector<std::string>& jp) { this->joinPath = jp; }
-  
+
   /// \brief write
   /// \param filePath
   AQENGINE_API void write(const char * filePath);
@@ -61,23 +61,23 @@ public:
   /// \brief load full aq matrix
   /// \param filePath
   /// \param tableIds
-  AQENGINE_API void load(const char * filePath, std::vector<long long>& tableIDs);
+  virtual AQENGINE_API void load(const char * filePath, std::vector<long long>& tableIDs) = 0;
 
   /// \brief load only head aq matrix
   /// \param filePath
   /// \param tableIDs
-  AQENGINE_API void loadHeader(const char * filePath, std::vector<long long>& tableIDs);
+  virtual AQENGINE_API void loadHeader(const char * filePath, std::vector<long long>& tableIDs) = 0;
 
   /// \brief load only full data aq matrix
   /// \param filePath
-  AQENGINE_API void loadData(const char * filePath);
+  virtual AQENGINE_API void loadData(const char * filePath) = 0;
 
   /// \brief prepare data file to be read by row
   /// \param filePath
-  AQENGINE_API void prepareData(const char * filePath);
+  virtual AQENGINE_API void prepareData(const char * filePath) = 0;
 
   /// \brief load next packet
-  AQENGINE_API void loadNextPacket();
+  virtual AQENGINE_API void loadNextPacket() = 0;
 
   /// \brief read data by row and call a callback for each row
   /// \param CB the type of callback to call
@@ -109,7 +109,7 @@ public:
   /// \brief Debug purpose
   AQENGINE_API void dump(std::ostream& os) const;
 
-private:
+protected:
 
   static uint64_t uid_generator;
   uint64_t uid;

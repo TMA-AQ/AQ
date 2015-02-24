@@ -109,7 +109,9 @@ add_dependencies(aq-parser scanner)
 # source files
 file(GLOB aq_engine_source_files aq/engine/AQEngine.cpp
                                  aq/engine/AQEngineException.cpp
-                                 aq/engine/AQMatrix.cpp)
+                                 aq/engine/AQMatrix.cpp
+                                 aq/engine/AQRawMatrix.cpp
+                                 aq/engine/AQTextMatrix.cpp)
 
 # aq-engine static library
 add_library(aq-engine STATIC ${aq_engine_source_files})

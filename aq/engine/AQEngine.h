@@ -14,21 +14,25 @@ class AQEngine : public AQEngine_Intf
 public:
   AQEngine(const Base::Ptr _baseDesc, const Settings::Ptr _settings);
   ~AQEngine();
-  
+
   void call(const std::string& query, mode_t mode = AQEngine_Intf::mode_t::REGULAR);
   void call(const aq::core::SelectStatement& query, mode_t mode = mode_t::REGULAR);
-  
+
   void renameResult(unsigned int id, std::vector<std::pair<std::string, std::string> >& resultTables);
   AQMatrix::Ptr getAQMatrix() { return aqMatrix; }
   const std::vector<llong>& getTablesIDs() const { return tableIDs; }
 
   void prepare() const;
   void clean() const;
+  bool check() const;
 
 protected:
   virtual int run(const char * prg, const char * args) const = 0;
 
 private:
+  void run(const std::string& query, mode_t mode);
+  void load(mode_t mode);
+
   const Base::Ptr baseDesc;
   const Settings::Ptr settings;
   AQMatrix::Ptr aqMatrix;

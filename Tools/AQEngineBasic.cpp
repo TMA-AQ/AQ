@@ -1,4 +1,5 @@
 #include "AQEngineBasic.h"
+#include <aq/engine/AQRawMatrix.h>
 #include <aq/util/Logger.h>
 #include <aq/util/AQLQuery.h>
 #include <aq/util/AQLParser.h>
@@ -39,7 +40,7 @@ void AQEngineBasic::call(const std::string& query, aq::engine::AQEngine_Intf::mo
 
 void AQEngineBasic::call(const aq::core::SelectStatement& stmt, aq::engine::AQEngine_Intf::mode_t mode)
 {
-  this->matrix.reset(new aq::engine::AQMatrix(this->settings, this->base));
+  this->matrix.reset(new aq::engine::AQRawMatrix(this->settings, this->base));
   auto& mtx = this->matrix->getMatrix();
 
   for (const auto& table : stmt.fromTables)

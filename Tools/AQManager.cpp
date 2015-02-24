@@ -1,6 +1,8 @@
 #include "AQManager.h"
 #include "AQEngineSimulate.h"
 
+#include <aq/engine/AQRawMatrix.h>
+
 #include <aq/util/Database.h>
 #include <aq/util/FileMapper.h>
 #include <aq/util/Timer.h>
@@ -189,7 +191,7 @@ int process_aq_matrix(const std::string& query, const std::string& aqMatrixFileN
 
   settings->answerFile = aqMatrixFileName;
 
-  boost::shared_ptr<aq::engine::AQMatrix> aqMatrix(new aq::engine::AQMatrix(settings, baseDesc));
+  boost::shared_ptr<aq::engine::AQRawMatrix> aqMatrix(new aq::engine::AQRawMatrix(settings, baseDesc));
   std::vector<llong> tableIDs;
 
   aq::Timer timer;
@@ -243,6 +245,8 @@ int transform_query(const std::string& query, aq::Settings::Ptr settings, aq::Ba
   std::string str;
   aq::syntax_tree_to_aql_form(pNode, str);
   aq::parser::ParseJeq( str );
+
+  std::cout << str << std::endl;
 
   return 0;
 }

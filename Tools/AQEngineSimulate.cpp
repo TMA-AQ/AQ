@@ -1,4 +1,5 @@
 #include "AQEngineSimulate.h"
+#include <aq/engine/AQRawMatrix.h>
 #include <aq/util/AQLParser.h>
 #include <aq/util/Exceptions.h>
 #include <aq/TreeUtilities.h>
@@ -29,7 +30,7 @@ namespace aq
 
     if (mode != aq::engine::AQEngine_Intf::mode_t::NESTED_2)
     {
-      this->aqMatrix.reset(new aq::engine::AQMatrix(this->settings, this->baseDesc));
+      this->aqMatrix.reset(new aq::engine::AQRawMatrix(this->settings, this->baseDesc));
       this->createTableIDs(query);
       auto& matrix = aqMatrix->getMatrix();
       for (const auto& col : ss.selectedTables)

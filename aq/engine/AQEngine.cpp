@@ -1,11 +1,15 @@
 #include "AQEngine.h"
 #include "AQEngineException.h"
+#include "AQRawMatrix.h"
+#include "AQTextMatrix.h"
 #include <string>
 #include <aq/util/Logger.h>
 #include <aq/util/Timer.h>
 #include <fstream>
 #include <boost/filesystem.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
 
 using namespace aq::engine;
 
@@ -33,10 +37,63 @@ void AQEngine::call(const std::string& query, mode_t mode)
     std::cout << std::endl;
   }
 
+  // check aq-engine executable
+  if (!this->check())
+  {
+    return;
+  }
+
   //
+  this->run(query, mode);
+
   //
+  this->load(mode);
+
+}
+
+bool AQEngine::check() const
+{
+  char * path = getenv("PATH");
+  std::string prg = settings->aqEngine;
+  std::list<std::string> vpath;
+  boost::algorithm::split(vpath, path, boost::is_any_of(":"));
+  vpath.push_front(""); // for absolute path
+  vpath.push_front("./"); // for relative path
+  for (auto p : vpath)
+  {
+    auto f = boost::filesystem::path(p) / boost::filesystem::path(prg);
+    if (boost::filesystem::exists(f))
+    {
+      aq::Logger::getInstance().log(AQ_DEBUG, "found %s\n", f.c_str());
+      return true;
+    }
+  }
+  aq::Logger::getInstance().log(AQ_DEBUG, "cannot found %s\n", prg.c_str());
+  return false;
+}
+
+void AQEngine::call(const aq::core::SelectStatement& query, mode_t mode)
+{
+  std::string query_str;
+  query.setOutput(aq::core::SelectStatement::output_t::AQL);
+  query.to_string(query_str);
+  this->call(query_str, mode);
+}
+
+void AQEngine::run(const std::string& query, mode_t mode)
+{
   std::string new_request_file = settings->workingPath + "New_Request.txt";
   aq::util::SaveFile(new_request_file.c_str(), query.c_str());
+
+  // check if matrix files are already present
+  auto file = ( boost::filesystem::path(settings->dpyPath)
+                / boost::filesystem::path("dpy")
+                / boost::filesystem::path("AnswerHeader00000_TXT.a_h") );
+  if (boost::filesystem::exists(file))
+  {
+    aq::Logger::getInstance().log(AQ_WARNING, "aq engine matrix already present");
+    return;
+  }
 
   aq::Timer timer;
   if ((mode == 0) || (!settings->skipNestedQuery))
@@ -59,15 +116,18 @@ void AQEngine::call(const std::string& query, mode_t mode)
   }
 
   aq::Logger::getInstance().log(AQ_NOTICE, "AQ Engine Time elapsed: %s\n", aq::Timer::getString(timer.getTimeElapsed()).c_str());
-  // std::cout << aq::Timer::getString(timer.getTimeElapsed()) << std::endl;
+}
 
+void AQEngine::load(mode_t mode)
+{
   if ((mode == REGULAR) || (mode == NESTED_1))
   {
-    timer.start();
     tableIDs.clear();
-    aqMatrix.reset(new AQMatrix(settings, baseDesc));
+    // aqMatrix.reset(new AQRawMatrix(settings, baseDesc));
+    aqMatrix.reset(new AQTextMatrix(settings, baseDesc));
 
 #ifndef __NO_LOAD_FULL_AQ_MATRIX__
+    aq::Timer timer;
     aqMatrix->load(settings->dpyPath.c_str(), this->tableIDs);
     aq::Logger::getInstance().log(AQ_NOTICE, "Load From Binary AQ Matrix: Time Elapsed = %s\n", aq::Timer::getString(timer.getTimeElapsed()).c_str());
     if (mode == REGULAR)
@@ -91,15 +151,6 @@ void AQEngine::call(const std::string& query, mode_t mode)
   {
     throw AQEngineException("aq engine mode not supported");
   }
-
-}
-
-void AQEngine::call(const aq::core::SelectStatement& query, mode_t mode)
-{
-  std::string query_str;
-  query.setOutput(aq::core::SelectStatement::output_t::AQL);
-  query.to_string(query_str);
-  this->call(query_str, mode);
 }
 
 void AQEngine::renameResult(unsigned int id, std::vector<std::pair<std::string, std::string> >& resultTables)
