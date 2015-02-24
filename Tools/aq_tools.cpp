@@ -22,6 +22,7 @@
 #endif
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <boost/thread.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
@@ -103,7 +104,7 @@ int processSQLQueries(const std::string       & query,
 int parse_queries(const std::string & aqHome,
                   const std::string & aqName,
                   const std::string & queryIdent,
-                  const std::string & sqlQueriesFile,
+                  aq::QueryReader   & queryReader,
                   const std::string & aqMatrixFileName,
                   aq::Settings::Ptr   settings,
                   aq::Base::Ptr       baseDesc,
@@ -125,28 +126,6 @@ int parse_queries(const std::string & aqHome,
       std::cout << "Connected to database " << settings->rootPath << std::endl;
       std::cout << std::endl;
     }
-  }
-
-  //
-  // parse inpout
-  aq::QueryReader * reader = 0;
-  std::fstream * fqueries = 0;
-
-  if (sqlQueriesFile != "")
-  {
-    boost::filesystem::path p(sqlQueriesFile);
-    if (!boost::filesystem::exists(p))
-    {
-      std::cerr << "cannot find file " << p << std::endl;
-      return -1;
-    }
-
-    fqueries = new std::fstream(sqlQueriesFile.c_str(), std::ifstream::in);
-    reader = new aq::QueryReader(*fqueries);
-  }
-  else
-  {
-    reader = new aq::QueryReader(std::cin, settings->cmdLine ? "aq" : "");
   }
 
   //
@@ -176,7 +155,7 @@ int parse_queries(const std::string & aqHome,
 
   std::string query;
   aq::CommandHandler cmdHandler(aqHome, aqName, settings, baseDesc);
-  while ((query = reader->next()) != "")
+  while ((query = queryReader.next()) != "")
   {
     if (transform)
     {
@@ -255,6 +234,8 @@ int main(int argc, char**argv)
     if (s != NULL)
       aqHome = s;
 
+    std::cout << "AQ_HOME=" << aqHome << std::endl;
+
     //
     // initialize verb builder
     boost::shared_ptr<const aq::VerbBuilder> vb(new aq::VerbBuilder);
@@ -270,6 +251,7 @@ int main(int argc, char**argv)
     else if (boost::filesystem::exists(boost::filesystem::path(aqHome + "/aq.ini")))
     {
         settings->iniFile = aqHome + "/aq.ini";
+        std::cout << "load " << settings->iniFile << std::endl;
         settings->load(settings->iniFile);
     }
 
@@ -318,6 +300,7 @@ int main(int argc, char**argv)
       ("aq-home,r", po::value<std::string>(&aqHome)->default_value(aqHome), "set AQ Home (AQ_HOME environment variable)")
       ("aq-name,n", po::value<std::string>(&aqName), "")
       ("query-ident,i", po::value<std::string>(&queryIdent), "")
+      ("query", po::value<std::string>(&sqlQuery), "")
       ("queries-file,f", po::value<std::string>(&sqlQueriesFile), "")
       ("output,o", po::value<std::string>(&settings->outputFile), "")
       ("worker,w", po::value<unsigned int>(&worker), "number of thread assigned to resolve the bunch of sql queries")
@@ -422,10 +405,10 @@ int main(int argc, char**argv)
       auto settings_str = settings->to_string();
       std::vector<std::string> vsettings;
       boost::split(vsettings, settings_str, boost::is_any_of("\n"));
-      aq::Logger::getInstance().log(AQ_DEBUG, "Settings:");
+      aq::Logger::getInstance().log(AQ_DEBUG, "Settings:\n");
       for (const auto & line : vsettings)
       {
-        aq::Logger::getInstance().log(AQ_DEBUG, line.c_str());
+        aq::Logger::getInstance().log(AQ_DEBUG, (line + "\n").c_str());
       }
     }
 
@@ -482,12 +465,49 @@ int main(int argc, char**argv)
     }
 
     //
+    // parse inpout
+    aq::QueryReader * reader = 0;
+    std::fstream * fileQueries = 0;
+    std::stringstream * streamQueries = 0;
+
+    if (sqlQueriesFile != "")
+    {
+      boost::filesystem::path p(sqlQueriesFile);
+      if (!boost::filesystem::exists(p))
+      {
+        std::cerr << "cannot find file " << p << std::endl;
+        return -1;
+      }
+
+      fileQueries = new std::fstream(sqlQueriesFile.c_str(), std::ifstream::in);
+      reader = new aq::QueryReader(*fileQueries);
+    }
+    else if (sqlQuery != "")
+    {
+      streamQueries = new std::stringstream();
+      *streamQueries << sqlQuery;
+      reader = new aq::QueryReader(*streamQueries);
+    }
+    else
+    {
+      reader = new aq::QueryReader(std::cin, settings->cmdLine ? "aq" : "");
+    }
+
+    //
     // Solve Queries
     aq::Base::Ptr bd(new aq::Base(settings->dbDesc));
-    return parse_queries(
-      aqHome, aqName, queryIdent, sqlQueriesFile, aqMatrixFileName,
+    auto rc = parse_queries(
+      aqHome, aqName, queryIdent, *reader, aqMatrixFileName,
       settings, bd,
       transform, simulateAQEngine, basicAQEngine, keepFiles, force);
+
+    delete reader;
+    if (fileQueries)
+      delete fileQueries;
+    if (streamQueries)
+      delete streamQueries;
+
+    return rc;
 
   }
   catch (const aq::generic_error& error)
