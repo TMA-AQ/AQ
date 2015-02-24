@@ -326,16 +326,21 @@ struct Runner : public aq::DatabaseGenerator::handle_t
           continue;
         }
 
+        report->new_query(ss);
+
         if (!tc->execute(ss, result))
         {
           std::cout << "E";
-      report->error(ss);
+          report->error();
         }
         else
         {
           std::cout << ".";
-      // report->success(ss);
+          report->success();
         }
+
+        report->close_query();
+
       }
     }
     std::cout
