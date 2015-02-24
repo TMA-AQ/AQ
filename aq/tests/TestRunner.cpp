@@ -146,39 +146,46 @@ bool TestCase::execute(const aq::core::SelectStatement& ss, aq::DatabaseIntf::re
   auto it = this->databases.begin();
   aq::DatabaseIntf::result_t r1, r2;
 
+  auto rv = true;
   auto begin = std::chrono::system_clock::now();
   (*it)->execute(ss, r1);
   auto end = std::chrono::system_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
-  report->time_exec((*it)->get_name(), duration);
+  auto ref_duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+  auto ref_name = (*it)->get_name();
+  // report->time_exec((*it)->get_name(), duration);
 
   ++it;
+  auto first = true;
   for (;it != this->databases.end(); ++it)
   {
     auto begin = std::chrono::system_clock::now();
     (*it)->execute(ss, r2);
     auto end = std::chrono::system_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
-    report->time_exec((*it)->get_name(), duration);
-
 
     nb_result += std::max(r1.size(), r2.size());
     // std::cout << nb_result << std::endl;
     if (!this->compare(r1, r2))
     {
-      // std::cout << std::endl;
-      // dump_result(r1, std::cout);
-      dump_result(r1, report->report);
-      // std::cout << std::endl;
-      // dump_result(r2, std::cout);
-      dump_result(r2, report->report);
-      nb_failure += 1;
-      // exit(0);
-      return false;
+      if (first)
+        dump_result(r1, report->report, ref_name, ref_duration);
+      dump_result(r2, report->report, (*it)->get_name(), duration);
+      rv = false;
     }
+    else
+    {
+      if (first)
+        report->time_exec(ref_name, ref_duration);
+      report->time_exec((*it)->get_name(), duration);
+    }
+
+    first = false;
   }
-  nb_success += 1;
-  return true;
+  if (rv)
+    nb_success += 1;
+  else
+    nb_failure += 1;
+  return rv;
 }
 
 bool TestCase::compare(const DatabaseIntf::result_t& result1, const DatabaseIntf::result_t& result2)
@@ -210,10 +217,12 @@ bool TestCase::compare(const DatabaseIntf::result_t& result1, const DatabaseIntf
   return true;
 }
 
-void TestCase::dump_result(const DatabaseIntf::result_t& result, std::ostream& os)
+void TestCase::dump_result(const DatabaseIntf::result_t& result, std::ostream& os,
+                           const std::string& engine_name, unsigned int duration_ms)
 {
   // std::ostream& os = report->report;
-  os << "<results size=\"" << result.size() << "\">" << std::endl;
+  os << "<" << engine_name <<" results_size=\"" << result.size()
+     << "\" execution_time=\"" << duration_ms << "ms\">" << std::endl;
   for (auto it1 = result.begin(); it1 != result.end();)
   {
     os << "(";
@@ -230,5 +239,5 @@ void TestCase::dump_result(const DatabaseIntf::result_t& result, std::ostream& o
       os << ", ";
   }
   os << std::endl;
-  os << "</results>" << std::endl;
+  os << "</" << engine_name << ">" << std::endl;
 }

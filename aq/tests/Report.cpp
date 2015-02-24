@@ -1,18 +1,26 @@
 #include "Report.h"
 #include <iostream>
+#include <boost/algorithm/string/replace.hpp>
 
 namespace aq
 {
 namespace
 {
+std::string& xs_string_format(std::string && str)
+{
+  boost::algorithm::replace_all(str, "<", "&lt;");
+  boost::algorithm::replace_all(str, ">", "&gt;");
+  return str;
+}
+
 void write_query(std::ostream& report, const aq::core::SelectStatement& ss)
 {
   report << "<sql>" << std::endl;
-  report << ss.to_string() << std::endl;
+  report << xs_string_format(ss.to_string()) << std::endl;
   report << "</sql>" << std::endl;
 
   report << "<aql>" << std::endl;
-  report << ss.to_string(aq::core::SelectStatement::output_t::AQL) << std::endl;
+  report << xs_string_format(ss.to_string(aq::core::SelectStatement::output_t::AQL)) << std::endl;
   report << "</aql>" << std::endl;
 }
 }
@@ -99,21 +107,23 @@ void Report::close_query()
 
 void Report::time_exec(std::string db_name, uint64_t duration_ms)
 {
-  report << "<" << db_name << " execution_time=" << duration_ms << "/>" << std::endl;
+  report << "<" << db_name << " execution_time=\"" << duration_ms << "\"/>" << std::endl;
 }
 
-void Report::success(const aq::core::SelectStatement& ss)
+void Report::success()
 {
-  report << "<query id=\"" << ++n_query << "\" status=\"success\">" << std::endl;
-  write_query(report, ss);
-  report << "</query>" << std::endl;
+  // report << "<query id=\"" << ++n_query << "\" status=\"success\">" << std::endl;
+  // write_query(report, ss);
+  // report << "</query>" << std::endl;
+  report << "<status>success</status>" << std::endl;
 }
 
-void Report::error(const aq::core::SelectStatement& ss)
+void Report::error()
 {
-  report << "<query id=\"" << ++n_query << "\" status=\"error\">" << std::endl;
-  write_query(report, ss);
-  report << "</query>" << std::endl;
+  // report << "<query id=\"" << ++n_query << "\" status=\"error\">" << std::endl;
+  // write_query(report, ss);
+  // report << "</query>" << std::endl;
+  report << "<status>failed</status>" << std::endl;
 }
 
 }

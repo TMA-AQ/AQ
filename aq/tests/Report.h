@@ -19,8 +19,8 @@ public:
   void new_db(const DatabaseGenerator::handle_t::tables_t& tables);
   void new_query(const aq::core::SelectStatement& ss);
   void close_query();
-  void success(const aq::core::SelectStatement& ss);
-  void error(const aq::core::SelectStatement& ss);
+  void success();
+  void error();
   void time_exec(std::string db_name, uint64_t duration_ms);
   std::ofstream report;
 private:

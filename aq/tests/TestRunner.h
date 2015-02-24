@@ -58,7 +58,8 @@ public:
   size_t getNbFailure() const { return nb_failure; }
 protected:
   bool compare(const DatabaseIntf::result_t& r1, const DatabaseIntf::result_t& r2);
-  void dump_result(const DatabaseIntf::result_t& result, std::ostream& os);
+  void dump_result(const DatabaseIntf::result_t& result, std::ostream& os,
+                   const std::string& engine_name, unsigned int duration_ms);
 private:
   TestCase(const TestCase& o);
   TestCase& operator=(const TestCase& o);
