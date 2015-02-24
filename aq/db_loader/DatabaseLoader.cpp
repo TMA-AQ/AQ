@@ -165,7 +165,7 @@ void DatabaseLoader::load(const size_t table_id)
 // --------------------------------------------------------------------------------------------
 void DatabaseLoader::loadTable(const aq::base_t::table_t& table, const std::string& filename) const
 {
-  aq::Logger::getInstance().log(AQ_INFO, "Table : %u\n", table.name.c_str());
+  aq::Logger::getInstance().log(AQ_INFO, "Table : %s\n", table.name.c_str());
 
   FILE * fd_table;
   FileCloser fcloser(fd_table);
@@ -209,20 +209,8 @@ void DatabaseLoader::loadTable(const aq::base_t::table_t& table, const std::stri
       // next packet
       for (auto& ci : columns_infos)
       {
-        if (k_batch_loader == "")
-        {
-          sprintf(my_col, format_file_name.c_str(), rep_cible.c_str(), n_base, table.id, ci.col.id, n_paquet);
-          ci.filename = my_col;
-          if ((ci.fd = fopen (my_col ,"w+b")) == nullptr)
-          {
-            throw aq::generic_error(aq::generic_error::COULD_NOT_OPEN_FILE, "error opening file %s\n", my_col);
-          }
-        }
-        else
-        {
-          ci.prm = new prm_t();
-          ci.thesaurus = new thesaurus_t(item_cmp_t(ci.col.getSize()));
-        }
+        ci.prm = new prm_t();
+        ci.thesaurus = new thesaurus_t(item_cmp_t(ci.col.getSize()));
       }
       n_paquet++;
     }
@@ -269,7 +257,8 @@ void DatabaseLoader::loadAllColumns() const
       ci.prm = new prm_t();
       ci.thesaurus = new thesaurus_t(item_cmp_t(ci.col.getSize()));
       // this->runLoader(table.id, ci, 0); // FIXME : manage multi packet
-      this->buildPrmThesaurus(ci, table.id, column.id, 0); // FIXME : manage multi packet
+      unsigned int packet = 0;
+      this->buildPrmThesaurus(ci, table.id, column.id, packet); // FIXME : manage multi packet
     }
   }
 }
@@ -285,12 +274,12 @@ void DatabaseLoader::loadColumn(const size_t table_id, const size_t column_id) c
 // --------------------------------------------------------------------------------------------
 void DatabaseLoader::loadColumn(const size_t table_id, const size_t column_id, const std::list<int32_t>& values)
 {
-  int n_paquet = 0;
+  int n_paquet = -1;
   size_t write_n_enreg = 0;
   size_t total_nb_enreg = 0;
 
   // FIXME
-  aq::base_t::table_t::col_t col = { "dummy", 0, t_int, 4 };
+  aq::base_t::table_t::col_t col = { "dummy", 0, t_int, 1 };
   struct column_info_t ci = { col, "", nullptr, nullptr, nullptr };
 
   for (const auto value : values)
