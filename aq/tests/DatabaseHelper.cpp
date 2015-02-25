@@ -80,7 +80,7 @@ void AlgoQuestDatabase::insertValues(const DatabaseGenerator::handle_t::tables_t
   aq::DatabaseLoader loader(base, db.getRootPath(), aq::packet_size, ',', true); // FIXME
   std::list<int32_t> column_values;
 
-  column_id = 0;
+  column_id = 1;
   for (int32_t v = 1; v <= static_cast<int32_t>(values.second.size()); v++)
   {
     column_values.push_back(v);
