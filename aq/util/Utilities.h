@@ -25,12 +25,18 @@ namespace aq {
 /// utils functions
 namespace util {
 
+template <typename T> void unused(T &&)
+{
+}
+
 /// \defgroup conversion_function miscellaenous conversions functions
 /// \{
 
 int StrToInt(const char* psz, llong* pnVal);
 int StrToDouble(const char* psz, double* pdVal);
+#ifdef WIN32
 std::wstring string2Wstring(const std::string& s);
+#endif
 char* strtoupr(char* pszStr);
 void doubleToString(char* strVal, double dVal);
 aq::ColumnType symbole_to_column_type(aq::symbole s);

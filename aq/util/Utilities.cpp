@@ -74,9 +74,9 @@ char* strtoupr( char* pszStr )
 }
 
 //------------------------------------------------------------------------------
+#ifdef WIN32
 std::wstring string2Wstring(const std::string& s)
 {
-#ifdef WIN32
   int len;
   int slength = (int)s.length() + 1;
   len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
@@ -85,11 +85,8 @@ std::wstring string2Wstring(const std::string& s)
   std::wstring r(buf);
   delete[] buf;
   return r;
-#else
-  assert(false);
-  (void)s;
-#endif
 }
+#endif
 
 //------------------------------------------------------------------------------
 void doubleToString( char* strVal, double dVal )

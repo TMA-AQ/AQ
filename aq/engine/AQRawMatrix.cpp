@@ -69,18 +69,18 @@ void AQRawMatrix::loadHeader(const char * filePath, std::vector<long long>& tabl
     }
   }
 
-  uint64_t nbTable, tableId, nbGroups = 0;
-  fread(&nbTable, sizeof(uint64_t), 1, fd);
+  uint64_t nbTable, tableId; // , nbGroups = 0;
+  aq::util::unused(fread(&nbTable, sizeof(uint64_t), 1, fd));
   for (uint32_t i = 0; i < nbTable; ++i)
   {
     this->matrix.push_back(column_t());
-    fread(&tableId, sizeof(uint64_t), 1, fd);
+    aq::util::unused(fread(&tableId, sizeof(uint64_t), 1, fd));
     this->matrix[this->matrix.size() - 1].table_id = tableId;
     tableIDs.push_back(tableId);
   }
 
-  fread(&this->totalCount, sizeof(uint64_t), 1, fd);
-  fread(&this->nbRows, sizeof(uint64_t), 1, fd);
+  aq::util::unused(fread(&this->totalCount, sizeof(uint64_t), 1, fd));
+  aq::util::unused(fread(&this->nbRows, sizeof(uint64_t), 1, fd));
   // fread(&nbGroups, sizeof(uint64_t), 1, fd);
 
   aq::Logger::getInstance().log(AQ_ERROR, "aq matrix: [table:%u;count:%u;rows:%u]\n", nbTable, this->totalCount, nbRows);
@@ -167,10 +167,10 @@ void AQRawMatrix::loadNextPacket()
   {
     for (size_t c = 0; c < this->matrix.size(); ++c)
     {
-      fread(&index, sizeof(uint32_t), 1, fdp);
+      aq::util::unused(fread(&index, sizeof(uint32_t), 1, fdp));
       this->matrix[c].indexes.push_back(index);
     }
-    fread(&value, sizeof(uint64_t), 1, fdc);
+    aq::util::unused(fread(&value, sizeof(uint64_t), 1, fdc));
     this->count.push_back(value);
     this->rowCountCheck += value;
   }

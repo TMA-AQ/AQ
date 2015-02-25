@@ -167,15 +167,15 @@ void DatabaseLoader::loadTable(const aq::base_t::table_t& table, const std::stri
 {
   aq::Logger::getInstance().log(AQ_INFO, "Table : %s\n", table.name.c_str());
 
-  FILE * fd_table;
+  FILE * fd_table = nullptr;
   FileCloser fcloser(fd_table);
 
   int total_nb_enreg =0;
   char my_record[k_record_size_max];
-  char my_col[k_file_name_size_max];
+  // char my_col[k_file_name_size_max];
 
   // initialisation des composants de nom de fichiers
-  int n_base = 1;
+  // int n_base = 1;
   int n_paquet = 0;
 
   // open source file and check if opened

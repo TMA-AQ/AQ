@@ -83,7 +83,7 @@ void fill_column_type(base_t::table_t::col_t * colonne, const char * type_aux)
 void construis_colonne ( FILE* fp, base_t::table_t::col_t *colonne )
 {
   char name[k_size_max], type_aux[k_size_max];
-  fscanf(fp,"%s %d %d %s", name, &(colonne->id), &(colonne->size), type_aux);
+  aq::util::unused(fscanf(fp,"%s %d %d %s", name, &(colonne->id), &(colonne->size), type_aux));
   colonne->name = name;
   boost::trim_if(colonne->name, boost::is_any_of("\""));
   fill_column_type(colonne, type_aux);
@@ -106,7 +106,7 @@ void construis_table ( FILE* fp, base_t::table_t * table )
 {
   char name[k_size_max];
   int nb_cols;
-  fscanf(fp,"%s %d %d %d", name, &(table->id), &(table->nb_record), &nb_cols);
+  aq::util::unused(fscanf(fp,"%s %d %d %d", name, &(table->id), &(table->nb_record), &nb_cols));
   table->name = name;
   boost::trim_if(table->name, boost::is_any_of("\""));
   for (int i = 0 ; i < nb_cols ; i++)
@@ -176,7 +176,7 @@ void base_t::build_base_from_raw(FILE* fp, base_t& base)
   clean(base);
   char name[k_size_max];
   int nb_tables;
-  fscanf(fp, "%s %d", name, &nb_tables);
+  aq::util::unused(fscanf(fp, "%s %d", name, &nb_tables));
   base.name = name;
   base.id = 1;
   for (int i = 0 ; i < nb_tables ; i++)

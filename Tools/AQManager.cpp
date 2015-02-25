@@ -63,7 +63,7 @@ int check_database(const aq::Settings::Ptr settings)
     {
       aq::Logger::getInstance().log(AQ_NOTICE, "check table [%u;%s] column [%u;%s] [records:%u]\n",
         t.id, t.name.c_str(), c.id, c.name.c_str(), t.nb_record);
-      for (size_t p = 0; p <= (t.nb_record / settings->packSize); p++)
+      for (int p = 0; p <= (t.nb_record / settings->packSize); p++)
       {
         std::string thefilename = aq::Database::getThesaurusFileName(settings->dataPath.c_str(), t.id, c.id, p);
         aq::Logger::getInstance().log(AQ_NOTICE, "check thesaurus [%s]\n", thefilename.c_str());

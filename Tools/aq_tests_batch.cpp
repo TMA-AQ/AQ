@@ -86,7 +86,7 @@ struct Runner : public aq::DatabaseGenerator::handle_t
 
       //
       // look for properties file in args
-      for (size_t i = 1; i < argc; i++)
+      for (int i = 1; i < argc; i++)
       {
         if ((strcmp(argv[i], "-s") == 0) || (strcmp(argv[i], "--settings") == 0))
         {

@@ -146,10 +146,10 @@ void AQMatrix::readData(CB& cb)
   {
     for (size_t c = 0; c < this->matrix.size(); ++c)
     {
-      fread(&value, sizeof(uint64_t), 1, fd);
+      aq::util::unused(fread(&value, sizeof(uint64_t), 1, fd));
       rows[c] = value;
     }
-    fread(&value, sizeof(uint64_t), 1, fd);
+    aq::util::unused(fread(&value, sizeof(uint64_t), 1, fd));
     rows[this->matrix.size()] = value;
     cb.handle(rows);
   }

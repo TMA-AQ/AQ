@@ -42,9 +42,10 @@ int GenericFileMapper::read(void * buffer, size_t offset, size_t len)
   {
     throw aq::generic_error(aq::generic_error::GENERIC, "bad offset of mapped file " + m_filename);
   }
-  
+
   fseek(this->m_fd, static_cast<long>(offset), SEEK_SET);
-  fread(buffer, 1, len, this->m_fd);
+  if (fread(buffer, 1, len, this->m_fd) < len)
+    return -1;
   if (feof(this->m_fd))
     return -1;
   return 0;

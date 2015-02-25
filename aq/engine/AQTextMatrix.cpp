@@ -82,7 +82,7 @@ void AQTextMatrix::loadHeader(const char * filePath, std::vector<long long>& tab
 
   uint64_t countCheck = 0;
   uint64_t rowCheck = 0;
-  uint64_t nbGroups = 0, grpCount, grpRows;
+  uint64_t grpCount, grpRows; // nbGroups = 0,
 
   // group by not managed yet
   countCheck = grpCount = this->totalCount;

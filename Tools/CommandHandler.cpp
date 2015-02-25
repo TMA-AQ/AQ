@@ -132,11 +132,11 @@ int CommandHandler::process(const std::string& cmd)
       }
       else
       {
-        for (auto& table : baseDesc->getTables())
-        {
-          std::cout << "TODO" << std::endl;
-          // table->dumpRawData(std::cout);
-        }
+        // for (auto& table : baseDesc->getTables())
+        // {
+        //   std::cout << "TODO" << std::endl;
+        //   table->dumpRawData(std::cout);
+        // }
       }
     }
     else

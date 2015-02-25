@@ -56,7 +56,8 @@ Logger& Logger::getInstance(const char * ident, int mode)
 }
 
 Logger::Logger(const char *_ident, int _mode)
-  : level(-1),
+  : out(nullptr),
+    level(-1),
     localFile(0),
     mode(_mode),
     colorLog(false),

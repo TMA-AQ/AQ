@@ -57,10 +57,10 @@ void AlgoQuestDatabase::createTable(const DatabaseGenerator::handle_t::tables_t:
 void AlgoQuestDatabase::insertValues(const DatabaseGenerator::handle_t::tables_t::value_type& values)
 {
   // write columns
-  size_t base_id = 1;
+  // size_t base_id = 1;
   size_t table_id = 0;
   size_t column_id = 1;
-  size_t packet = 0;
+  // size_t packet = 0;
   char column_filename[1024];
   ::memset(column_filename, 0, 1024);
 

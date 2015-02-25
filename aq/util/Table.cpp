@@ -22,11 +22,11 @@ namespace aq
 
 //------------------------------------------------------------------------------
 Table::Table(const std::string& _name, unsigned int _id, uint64_t _totalCount)
-  : 
-  ID(_id), 
-  HasCount(false), 
-  TotalCount(_totalCount), 
-  GroupByApplied(false), 
+  :
+  ID(_id),
+  TotalCount(_totalCount),
+  HasCount(false),
+  GroupByApplied(false),
   OrderByApplied(false),
   NoAnswer(false),
   temporary(false)
@@ -37,11 +37,11 @@ Table::Table(const std::string& _name, unsigned int _id, uint64_t _totalCount)
 
 //------------------------------------------------------------------------------
 Table::Table(const std::string& _name, unsigned int _id, uint64_t _totalCount, bool _temporary)
-  : 
-  ID(ID), 
-  HasCount(_totalCount), 
-  TotalCount(0), 
-  GroupByApplied(false), 
+  :
+  ID(_id),
+  TotalCount(0),
+  HasCount(_totalCount),
+  GroupByApplied(false),
   OrderByApplied(false),
   NoAnswer(false),
   temporary(_temporary)
@@ -52,11 +52,11 @@ Table::Table(const std::string& _name, unsigned int _id, uint64_t _totalCount, b
 
 //------------------------------------------------------------------------------
 Table::Table(const Table& source)
-  : 
-  ID(source.ID), 
-  HasCount(source.HasCount), 
-  TotalCount(source.TotalCount), 
-  GroupByApplied(source.GroupByApplied), 
+  :
+  ID(source.ID),
+  TotalCount(source.TotalCount),
+  HasCount(source.HasCount),
+  GroupByApplied(source.GroupByApplied),
   OrderByApplied(source.OrderByApplied),
   NoAnswer(source.NoAnswer),
   temporary(source.temporary)
