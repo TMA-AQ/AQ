@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 2.8)
 project(AQQueryResolver)
 
 ################################################################################
+# options
+
+option(AQ_TRACE "enable trace")
+
+################################################################################
 # libraries dependencies
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules")
@@ -43,6 +48,10 @@ set(CMAKE_CXX_FLAGS "--std=c++11 -Wall")
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb")
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG -Werror")
 add_definitions(-DENABLE_AQL_PARSER)
+
+IF(${AQ_TRACE} MATCHES "ON")
+  add_definitions(-DAQ_TRACE)
+ENDIF(${AQ_TRACE} MATCHES "ON")
 
 # Mac OS X specific code
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -147,6 +156,8 @@ file(GLOB aq_query_resolver_source_files aq/ApplyRowVisitor.cpp
 add_library(aq-query-resolver STATIC ${aq_query_resolver_source_files}
                                      ${aq_loader_source_files}
                                      ${aq_verbs_source_files})
+add_dependencies(aq-query-resolver aq-parser)
+add_dependencies(aq-query-resolver aq-parser)
 
 ################################################################################
 # aq loader
