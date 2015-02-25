@@ -21,6 +21,7 @@ RowWritter::RowWritter(const RowWritter& o)
   firstRow(o.firstRow)
 {
   value = static_cast<char*>(malloc(128 * sizeof(char)));
+  bzero(value, 128);
 }
 
 RowWritter::~RowWritter()
