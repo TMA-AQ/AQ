@@ -38,13 +38,10 @@ void AQEngine::call(const std::string& query, mode_t mode)
   }
 
   // check aq-engine executable
-  if (!this->check())
+  if (this->check())
   {
-    return;
+    this->run(query, mode);
   }
-
-  //
-  this->run(query, mode);
 
   //
   this->load(mode);
@@ -123,8 +120,8 @@ void AQEngine::load(mode_t mode)
   if ((mode == REGULAR) || (mode == NESTED_1))
   {
     tableIDs.clear();
-    // aqMatrix.reset(new AQRawMatrix(settings, baseDesc));
-    aqMatrix.reset(new AQTextMatrix(settings, baseDesc));
+    aqMatrix.reset(new AQRawMatrix(settings, baseDesc));
+    // aqMatrix.reset(new AQTextMatrix(settings, baseDesc));
 
 #ifndef __NO_LOAD_FULL_AQ_MATRIX__
     aq::Timer timer;
