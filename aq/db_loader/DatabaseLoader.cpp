@@ -112,16 +112,15 @@ DatabaseLoader::DatabaseLoader(const aq::base_t bd, const std::string& _path, co
   :
   my_base(bd),
   k_rep_racine(_path),
-  k_batch_loader(""),
   format_file_name("%sB%03dT%04dC%04dP%012d"),
   packet_size(_packet_size),
   end_of_field_c(_end_of_field_c),
   csv_format(_csv_format)
 {
-  base_desc_file = this->k_rep_racine + "base_desc/base.aqb";
-  rep_source = k_rep_racine + "data_orga/tables/";
-  rep_cible = k_rep_racine + "data_orga/vdg/data/";
-  ini_filename = this->k_rep_racine + "loader.ini";
+  base_desc_file = this->k_rep_racine / fs::path("/base_desc/base.aqb");
+  rep_source = this->k_rep_racine / fs::path("/data_orga/tables/");
+  rep_cible = this->k_rep_racine / fs::path("/data_orga/vdg/data/");
+  ini_filename = this->k_rep_racine / fs::path("/loader.ini");
 }
 
 //-------------------------------------------------------------------------------
@@ -138,8 +137,8 @@ void DatabaseLoader::load()
   {
     std::string filename = table.name;
     boost::trim_if(filename, boost::is_any_of(" \""));
-    filename = rep_source + filename + ".txt";
-    grp.create_thread(boost::bind(&DatabaseLoader::loadTable, this, boost::cref(table), filename));
+    auto path = rep_source / fs::path(filename + ".txt");
+    grp.create_thread(boost::bind(&DatabaseLoader::loadTable, this, boost::cref(table), path.string()));
   }
   grp.join_all();
 
@@ -160,8 +159,8 @@ void DatabaseLoader::load(const size_t table_id)
 
     std::string filename = table.name;
     boost::trim_if(filename, boost::is_any_of(" \""));
-    filename = rep_source + filename + ".txt";
-    this->loadTable(table, filename);
+    auto path = rep_source / fs::path(filename + ".txt");
+    this->loadTable(table, path.string());
   }
 }
 

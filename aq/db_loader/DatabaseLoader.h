@@ -8,6 +8,7 @@
 #include <list>
 #include <aq/util/BaseDesc.h>
 #include <aq/util/DateConversion.h>
+#include <boost/filesystem.hpp>
 
 namespace aq
 {
@@ -70,13 +71,12 @@ protected:
 private:
   const aq::base_t my_base;
   mutable aq::DateConversion dateConverter;
-  std::string k_rep_racine;
-  std::string k_rep_param;
-  std::string k_batch_loader;
-  std::string ini_filename;
-  std::string rep_source;
-  std::string rep_cible;
-  std::string base_desc_file;
+  boost::filesystem::path k_rep_racine;
+  boost::filesystem::path k_rep_param;
+  boost::filesystem::path ini_filename;
+  boost::filesystem::path rep_source;
+  boost::filesystem::path rep_cible;
+  boost::filesystem::path base_desc_file;
   std::string format_file_name;
   size_t packet_size;
   unsigned char end_of_field_c;
