@@ -249,8 +249,10 @@ target_link_libraries(
     aq-parser
     aq-util
     ${Boost_LIBRARIES}
-    ${MYSQLCONNECTORCPP_LIBRARIES}
-    ${PQXX_LIBRARIES})
+    ${MYSQLCONNECTORCPP_LIBRARIES})
+IF(${PQXX_FOUND})
+  target_link_libraries(aq-tests ${PQXX_LIBRARIES})
+ENDIF(${PQXX_FOUND})
 
 ################################################################################
 # tests parser
