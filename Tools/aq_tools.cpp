@@ -322,7 +322,6 @@ int main(int argc, char**argv)
 
     po::options_description loader("Loader");
     loader.add_options()
-      ("aq-loader,l", po::value<std::string>(&settings->aqLoader))
       ("load-db", po::bool_switch(&loadDatabase), "")
       ("load-table", po::value<std::string>(&tableNameToLoad), "")
       ;
