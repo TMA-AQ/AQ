@@ -5,17 +5,14 @@
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
+namespace fs = boost::filesystem;
+
 namespace aq
 {
 
-Database::Database(const std::string& _path)
-  : path(_path)
+Database::Database(const boost::filesystem::path& _path)
+  : path(_path.string())
 {
-  boost::replace_all(path, "\\", "/");
-  if (!path.empty() && (*path.rbegin() != '/'))
-  {
-    path += "/";
-  }
   this->load();
 }
 
@@ -24,17 +21,13 @@ bool Database::isValid() const
   if (baseDesc.name == "")
     return false;
 
-  std::string bdFname = this->getBaseDescFile();
-  boost::filesystem::path bdFile(bdFname);
-  if (!boost::filesystem::exists(bdFile))
+  if (!boost::filesystem::exists(this->getBaseDescFile()))
     return false;
 
-  boost::filesystem::path workingPath(this->getWorkingPath());
-  if (!boost::filesystem::exists(workingPath))
+  if (!boost::filesystem::exists(this->getWorkingPath()))
     return false;
 
-  boost::filesystem::path dataPath(this->getDataPath());
-  if (!boost::filesystem::exists(dataPath))
+  if (!boost::filesystem::exists(this->getDataPath()))
     return false;
 
   return true;
@@ -44,13 +37,13 @@ void Database::create(aq::base_t& base)
 {
   boost::filesystem::path paths[] =
     {
-      boost::filesystem::path(this->path),
-      boost::filesystem::path(this->path + "base_struct"),
-      boost::filesystem::path(this->getWorkingPath()),
-      boost::filesystem::path(this->getDataPath()),
-      boost::filesystem::path(this->getTemporaryColumnLoadPath()),
-      boost::filesystem::path(this->getTemporaryTableLoadPath()),
-      boost::filesystem::path(this->getTemporaryWorkingPath()),
+      this->path,
+      this->path / fs::path("base_struct"),
+      this->getWorkingPath(),
+      this->getDataPath(),
+      this->getTemporaryColumnLoadPath(),
+      this->getTemporaryTableLoadPath(),
+      this->getTemporaryWorkingPath(),
     };
 
   for (auto& p : paths)
@@ -61,9 +54,7 @@ void Database::create(aq::base_t& base)
     }
   }
 
-  boost::filesystem::path bdFile(this->getBaseDescFile());
-  std::string fname = this->getBaseDescFile();
-  std::ofstream f(fname.c_str(), std::ios::trunc);
+  std::ofstream f(this->getBaseDescFile().filename().string().c_str(), std::ios::trunc);
   aq::base_t::dump_raw_base(f, base);
   f.close();
 
@@ -71,14 +62,13 @@ void Database::create(aq::base_t& base)
 
 void Database::erase()
 {
-  boost::filesystem::path root(this->path);
-  boost::filesystem::remove_all(root);
+  boost::filesystem::remove_all(this->path);
 }
 
 std::string Database::getName() const
 {
   std::string name;
-  std::ifstream f(this->getBaseDescFile().c_str(), std::ios::in);
+  std::ifstream f(this->getBaseDescFile().filename().string().c_str(), std::ios::in);
   if (f.is_open())
   {
     std::getline(f, name);
@@ -94,7 +84,7 @@ aq::base_t Database::getBaseDesc() const
 int Database::load()
 {
   int rc = 0;
-  std::string bdFname = this->getBaseDescFile();
+  auto bdFname = this->getBaseDescFile().filename().string();
   std::ifstream fin(bdFname.c_str(), std::ios::in);
   if (!fin.is_open())
     return -1;
@@ -107,39 +97,39 @@ int Database::load()
   return rc;
 }
 
-std::string Database::getRootPath() const
+fs::path Database::getRootPath() const
 {
   return this->path;
 }
 
-std::string Database::getWorkingPath() const
+fs::path Database::getWorkingPath() const
 {
-  return this->path + "calculus/";
+  return this->path / fs::path("calculus");
 }
 
-std::string Database::getDataPath() const
+fs::path Database::getDataPath() const
 {
-  return this->path + "data_orga/vdg/data/";
+  return this->path / fs::path("data_orga/vdg/data/");
 }
 
-std::string Database::getBaseDescFile() const
+fs::path Database::getBaseDescFile() const
 {
-  return this->path + "base_struct/base.aqb";
+  return this->path / fs::path("base_struct/base.aqb");
 }
 
-std::string Database::getTemporaryWorkingPath() const
+fs::path Database::getTemporaryWorkingPath() const
 {
-  return this->path + "data_orga/tmp/";
+  return this->path / fs::path("data_orga/tmp/");
 }
 
-std::string Database::getTemporaryTableLoadPath() const
+fs::path Database::getTemporaryTableLoadPath() const
 {
-  return this->path + "data_orga/tables/";
+  return this->path / fs::path("data_orga/tables/");
 }
 
-std::string Database::getTemporaryColumnLoadPath() const
+fs::path Database::getTemporaryColumnLoadPath() const
 {
-  return this->path + "data_orga/columns/";
+  return this->path / fs::path("data_orga/columns/");
 }
 
 void Database::dump(std::ostream& os) const
@@ -152,36 +142,33 @@ void Database::dump(std::ostream& os) const
   aq::base_t::dump_raw_base(os, this->baseDesc);
 }
 
-std::string Database::getPrmFileName(size_t tableIdx, size_t columnIdx, size_t partIdx)
+fs::path Database::getPrmFilePath(size_t tableIdx, size_t columnIdx, size_t partIdx)
 {
-  return Database::getPrmFileName(this->getDataPath().c_str(), tableIdx, columnIdx, partIdx);
+  return this->getDataPath() / Database::getPrmFileName(tableIdx, columnIdx, partIdx);
 }
 
-std::string Database::getThesaurusFileName(size_t tableIdx, size_t columnIdx, size_t partIdx )
+fs::path Database::getThesaurusFilePath(size_t tableIdx, size_t columnIdx, size_t partIdx )
 {
-  return Database::getThesaurusFileName(this->getDataPath().c_str(), tableIdx, columnIdx, partIdx);
-}
-
-// static
-std::string Database::getPrmFileName(const char* path, size_t tableIdx, size_t columnIdx, size_t partIdx)
-{
-  return Database::getDataFileName(path, tableIdx, columnIdx, partIdx, "prm");
+  return this->getDataPath() / Database::getThesaurusFileName(tableIdx, columnIdx, partIdx);
 }
 
 // static
-std::string Database::getThesaurusFileName(const char* path, size_t tableIdx, size_t columnIdx, size_t partIdx)
+fs::path Database::getPrmFileName(size_t tableIdx, size_t columnIdx, size_t partIdx)
 {
-  return Database::getDataFileName(path, tableIdx, columnIdx, partIdx, "the");
+  return fs::path(Database::getDataFileName(tableIdx, columnIdx, partIdx, "prm"));
 }
 
 // static
-std::string Database::getDataFileName(const char * path, size_t tIdx, size_t cIdx, size_t pIdx, const char * ext)
+fs::path Database::getThesaurusFileName(size_t tableIdx, size_t columnIdx, size_t partIdx)
+{
+  return fs::path(Database::getDataFileName(tableIdx, columnIdx, partIdx, "the"));
+}
+
+// static
+std::string Database::getDataFileName(size_t tIdx, size_t cIdx, size_t pIdx, const char * ext)
 {
   char szFN[ _MAX_PATH ];
-  if (path)
-    sprintf(szFN, "%sB001T%.4luC%.4luV01P%.12lu.%s", path, tIdx, cIdx, pIdx, ext);
-  else
-    sprintf(szFN, "B001T%.4luC%.4luV01P%.12lu.%s", tIdx, cIdx, pIdx, ext);
+  sprintf(szFN, "B001T%.4luC%.4luV01P%.12lu.%s", tIdx, cIdx, pIdx, ext);
   return szFN;
 }
 

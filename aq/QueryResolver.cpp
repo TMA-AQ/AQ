@@ -655,7 +655,7 @@ void QueryResolver::solveAQMatrix(aq::verb::VerbNode::Ptr spTree)
     }
     else
     {
-      resultHandler.reset(new aq::RowWritter(this->settings->outputFile == "stdout" ? this->settings->outputFile : this->settings->answerFile));
+      resultHandler.reset(new aq::RowWritter(this->settings->outputFile == "stdout" ? this->settings->outputFile.string() : this->settings->answerFile.string()));
     }
   }
   this->resultHandler->setColumn(columnTypes);
@@ -1113,9 +1113,9 @@ int QueryResolver::prepareQuery(const std::string& query, const std::string & id
   //
   // create directories
   std::list<fs::path> lpaths;
-  lpaths.push_back(fs::path(settings->rootPath + "calculus/" + queryIdent));
-  lpaths.push_back(fs::path(settings->tmpPath));
-  lpaths.push_back(fs::path(settings->dpyPath));
+  lpaths.push_back(settings->rootPath / fs::path("calculus") / fs::path(queryIdent));
+  lpaths.push_back(settings->tmpPath);
+  lpaths.push_back(settings->dpyPath);
   for (std::list<fs::path>::const_iterator dir = lpaths.begin(); dir != lpaths.end(); ++dir)
   {
     if (fs::exists(*dir))
@@ -1138,7 +1138,7 @@ int QueryResolver::prepareQuery(const std::string& query, const std::string & id
 
   //
   // write request file
-  std::string queryFilename(settings->rootPath + "calculus/" + queryIdent + "/Request.sql");
+  auto queryFilename = settings->rootPath / fs::path("calculus") / fs::path(queryIdent) / fs::path("Request.sql");
   std::ofstream queryFile(queryFilename.c_str());
   queryFile << query;
   queryFile.close();

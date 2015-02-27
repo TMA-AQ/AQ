@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include "BaseDesc.h"
+#include <boost/filesystem.hpp>
 
 namespace aq
 {
@@ -14,10 +15,10 @@ namespace aq
 class Database
 {
 public:
-  
-  explicit Database(const std::string& _path);
+
+  explicit Database(const boost::filesystem::path& _path);
   void dump(std::ostream& os) const;
-  
+
   /// \brief check if database is valid (ready to use)
   bool isValid() const;
 
@@ -30,66 +31,66 @@ public:
   /// \todo handle errors
   void erase();
 
-  /// \brief get database name 
+  /// \brief get database name
   /// \return database name
   std::string getName() const;
 
-  /// \brief get database description 
+  /// \brief get database description
   /// \return database description
   aq::base_t getBaseDesc() const;
-  
-  /// \brief get database root path 
+
+  /// \brief get database root path
   /// \return database root path
-  std::string getRootPath() const; 
+  boost::filesystem::path getRootPath() const;
 
-  /// \brief get database working path 
+  /// \brief get database working path
   /// \return database working path
-  std::string getWorkingPath() const;
+  boost::filesystem::path getWorkingPath() const;
 
-  /// \brief get database data path 
+  /// \brief get database data path
   /// \return database data path
-  std::string getDataPath() const;
+  boost::filesystem::path getDataPath() const;
 
-  /// \deprecated 
-  /// \brief get database base description file 
+  /// \deprecated
+  /// \brief get database base description file
   /// \return database description file
-  std::string getBaseDescFile() const;
+  boost::filesystem::path getBaseDescFile() const;
 
-  /// \brief get database temporary working path 
+  /// \brief get database temporary working path
   /// \return database temporary working path
-  std::string getTemporaryWorkingPath() const;
+  boost::filesystem::path getTemporaryWorkingPath() const;
 
-  /// \brief get database temporary table load path 
+  /// \brief get database temporary table load path
   /// \return database temporary table load path
-  std::string getTemporaryTableLoadPath() const;
+  boost::filesystem::path getTemporaryTableLoadPath() const;
 
-  /// \brief get database temporary column load path 
+  /// \brief get database temporary column load path
   /// \return database temporary column load path
-  std::string getTemporaryColumnLoadPath() const;
+  boost::filesystem::path getTemporaryColumnLoadPath() const;
 
   /// \brief get prm filename
   /// \param tableIdx table's index
   /// \param columnIdx column's index
   /// \param partIdx paquet's index
   /// \return prm filename
-  std::string getPrmFileName(size_t tableIdx, size_t columnIdx, size_t partIdx);
-  
+  boost::filesystem::path getPrmFilePath(size_t tableIdx, size_t columnIdx, size_t partIdx);
+
   /// \brief get thesaurus filename
   /// \param tableIdx table's index
   /// \param columnIdx column's index
   /// \param partIdx paquet's index
   /// \return thesaurus filename
-  std::string getThesaurusFileName(size_t tableIdx, size_t columnIdx, size_t partIdx );
-  
-  static std::string getPrmFileName(const char* path, size_t tableIdx, size_t columnIdx, size_t partIdx);
-  static std::string getThesaurusFileName(const char* path, size_t tableIdx, size_t columnIdx, size_t partIdx);
+  boost::filesystem::path getThesaurusFilePath(size_t tableIdx, size_t columnIdx, size_t partIdx );
+
+  static boost::filesystem::path getPrmFileName(size_t tableIdx, size_t columnIdx, size_t partIdx);
+  static boost::filesystem::path getThesaurusFileName(size_t tableIdx, size_t columnIdx, size_t partIdx);
   static std::string getTemporaryFileName(size_t tableIdx, size_t columnIdx, size_t partIdx, const char * type, size_t size);
-  
+
 private:
   int load();
-  static std::string getDataFileName(const char * path, size_t tIdx, size_t cIdx, size_t pIdx, const char * ext);
+  static std::string getDataFileName(size_t tIdx, size_t cIdx, size_t pIdx, const char * ext);
 
-  std::string path;
+  boost::filesystem::path path;
   aq::base_t baseDesc;
 };
 

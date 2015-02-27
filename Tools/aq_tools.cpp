@@ -33,6 +33,7 @@
 #define AQ_TOOLS_VERSION "0.1.0"
 
 namespace po = boost::program_options;
+namespace fs = boost::filesystem;
 
 size_t failedQueries = 0;
 boost::mutex parserMutex;
@@ -65,7 +66,7 @@ int processSQLQueries(const std::string       & query,
   }
   else if (!basicAQEngine)
   {
-    if (!boost::filesystem::exists(boost::filesystem::path(settings->aqEngine)))
+    if (!fs::exists(fs::path(settings->aqEngine)))
     {
       aq::Logger::getInstance().log(AQ_WARNING, "cannot find aq engine: '%s'\n", settings->aqEngine.c_str());
       basicAQEngine = true;
@@ -132,25 +133,13 @@ int parse_queries(const std::string & aqHome,
   // Get current database name from settings if set
   if (aqName == "")
   {
-    std::string databaseName = settings->rootPath;
-    boost::replace_all(databaseName, "\\", "/");
-    while ((databaseName.size() > 0) && (*databaseName.rbegin() == '/'))
-    {
-      databaseName.erase(databaseName.size() - 1);
-    }
-    std::string::size_type pos = databaseName.find_last_of('/');
-    if (pos == std::string::npos)
-    {
-      databaseName = "";
-    }
-    else
-    {
-      databaseName = databaseName.substr(pos + 1);
-    }
+    std::string databaseName = settings->rootPath.filename().string();
+    if (databaseName == ".")
+      databaseName = settings->rootPath.parent_path().string();
   }
   else
   {
-    settings->initPath(aqHome + aqName);
+    settings->initPath(fs::path(aqHome) / fs::path(aqName));
   }
 
   std::string query;
@@ -163,7 +152,7 @@ int parse_queries(const std::string & aqHome,
     }
     else if (aqMatrixFileName != "")
     {
-      process_aq_matrix(query, aqMatrixFileName, settings->outputFile, settings, baseDesc);
+      process_aq_matrix(query, aqMatrixFileName, settings->outputFile.string(), settings, baseDesc);
     }
     else
     {
@@ -243,16 +232,16 @@ int main(int argc, char**argv)
 
     //
     // if aq.ini exists in current directory, use it as default settings
-    if (boost::filesystem::exists(boost::filesystem::path("aq.ini")))
+    settings->iniFile = fs::path("aq.ini");
+    if (fs::exists(settings->iniFile))
     {
-        settings->iniFile = "aq.ini";
         settings->load(settings->iniFile);
     }
-    else if (boost::filesystem::exists(boost::filesystem::path(aqHome + "/aq.ini")))
+    else if (fs::exists(fs::path(aqHome) / fs::path("aq.ini")))
     {
-        settings->iniFile = aqHome + "/aq.ini";
-        std::cout << "load " << settings->iniFile << std::endl;
-        settings->load(settings->iniFile);
+      settings->iniFile = aqHome + "/aq.ini";
+      std::cout << "load configuration from " << settings->iniFile << std::endl;
+      settings->load(settings->iniFile.string());
     }
 
     //
@@ -296,13 +285,13 @@ int main(int argc, char**argv)
     po::options_description engine("Engine");
     engine.add_options()
       ("settings,s", po::value<std::string>(&propertiesFile), "")
-      ("aq-engine,e", po::value<std::string>(&settings->aqEngine))
+      ("aq-engine,e", po::value<boost::filesystem::path>(&settings->aqEngine))
       ("aq-home,r", po::value<std::string>(&aqHome)->default_value(aqHome), "set AQ Home (AQ_HOME environment variable)")
       ("aq-name,n", po::value<std::string>(&aqName), "")
       ("query-ident,i", po::value<std::string>(&queryIdent), "")
       ("query", po::value<std::string>(&sqlQuery), "")
       ("queries-file,f", po::value<std::string>(&sqlQueriesFile), "")
-      ("output,o", po::value<std::string>(&settings->outputFile), "")
+      ("output,o", po::value<boost::filesystem::path>(&settings->outputFile), "")
       ("worker,w", po::value<unsigned int>(&worker), "number of thread assigned to resolve the bunch of sql queries")
       ("parralellize,p", po::value<size_t>(&settings->process_thread)->default_value(settings->process_thread), "number of thread assigned resolve one sql queries")
       ("display-count", po::bool_switch(&displayCount), "")
@@ -388,7 +377,7 @@ int main(int argc, char**argv)
     }
     if ((aqHome != "") && (aqName != ""))
     {
-      settings->initPath(aqHome + aqName);
+      settings->initPath(fs::path(aqHome) / fs::path(aqName));
     }
 
     //
@@ -458,7 +447,7 @@ int main(int argc, char**argv)
     // Test plugins
     if (testPlugins)
     {
-      aq::Base::Ptr bd(new aq::Base(settings->dbDesc));
+      aq::Base::Ptr bd(new aq::Base(settings->dbDesc.string()));
       std::string plugins_path = "C:/Users/AlgoQuest/Documents/Visual Studio 2012/Projects/AQPlugin/x64/Debug/AQPlugin.dll";
       std::string query = "select aq_func1(t1.id), aq_func2(t1.v1) from t1;";
       return test_plugins(plugins_path, query, settings, bd);
@@ -472,8 +461,8 @@ int main(int argc, char**argv)
 
     if (sqlQueriesFile != "")
     {
-      boost::filesystem::path p(sqlQueriesFile);
-      if (!boost::filesystem::exists(p))
+      fs::path p(sqlQueriesFile);
+      if (!fs::exists(p))
       {
         std::cerr << "cannot find file " << p << std::endl;
         return -1;
@@ -495,7 +484,7 @@ int main(int argc, char**argv)
 
     //
     // Solve Queries
-    aq::Base::Ptr bd(new aq::Base(settings->dbDesc));
+    aq::Base::Ptr bd(new aq::Base(settings->dbDesc.string()));
     auto rc = parse_queries(
       aqHome, aqName, queryIdent, *reader, aqMatrixFileName,
       settings, bd,

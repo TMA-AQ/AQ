@@ -1177,7 +1177,7 @@ void transformExpression(const aq::Base::Ptr baseDesc, const aq::Settings::Ptr s
       aq::tnode * cmpNode = nullptr;
       while ((cmpNode = whereNode->find_first(tag)) != nullptr)
       {
-        aq::expression_transform::transform<FileMapper>(baseDesc, settings->dataPath, settings->packSize, cmpNode);
+        aq::expression_transform::transform<FileMapper>(baseDesc, settings->dataPath.string(), settings->packSize, cmpNode);
       }
     }
   }

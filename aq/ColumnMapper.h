@@ -60,8 +60,8 @@ ColumnMapper<T, M>::ColumnMapper(const char * _path, size_t _tableId, size_t _co
     mode(_mode),
     cache(_cache)
 {
-  std::string prmFilename = aq::Database::getPrmFileName(path.c_str(), tableId, columnId, currentPart);
-  std::string thesaurusFilename = aq::Database::getThesaurusFileName(path.c_str(), tableId, columnId, currentPart);
+  auto prmFilename = boost::filesystem::path(path) / aq::Database::getPrmFileName(tableId, columnId, currentPart);
+  auto thesaurusFilename = boost::filesystem::path(path) / aq::Database::getThesaurusFileName(tableId, columnId, currentPart);
   this->prmMapper.reset(new M(prmFilename.c_str(), mode));
   this->thesaurusMapper.reset(new M(thesaurusFilename.c_str(), mode));
   this->val = new T[size];
@@ -152,7 +152,7 @@ int ColumnMapper<T, M>::append(T * value)
 
 template <typename T, class M>
 size_t ColumnMapper<T, M>::setPrmThe(size_t index)
-{  
+{
   size_t part = index / packetSize;
   size_t i = index % packetSize;
   if (currentPart != part)
@@ -162,8 +162,8 @@ size_t ColumnMapper<T, M>::setPrmThe(size_t index)
 
     if (this->prmMappers.find(currentPart) == this->prmMappers.end())
     {
-      std::string prmFilename = aq::Database::getPrmFileName(path.c_str(), tableId, columnId, currentPart);
-      std::string thesaurusFilename = aq::Database::getThesaurusFileName(path.c_str(), tableId, columnId, currentPart);
+      auto prmFilename = boost::filesystem::path(path) / aq::Database::getPrmFileName(tableId, columnId, currentPart);
+      auto thesaurusFilename = boost::filesystem::path(path) / aq::Database::getThesaurusFileName(tableId, columnId, currentPart);
 
       aq::Logger::getInstance().log(AQ_DEBUG, "open %s\n", prmFilename.c_str());
       aq::Logger::getInstance().log(AQ_DEBUG, "open %s\n", thesaurusFilename.c_str());

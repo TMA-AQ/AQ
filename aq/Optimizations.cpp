@@ -4,6 +4,8 @@
 #include <aq/util/Database.h>
 #include <aq/util/FileCloser.h>
 #include <boost/scoped_array.hpp>
+#include <boost/filesystem.hpp>
+namespace fs = boost::filesystem;
 
 namespace aq
 {
@@ -19,7 +21,7 @@ typename ColumnItem<T>::Ptr getMinMaxFromThesaurus(Column::Ptr column, size_t ta
     if (baseDesc->getTables()[tableIdx]->ID == tableID)
       break;
   }
-  std::string fileName = Database::getThesaurusFileName(settings->dataPath.c_str(), tableIdx + 1, colIdx + 1, partIdx);
+  auto fileName = fs::path(settings->dataPath) / Database::getThesaurusFileName(tableIdx + 1, colIdx + 1, partIdx);
   FILE* pFIn = fopen(fileName.c_str(), "rb");
   if ( pFIn == nullptr )
     return minMax;

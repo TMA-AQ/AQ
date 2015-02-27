@@ -35,7 +35,7 @@ template <typename T, class M>
 ThesaurusReader<T, M>::ThesaurusReader(const char * _path, size_t _tableId, size_t _columnId, size_t _size, size_t _packetSize, size_t _currentPacket, bool _readNextPacket)
   : path(_path), tableId(_tableId), columnId(_columnId), size(_size), currentPacket(_currentPacket), readNextPacket(_readNextPacket)
 {
-  std::string thesaurusFilename = aq::Database::getThesaurusFileName(path.c_str(), tableId, columnId, currentPacket);
+  auto thesaurusFilename = boost::filesystem::path(path) / aq::Database::getThesaurusFileName(tableId, columnId, currentPacket);
   this->thesaurusMapper.reset(new M(thesaurusFilename.c_str()));
   sizes.push_back(this->thesaurusMapper->size() / (size * sizeof(T)));
   mappedZone = std::make_pair(0, sizes[0]);
@@ -64,9 +64,8 @@ int ThesaurusReader<T, M>::loadValue(size_t index, T * value)
   else if ((index >= mappedZone.second) && (readNextPacket))
   {
     ++currentPacket;
-    std::string thesaurusFilename = aq::Database::getThesaurusFileName(path.c_str(), tableId, columnId, currentPacket);
-    boost::filesystem::path f(thesaurusFilename);
-    if (boost::filesystem::exists(f))
+    auto thesaurusFilename = boost::filesystem::path(path) / aq::Database::getThesaurusFileName(tableId, columnId, currentPacket);
+    if (boost::filesystem::exists(thesaurusFilename))
     {
       this->thesaurusMapper.reset(new M(thesaurusFilename.c_str()));
       sizes.push_back(this->thesaurusMapper->size() / (size * sizeof(T)));

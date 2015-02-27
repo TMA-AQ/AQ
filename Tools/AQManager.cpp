@@ -65,7 +65,7 @@ int check_database(const aq::Settings::Ptr settings)
         t.id, t.name.c_str(), c.id, c.name.c_str(), t.nb_record);
       for (int p = 0; p <= (t.nb_record / settings->packSize); p++)
       {
-        std::string thefilename = aq::Database::getThesaurusFileName(settings->dataPath.c_str(), t.id, c.id, p);
+        auto thefilename = settings->dataPath / aq::Database::getThesaurusFileName(t.id, c.id, p);
         aq::Logger::getInstance().log(AQ_NOTICE, "check thesaurus [%s]\n", thefilename.c_str());
 
   //      switch (c.type)
@@ -254,7 +254,7 @@ int transform_query(const std::string& query, aq::Settings::Ptr settings, aq::Ba
 // -------------------------------------------------------------------------------------------------
 int load_database(const aq::Settings::Ptr settings, aq::base_t& baseDesc, const std::string& tableNameToLoad)
 {
-  aq::DatabaseLoader loader(baseDesc, settings->rootPath, settings->packSize, ',', settings->csvFormat);
+  aq::DatabaseLoader loader(baseDesc, settings->rootPath.string(), settings->packSize, ',', settings->csvFormat);
   if (tableNameToLoad != "")
   {
     for (size_t t = 0; t < baseDesc.table.size(); ++t)
@@ -301,7 +301,7 @@ int generate_tmp_table(const aq::Settings::Ptr settings, aq::base_t& baseDesc, u
     {
       if (fd != NULL)
         fclose(fd);
-      std::string tmpFilename = settings->rootPath + aq::Database::getTemporaryFileName(tableIndex,  columnIndex,  partIndex, type.c_str(),  size);
+      auto tmpFilename = settings->rootPath / aq::Database::getTemporaryFileName(tableIndex,  columnIndex,  partIndex, type.c_str(),  size);
       fd = fopen(tmpFilename.c_str(), "w");
       if (fd == NULL)
         return -1;
@@ -348,9 +348,9 @@ int prepareQuery(const std::string& query, const aq::Settings::Ptr settingsBase,
   //
   // create directories
   std::list<fs::path> lpaths;
-  lpaths.push_back(fs::path(settings->rootPath + "calculus/" + queryIdentTmp));
-  lpaths.push_back(fs::path(settings->tmpPath));
-  lpaths.push_back(fs::path(settings->dpyPath));
+  lpaths.push_back(settings->rootPath / fs::path("calculus") / fs::path(queryIdentTmp));
+  lpaths.push_back(settings->tmpPath);
+  lpaths.push_back(settings->dpyPath);
   for (std::list<fs::path>::const_iterator dir = lpaths.begin(); dir != lpaths.end(); ++dir)
   {
     if (fs::exists(*dir))
@@ -373,7 +373,7 @@ int prepareQuery(const std::string& query, const aq::Settings::Ptr settingsBase,
 
   //
   // write request file
-  std::string queryFilename(settings->rootPath + "calculus/" + queryIdentTmp + "/Request.sql");
+  auto queryFilename = settings->rootPath / fs::path("calculus") / fs::path(queryIdentTmp) / fs::path("Request.sql");
   std::ofstream queryFile(queryFilename.c_str());
   queryFile << query;
   queryFile.close();
@@ -386,7 +386,7 @@ int prepareQuery(const std::string& query, const aq::Settings::Ptr settingsBase,
 
   // generate answer file
   // displayFile = settings.szRootPath + "/calculus/" + queryIdentStr + "/display.txt"; // TODO
-  displayFile = settings->rootPath + "calculus/" + queryIdentStr + "/answer.txt"; // TODO
+  displayFile = (settings->rootPath / fs::path("calculus") / fs::path(queryIdentStr) / fs::path("answer.txt")).string(); // TODO
   aq::Logger::getInstance().log(AQ_INFO, "save answer to %s\n", displayFile.c_str());
 
   return EXIT_SUCCESS;

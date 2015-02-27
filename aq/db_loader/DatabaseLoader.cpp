@@ -13,6 +13,9 @@
 #include <algorithm>
 #include <string>
 
+#include <boost/filesystem.hpp>
+namespace fs = boost::filesystem;
+
 #if defined(WIN32)
 # include <windows.h>
 # define atoll _atoi64
@@ -385,7 +388,7 @@ void DatabaseLoader::writeRecord(std::vector<struct column_info_t>& columns_info
 void DatabaseLoader::buildPrmThesaurus(const column_info_t& ci, size_t table_id, size_t col_id, size_t packet) const
 {
   // prm
-  std::string prmFilename = aq::Database::getPrmFileName(this->rep_cible.c_str(), table_id, col_id, packet);
+  auto prmFilename = fs::path(this->rep_cible) / aq::Database::getPrmFileName(table_id, col_id, packet);
   FILE * prm = fopen(prmFilename.c_str(), "w");
   if (prm == nullptr)
   {
@@ -398,7 +401,7 @@ void DatabaseLoader::buildPrmThesaurus(const column_info_t& ci, size_t table_id,
   fclose(prm);
 
   // thesaurus
-  std::string theFilename = aq::Database::getThesaurusFileName(this->rep_cible.c_str(), table_id, col_id, packet);
+  auto theFilename = fs::path(this->rep_cible) / aq::Database::getThesaurusFileName(table_id, col_id, packet);
   FILE * the = fopen(theFilename.c_str(), "w");
   if (the == nullptr)
   {

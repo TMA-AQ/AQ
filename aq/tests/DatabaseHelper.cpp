@@ -15,16 +15,12 @@
 using namespace aq;
 
 AlgoQuestDatabase::AlgoQuestDatabase(aq::Settings::Ptr _settings, bool _onlyEngine)
-  : db(_settings->rootPath), settings(_settings), onlyEngine(_onlyEngine)
+  : db(_settings->rootPath.string()), settings(_settings), onlyEngine(_onlyEngine)
 {
   base.id = 1; // fixme
-  base.name = settings->rootPath;
-  boost::replace_all(base.name, "\\", "/");
-  while (!base.name.empty() && (*base.name.rbegin() == '/'))
-    base.name.erase(base.name.size() - 1);
-  std::string::size_type pos = base.name.find_last_of("/");
-  if ((pos != std::string::npos) && (pos < base.name.size() - 1))
-    base.name = base.name.substr(pos + 1);
+  base.name = settings->rootPath.filename() == "." ?
+    settings->rootPath.filename().string() :
+    settings->rootPath.parent_path().filename().string() ;
   db.erase();
 }
 
@@ -77,7 +73,7 @@ void AlgoQuestDatabase::insertValues(const DatabaseGenerator::handle_t::tables_t
     throw;
   }
 
-  aq::DatabaseLoader loader(base, db.getRootPath(), aq::packet_size, ',', true); // FIXME
+  aq::DatabaseLoader loader(base, db.getRootPath().string(), aq::packet_size, ',', true); // FIXME
   std::list<int32_t> column_values;
 
   column_id = 1;
@@ -186,7 +182,7 @@ bool AlgoQuestDatabase::execute(const aq::core::SelectStatement& ss, DatabaseInt
   {
     try
     {
-      aq::Base::Ptr base(new aq::Base(settings->dbDesc));
+      aq::Base::Ptr base(new aq::Base(settings->dbDesc.string()));
       aq::engine::AQEngine_Intf::Ptr engine(aq::engine::getAQEngineSystem(base, settings));
       engine->prepare();
 
@@ -223,7 +219,7 @@ bool AlgoQuestDatabase::execute(const aq::core::SelectStatement& ss, DatabaseInt
   else
   {
     std::string query;
-    aq::Base::Ptr bd(new aq::Base(settings->dbDesc));
+    aq::Base::Ptr bd(new aq::Base(settings->dbDesc.string()));
     aq::engine::AQEngine_Intf::Ptr aqEngine(aq::engine::getAQEngineSystem(bd, settings));
     const std::string ident;
     bool keepFiles = false;

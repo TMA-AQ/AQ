@@ -12,6 +12,7 @@
 #include <boost/algorithm/string/classification.hpp>
 
 using namespace aq::engine;
+namespace fs = boost::filesystem;
 
 AQEngine::AQEngine(const aq::Base::Ptr _baseDesc, const aq::Settings::Ptr _settings)
   : baseDesc(_baseDesc), settings(_settings)
@@ -51,21 +52,20 @@ void AQEngine::call(const std::string& query, mode_t mode)
 bool AQEngine::check() const
 {
   char * path = getenv("PATH");
-  std::string prg = settings->aqEngine;
   std::list<std::string> vpath;
   boost::algorithm::split(vpath, path, boost::is_any_of(":"));
   vpath.push_front(""); // for absolute path
   vpath.push_front("./"); // for relative path
   for (auto p : vpath)
   {
-    auto f = boost::filesystem::path(p) / boost::filesystem::path(prg);
+    auto f = boost::filesystem::path(p) / settings->aqEngine;
     if (boost::filesystem::exists(f))
     {
       aq::Logger::getInstance().log(AQ_DEBUG, "found %s\n", f.c_str());
       return true;
     }
   }
-  aq::Logger::getInstance().log(AQ_DEBUG, "cannot found %s\n", prg.c_str());
+  aq::Logger::getInstance().log(AQ_DEBUG, "cannot found %s\n", settings->aqEngine.c_str());
   return false;
 }
 
@@ -79,7 +79,7 @@ void AQEngine::call(const aq::core::SelectStatement& query, mode_t mode)
 
 void AQEngine::run(const std::string& query, mode_t mode)
 {
-  std::string new_request_file = settings->workingPath + "New_Request.txt";
+  auto new_request_file = settings->workingPath / fs::path("New_Request.txt");
   aq::util::SaveFile(new_request_file.c_str(), query.c_str());
 
   // check if matrix files are already present
@@ -96,8 +96,8 @@ void AQEngine::run(const std::string& query, mode_t mode)
   if ((mode == 0) || (!settings->skipNestedQuery))
   {
     int rc = 1;
-    std::string prg = settings->aqEngine;
-    std::string arg = settings->iniFile + " " + settings->queryIdent;
+    std::string prg = settings->aqEngine.string();
+    std::string arg = settings->iniFile.string() + " " + settings->queryIdent;
     arg += mode == NESTED_2 ? " NoDpy" : " Dpy";
     if ((rc = this->run(prg.c_str(), arg.c_str())) != 0)
     {
@@ -236,7 +236,7 @@ void AQEngine::prepare() const
   boost::filesystem::path p;
   p = boost::filesystem::path(settings->workingPath);
   boost::filesystem::create_directory(p);
-  p = boost::filesystem::path(settings->tmpPath + "/dpy");
+  p = boost::filesystem::path(settings->tmpPath / fs::path("dpy"));
   boost::filesystem::create_directories(p);
 
   std::ofstream ini(settings->iniFile.c_str());
