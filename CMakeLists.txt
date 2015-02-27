@@ -21,6 +21,10 @@ find_package(BISON 3.0.2 REQUIRED)
 find_package(MySQLConnectorCPP REQUIRED)
 find_package(Pqxx)
 
+if(${PQXX_FOUND})
+  add_definitions(-DHAVE_PQXX)
+endif(${PQXX_FOUND})
+
 # Check syslog
 include(CheckIncludeFiles)
 check_include_files("syslog.h" HAVE_SYSLOG_H)

@@ -1,6 +1,8 @@
 #include <aq/tests/TestRunner.h>
 #include <aq/tests/MySQLHelper.h>
-#include <aq/tests/PGSQLHelper.h>
+#ifdef HAVE_PQXX
+# include <aq/tests/PGSQLHelper.h>
+#endif
 #include <aq/tests/QueryGenerator.h>
 #include <aq/tests/Report.h>
 #include "VerbBuilder.h"
@@ -230,6 +232,7 @@ struct Runner : public aq::DatabaseGenerator::handle_t
           boost::shared_ptr<aq::DatabaseIntf> db(new aq::MySQLDatabase(opt->mysql_host, opt->mysql_user, opt->mysql_pass, opt->mysql_name));
           tc->add(db);
       }
+#ifdef HAVE_PQXX
       if (pgsql_enabled)
       {
           std::cout << "add postgresql test case" << std::endl;
@@ -243,6 +246,7 @@ struct Runner : public aq::DatabaseGenerator::handle_t
               std::cerr << "ERROR while loading postgresql: " << ex.what() << std::endl;
           }
       }
+#endif
 
       std::fstream fin(opt->generator_filename.c_str());
       this->queriesGenerators.clear();
