@@ -54,7 +54,7 @@ void Database::create(aq::base_t& base)
     }
   }
 
-  std::ofstream f(this->getBaseDescFile().filename().string().c_str(), std::ios::trunc);
+  std::ofstream f(this->getBaseDescFile().c_str(), std::ios::trunc);
   aq::base_t::dump_raw_base(f, base);
   f.close();
 
