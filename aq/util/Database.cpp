@@ -84,7 +84,7 @@ aq::base_t Database::getBaseDesc() const
 int Database::load()
 {
   int rc = 0;
-  auto bdFname = this->getBaseDescFile().filename().string();
+  auto bdFname = this->getBaseDescFile().string();
   std::ifstream fin(bdFname.c_str(), std::ios::in);
   if (!fin.is_open())
     return -1;
