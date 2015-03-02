@@ -240,10 +240,10 @@ void AQEngine::prepare() const
   boost::filesystem::create_directories(p);
 
   std::ofstream ini(settings->iniFile.c_str());
-  ini << "export.filename.final=" << settings->dbDesc << std::endl;
+  ini << "export.filename.final=" << settings->dbDesc.string() << std::endl;
   ini << "step1.field.separator=;" << std::endl;
-  ini << "k_rep_racine=" << settings->rootPath << std::endl;
-  ini << "k_rep_racine_tmp=" << settings->rootPath << std::endl;
+  ini << "k_rep_racine=" << settings->rootPath.string() << "/" << std::endl;
+  ini << "k_rep_racine_tmp=" << settings->rootPath.string() << "/" << std::endl;
   ini.close();
 }
 
