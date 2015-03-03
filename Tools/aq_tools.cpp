@@ -66,16 +66,16 @@ int processSQLQueries(const std::string       & query,
   }
   else if (!basicAQEngine)
   {
-    if (!fs::exists(fs::path(settings->aqEngine)))
-    {
-      aq::Logger::getInstance().log(AQ_WARNING, "cannot find aq engine: '%s'\n", settings->aqEngine.c_str());
-      basicAQEngine = true;
-    }
-    else
-    {
+    // if (!fs::exists(fs::path(settings->aqEngine)))
+    // {
+    //   aq::Logger::getInstance().log(AQ_WARNING, "cannot find aq engine: '%s'\n", settings->aqEngine.c_str());
+    //   basicAQEngine = true;
+    // }
+    // else
+    // {
       aq::Logger::getInstance().log(AQ_INFO, "Use aq engine: '%s'\n", settings->aqEngine.c_str());
       aq_engine.reset(aq::engine::getAQEngineSystem(baseDesc, settings));
-    }
+    // }
   }
 
   if (basicAQEngine)
@@ -83,6 +83,9 @@ int processSQLQueries(const std::string       & query,
     aq::Logger::getInstance().log(AQ_INFO, "Use basic aq engine\n");
     aq_engine.reset(new aq::AQEngineBasic(baseDesc, settings));
   }
+
+  // FIXME : force use of aq-engine
+  aq_engine.reset(aq::engine::getAQEngineSystem(baseDesc, settings));
 
   //
   // prepare and process query

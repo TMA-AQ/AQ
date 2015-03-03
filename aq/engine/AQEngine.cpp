@@ -129,7 +129,7 @@ void AQEngine::load(mode_t mode)
     aq::Logger::getInstance().log(AQ_NOTICE, "Load From Binary AQ Matrix: Time Elapsed = %s\n", aq::Timer::getString(timer.getTimeElapsed()).c_str());
     if (mode == REGULAR)
     {
-      aq::util::DeleteFolder(settings->dpyPath.c_str());
+      // aq::util::DeleteFolder(settings->dpyPath.c_str());
     }
     else
     {
