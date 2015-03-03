@@ -100,6 +100,7 @@ Table::Ptr QueryResolver::solve(boost::shared_ptr<aq::RowWritter_Intf> rowWritte
   this->preProcess();
   this->solveNested(this->sqlStatement, this->level, nullptr, false, false);
   aq::verb::VerbNode::Ptr spTree = this->postProcess();
+  spTree->changeQuery();
   if (spTree != nullptr)
   {
     this->resolve(spTree);

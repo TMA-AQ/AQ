@@ -949,8 +949,12 @@ void cleanQuery( aq::tnode*& pNode )
 //------------------------------------------------------------------------------
 void getColumnTypes( aq::tnode* pNode, std::vector<Column::Ptr>& columnTypes, Base::Ptr BaseDesc )
 {
+  /*
+
   if (!pNode || !pNode->left)
     return;
+
+  std::cout << *pNode << std::endl;
 
   while ((pNode->left->tag == K_PERIOD) || (pNode->left->tag == K_COMMA))
   {
@@ -959,6 +963,10 @@ void getColumnTypes( aq::tnode* pNode, std::vector<Column::Ptr>& columnTypes, Ba
     if (pNode->tag == K_PERIOD)
     {
       colNode = pNode;
+    }
+    else if (pNode->tag == K_DELETED)
+    {
+      continue;
     }
     else
     {
@@ -975,6 +983,49 @@ void getColumnTypes( aq::tnode* pNode, std::vector<Column::Ptr>& columnTypes, Ba
     c->setTableName(table->getName());
     columnTypes.push_back(c);
   }
+
+  */
+
+  if (!pNode || !pNode->left)
+    return;
+
+  pNode = pNode->left;
+
+  std::cout << *pNode << std::endl;
+
+  while ((pNode->tag == K_PERIOD) || (pNode->tag == K_COMMA))
+  {
+    aq::tnode* colNode;
+    if (pNode->tag == K_PERIOD)
+    {
+      colNode = pNode;
+    }
+    else if (pNode->right->tag == K_DELETED)
+    {
+      pNode = pNode->left;
+      continue;
+    }
+    else
+    {
+      colNode = pNode->right;
+      assert (colNode->tag == K_PERIOD);
+    }
+
+    assert(colNode);
+    assert(colNode->left && (colNode->left->tag == K_IDENT));
+    assert(colNode->right && (colNode->right->tag == K_COLUMN));
+    const auto& table = BaseDesc->getTable(colNode->left->getData().val_str);
+    const auto& column = table->getColumn(colNode->right->getData().val_str);
+    Column::Ptr c(new Column(*column));
+    c->setTableName(table->getName());
+    columnTypes.push_back(c);
+
+    if (pNode->tag != K_COMMA)
+      break;
+
+    pNode = pNode->left;
+  }
+
   reverse(columnTypes.begin(), columnTypes.end());
 }
 
