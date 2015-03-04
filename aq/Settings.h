@@ -71,6 +71,7 @@ struct Settings
   bool displayCount;
   bool cmdLine;
   bool trace;
+  bool keepFiles;
   /// \}
 
   AQENGINE_API Settings();

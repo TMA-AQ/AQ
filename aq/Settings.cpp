@@ -43,7 +43,8 @@ Settings::Settings()
   useBinAQMatrix(true),
   displayCount(false),
   cmdLine(false),
-  trace(false)
+  trace(false),
+  keepFiles(false)
 {
 }
 
@@ -73,7 +74,8 @@ skipNestedQuery(obj.skipNestedQuery),
 useBinAQMatrix(obj.useBinAQMatrix),
 displayCount(obj.displayCount),
 cmdLine(obj.cmdLine),
-trace(obj.trace)
+trace(obj.trace),
+keepFiles(obj.keepFiles)
 {
 }
 
@@ -111,6 +113,7 @@ Settings& Settings::operator=(const Settings& obj)
     displayCount = obj.displayCount;
     cmdLine = obj.cmdLine;
     trace = obj.trace;
+    keepFiles = obj.keepFiles;
   }
   return *this;
 }
@@ -174,6 +177,7 @@ void Settings::load(std::istream& is)
     this->process_thread = get_opt_value(pt, "process-thread", this->process_thread);
     this->displayCount = get_opt_value(pt, "display-count", this->displayCount);
     this->trace = get_opt_value(pt, "trace", this->trace);
+    this->keepFiles = get_opt_value(pt, "keep-files", this->keepFiles);
 
     //
     //
@@ -249,6 +253,7 @@ void Settings::dump(std::ostream& os) const
   os << "displayCount:         ["  << displayCount         <<  "]" << std::endl;
   os << "cmdLine:              ["  << cmdLine              <<  "]" << std::endl;
   os << "trace:                ["  << trace                <<  "]" << std::endl;
+  os << "keep-files:           ["  << keepFiles            <<  "]" << std::endl;
 }
 
 std::string Settings::to_string() const

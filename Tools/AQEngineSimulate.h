@@ -18,6 +18,7 @@ namespace aq
 
     void prepare() const {}
     void clean() const {}
+    bool check() const { return true; }
 
     void call(const std::string& query, aq::engine::AQEngine_Intf::mode_t mode);
     void call(const aq::core::SelectStatement& query, aq::engine::AQEngine_Intf::mode_t mode);

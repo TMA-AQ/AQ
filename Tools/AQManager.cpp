@@ -394,7 +394,7 @@ int prepareQuery(const std::string& query, const aq::Settings::Ptr settingsBase,
 
 // -------------------------------------------------------------------------------------------------
 int processQuery(const std::string& query, aq::Settings::Ptr settings, aq::Base::Ptr baseDesc, aq::engine::AQEngine_Intf::Ptr aq_engine,
-                 const std::string& answer, bool keepFiles)
+                 const std::string& answer)
 {
   int rc = EXIT_SUCCESS;
 
@@ -467,7 +467,7 @@ int processQuery(const std::string& query, aq::Settings::Ptr settings, aq::Base:
     rc = EXIT_FAILURE;
   }
 
-  if (!keepFiles)
+  if (!settings->keepFiles)
   {
     aq::Logger::getInstance().log(AQ_NOTICE, "remove temporary directory '%s'\n", settings->tmpPath.c_str());
     aq::util::DeleteFolder(settings->tmpPath.c_str());

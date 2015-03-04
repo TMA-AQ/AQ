@@ -45,7 +45,6 @@ int processSQLQueries(const std::string       & query,
                       aq::Base::Ptr             baseDesc,
                       bool                      simulateAQEngine,
                       bool                      basicAQEngine,
-                      bool                      keepFiles,
                       bool                      force)
 {
 
@@ -66,15 +65,15 @@ int processSQLQueries(const std::string       & query,
   }
   else if (!basicAQEngine)
   {
-    if (!fs::exists(fs::path(settings->aqEngine)))
+    aq_engine.reset(aq::engine::getAQEngineSystem(baseDesc, settings));
+    if (aq_engine->check())
     {
-      aq::Logger::getInstance().log(AQ_WARNING, "cannot find aq engine: '%s'\n", settings->aqEngine.c_str());
-      basicAQEngine = true;
+      aq::Logger::getInstance().log(AQ_INFO, "Use aq engine: '%s'\n", settings->aqEngine.c_str());
     }
     else
     {
-      aq::Logger::getInstance().log(AQ_INFO, "Use aq engine: '%s'\n", settings->aqEngine.c_str());
-      aq_engine.reset(aq::engine::getAQEngineSystem(baseDesc, settings));
+      aq::Logger::getInstance().log(AQ_WARNING, "cannot find aq engine: '%s'\n", settings->aqEngine.c_str());
+      basicAQEngine = true;
     }
   }
 
@@ -89,7 +88,7 @@ int processSQLQueries(const std::string       & query,
   std::string answer;
 
   if (!((prepareQuery(query, settingsBase, baseDesc, settings, answer, queryIdent, force) == EXIT_SUCCESS) &&
-    (processQuery(query, settings, baseDesc, aq_engine, answer, keepFiles) == EXIT_SUCCESS)))
+    (processQuery(query, settings, baseDesc, aq_engine, answer) == EXIT_SUCCESS)))
   {
     aq::Logger::getInstance().log(AQ_DEBUG, "QUERY FAILED:\n%s\n", query.c_str());
   }
@@ -112,7 +111,6 @@ int parse_queries(const std::string & aqHome,
                   bool                transform,
                   bool                simulateAQEngine,
                   bool                basicAQEngine,
-                  bool                keepFiles,
                   bool                force)
 {
   //
@@ -158,7 +156,7 @@ int parse_queries(const std::string & aqHome,
     {
       if (cmdHandler.process(query) == -1)
       {
-        processSQLQueries(query, settings, queryIdent, baseDesc, simulateAQEngine, basicAQEngine, keepFiles, force);
+        processSQLQueries(query, settings, queryIdent, baseDesc, simulateAQEngine, basicAQEngine, force);
       }
     }
   }
@@ -194,7 +192,6 @@ int main(int argc, char**argv)
     std::string baseDescr;
     std::string DLLFunction;
     unsigned int worker;
-    bool keepFiles = false;
     bool displayCount = false;
     bool trace = false;
     bool loadDatabase = false;
@@ -296,7 +293,7 @@ int main(int argc, char**argv)
       ("parralellize,p", po::value<size_t>(&settings->process_thread)->default_value(settings->process_thread), "number of thread assigned resolve one sql queries")
       ("display-count", po::bool_switch(&displayCount), "")
       ("force", po::bool_switch(&force), "force use of directory if it already exists")
-      ("keep-file,k", po::bool_switch(&keepFiles), "")
+      ("keep-file,k", po::bool_switch(&settings->keepFiles), "")
       ("trace,t", po::bool_switch(&trace), "")
       ;
 
@@ -487,7 +484,7 @@ int main(int argc, char**argv)
     auto rc = parse_queries(
       aqHome, aqName, queryIdent, *reader, aqMatrixFileName,
       settings, bd,
-      transform, simulateAQEngine, basicAQEngine, keepFiles, force);
+      transform, simulateAQEngine, basicAQEngine, force);
 
     delete reader;
     if (fileQueries)

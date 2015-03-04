@@ -12,6 +12,7 @@ public:
   AQEngineBasic(aq::Base::Ptr _base, aq::Settings::Ptr _settings);
   void prepare() const;
   void clean() const;
+  bool check() const { return true; }
   void call(const std::string& query, aq::engine::AQEngine_Intf::mode_t mode);
   void call(const aq::core::SelectStatement& stmt, aq::engine::AQEngine_Intf::mode_t mode);
   void renameResult(unsigned int id, std::vector<std::pair<std::string, std::string> >& resultTables); 

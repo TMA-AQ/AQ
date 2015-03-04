@@ -129,11 +129,13 @@ void AQEngine::load(mode_t mode)
     aq::Logger::getInstance().log(AQ_NOTICE, "Load From Binary AQ Matrix: Time Elapsed = %s\n", aq::Timer::getString(timer.getTimeElapsed()).c_str());
     if (mode == REGULAR)
     {
-      aq::util::DeleteFolder(settings->dpyPath.c_str());
+      if (!settings->keepFiles)
+        aq::util::DeleteFolder(settings->dpyPath.c_str());
     }
     else
     {
-      aq::util::CleanFolder(settings->tmpPath.c_str());
+      if (!settings->keepFiles)
+        aq::util::CleanFolder(settings->tmpPath.c_str());
     }
 #else
     aqMatrix->loadHeader(settings.szTempPath2, this->tableIDs);
@@ -249,8 +251,11 @@ void AQEngine::prepare() const
 
 void AQEngine::clean() const
 {
-  aq::util::DeleteFolder(settings->workingPath.c_str());
-  aq::util::DeleteFolder(settings->tmpPath.c_str());
+  if (!settings->keepFiles)
+  {
+    aq::util::DeleteFolder(settings->workingPath.c_str());
+    aq::util::DeleteFolder(settings->tmpPath.c_str());
+  }
 }
 
 #ifdef WIN32

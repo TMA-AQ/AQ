@@ -37,6 +37,9 @@ class AQENGINE_API AQEngine_Intf
   /// \brief clean after called aq engine (delete unused files or directories, ...)
   virtual void clean() const = 0;
 
+  /// \brief check aq engine is ready to run
+  virtual bool check() const = 0;
+
   /// \brief call aq engine
   /// \param[in] query the string representation of the query must be an AQL Prefixed Query
   /// \param[in] mode determine if the query is a subquery of a larger query and how the result must be processed
