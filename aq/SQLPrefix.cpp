@@ -55,6 +55,16 @@ std::string& syntax_tree_to_aql_form(const aq::tnode * const pNode, std::string&
       aq::syntax_tree_to_aql_form(pNode->right, query);
       aq::syntax_tree_to_aql_form(pNode->left, query);
     }
+    else if ((pNode->tag == K_COMMA) && (pNode->left != nullptr) && (pNode->left->tag == K_DELETED))
+    {
+      aq::syntax_tree_to_aql_form(pNode->right, query);
+      return query;
+    }
+    else if ((pNode->tag == K_COMMA) && (pNode->right != nullptr) && (pNode->right->tag == K_DELETED))
+    {
+      aq::syntax_tree_to_aql_form(pNode->left, query);
+      return query;
+    }
     else
     {
       switch ( pNode->tag ) {
@@ -76,6 +86,11 @@ std::string& syntax_tree_to_aql_form(const aq::tnode * const pNode, std::string&
       case K_IDENT:
       case K_COLUMN:
         stmp << pNode->getData().val_str;
+        break;
+      case K_INNER:
+      case K_OUTER:
+        stmp << "K_ACTIVE " << id_to_string(pNode->tag);
+        break;
         break;
       default:
         stmp << id_to_string( pNode->tag );

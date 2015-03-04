@@ -27,6 +27,8 @@ struct connectionLine
   int lineId;
   std::string table1;
   std::string table2;
+  std::string table1Type; ///< k_active / k_filter / k_neutral
+  std::string table2Type; ///< k_active / k_filter / k_neutral
   std::string table1JoinType; ///< k_inner / k_outer
   std::string table2JoinType; ///< k_inner / k_outer
   std::vector<std::string> tableAndCol1;
@@ -163,12 +165,14 @@ connectionLine nextConnectionLine( std::string& inputString )
 
   nextPosition = inputString.find(' ') + 1;
   nextPosition = inputString.find(' ', nextPosition) + 1;
+  nextPosition = inputString.find(' ', nextPosition) + 1;
   nextPosition = inputString.find(' ', nextPosition);
   CL.table1 = inputString.substr(0, nextPosition);
 
   pos = CL.table1.find('.');
   if (pos == std::string::npos)
     throw std::exception(); // TODO
+
   CL.table1JoinType = CL.table1.substr(0, pos);
   CL.table1 = CL.table1.substr(pos);
 
@@ -180,6 +184,7 @@ connectionLine nextConnectionLine( std::string& inputString )
   boost::algorithm::trim( inputString );
 
   nextPosition = inputString.find(' ') + 1;
+  nextPosition = inputString.find(' ', nextPosition) + 1;
   nextPosition = inputString.find(' ', nextPosition) + 1;
   nextPosition = inputString.find(' ', nextPosition);
   CL.table2 = inputString.substr(0, nextPosition);
