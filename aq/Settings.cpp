@@ -266,7 +266,7 @@ void Settings::writeAQEngineIni(std::ostream& os) const
 {
   os << "export.filename.final=" << dbDesc.string() << std::endl;
   os << "step1.field.separator=" << fieldSeparator << std::endl;
-  os << "k_rep_racine=" << rootPath.string() << std::endl;
+  os << "k_rep_racine=" << rootPath.string() << "/" << std::endl;
   // FIXME
   auto str = tmpRootPath.string();
   std::string::size_type pos = str.find("data_orga/tmp");
@@ -276,7 +276,7 @@ void Settings::writeAQEngineIni(std::ostream& os) const
   }
   else
   {
-    os << "k_rep_racine_tmp=" << str << std::endl;
+    os << "k_rep_racine_tmp=" << str << "/" << std::endl;
   }
 }
 
