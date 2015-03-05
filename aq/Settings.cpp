@@ -264,12 +264,12 @@ std::string Settings::to_string() const
 
 void Settings::writeAQEngineIni(std::ostream& os) const
 {
-  os << "export.filename.final=" << dbDesc << std::endl;
+  os << "export.filename.final=" << dbDesc.string() << std::endl;
   os << "step1.field.separator=" << fieldSeparator << std::endl;
-  os << "k_rep_racine=" << rootPath << std::endl;
+  os << "k_rep_racine=" << rootPath.string() << std::endl;
   // FIXME
   auto str = tmpRootPath.string();
-  std::string::size_type pos = str.find("data_orga/tmp/");
+  std::string::size_type pos = str.find("data_orga/tmp");
   if (pos != std::string::npos)
   {
     os << "k_rep_racine_tmp=" << str.substr(0, pos) << std::endl;
