@@ -45,7 +45,7 @@ int SQLParse( const char *pszStr, aq::tnode*& pNode )
   return rc;
 }
 
-std::string tnode::indentStep("    ");
+std::string tnode::indentStep("|   ");
 
 tnode::tnode(tag_t _tag)
   :
@@ -506,12 +506,12 @@ void tnode::dump(std::ostream& os, std::string indent) const
     if (this->left != nullptr)
       this->left->dump(os, indent + tnode::indentStep);
     else
-      os << "[address:" << (void*)0 << "] " << indent << tnode::indentStep << "[EMPTY LEFT]" << std::endl;
+      os << "[address:0x000000] " << indent << tnode::indentStep << "[EMPTY LEFT]" << std::endl;
 
     if (this->right != nullptr)
-      this->right->dump(os, indent + "    ");
+      this->right->dump(os, indent + tnode::indentStep);
     else
-      os << "[address:" << (void*)0 << "] " << indent << tnode::indentStep << "[EMPTY RIGHT]" << std::endl;
+      os << "[address:0x000000] " << indent << tnode::indentStep << "[EMPTY RIGHT]" << std::endl;
   }
 
   if (this->next != nullptr)

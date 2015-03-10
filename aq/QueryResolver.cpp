@@ -350,17 +350,17 @@ void QueryResolver::resolve(aq::verb::VerbNode::Ptr spTree)
     case analyze::type_t::REGULAR:
     case analyze::type_t::TEMPORARY_COLUMN:
       this->solveAQMatrix(spTree);
-      aq::Logger::getInstance().log(AQ_INFO, "solve aq matrice in %s", aq::Timer::getString(timer.getTimeElapsed()).c_str());
+      aq::Logger::getInstance().log(AQ_INFO, "solve aq matrice in %s\n", aq::Timer::getString(timer.getTimeElapsed()).c_str());
       break;
     case analyze::type_t::FOLD_UP_QUERY:
       this->resultTables.clear();
       this->renameResultTable();
-      aq::Logger::getInstance().log(AQ_INFO, "result table renamed in %s", aq::Timer::getString(timer.getTimeElapsed()).c_str());
+      aq::Logger::getInstance().log(AQ_INFO, "result table renamed in %s\n", aq::Timer::getString(timer.getTimeElapsed()).c_str());
       break;
     case analyze::type_t::TEMPORARY_TABLE:
       this->resultTables.clear();
       this->generateTemporaryTable();
-      aq::Logger::getInstance().log(AQ_INFO, "generate temporary table in %s", aq::Timer::getString(timer.getTimeElapsed()).c_str());
+      aq::Logger::getInstance().log(AQ_INFO, "generate temporary table in %s\n", aq::Timer::getString(timer.getTimeElapsed()).c_str());
       break;
     }
   }
@@ -512,6 +512,11 @@ void QueryResolver::generateAQEngineQuery(std::string& query, std::vector<std::s
   std::string group;
   std::string order;
   std::string group_and_order;
+
+#if defined (AQ_TRACE)
+  std::cout << *this->sqlStatement << std::endl;
+#endif
+
   aq::syntax_tree_to_aql_form(this->sqlStatement, query);
 
   std::string::size_type posOrder = query.find("ORDER");

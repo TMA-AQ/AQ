@@ -991,7 +991,9 @@ void getColumnTypes( aq::tnode* pNode, std::vector<Column::Ptr>& columnTypes, Ba
 
   pNode = pNode->left;
 
+#if defined (AQ_TRACE)
   std::cout << *pNode << std::endl;
+#endif
 
   while ((pNode->tag == K_PERIOD) || (pNode->tag == K_COMMA))
   {
@@ -1463,7 +1465,9 @@ void processNot( aq::tnode*& pNode, bool applyNot )
 //------------------------------------------------------------------------------
 void tnodeToSelectStatement(const aq::tnode& tree, aq::core::SelectStatement& ss)
 {
+#if defined (AQ_TRACE)
   std::cout << tree << std::endl;
+#endif
 
   const aq::tnode * selectNode = tree.find_main(K_SELECT);
   const aq::tnode * fromNode = tree.find_main(K_FROM);
@@ -1515,7 +1519,6 @@ void tnodeToSelectStatement(const aq::tnode& tree, aq::core::SelectStatement& ss
     fromNode->find_nodes(K_JOIN, from_nodes);
     for (const auto& join : nodes)
     {
-      std::cout << *join << std::endl;
       aq::core::JoinCondition jc;
 
       aq::tnode * on = join->next;
