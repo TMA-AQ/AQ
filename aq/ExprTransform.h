@@ -157,6 +157,10 @@ aq::tnode * getResult(const std::vector<aq::ColumnItem<T> >& result, const aq::C
 
 void getColumnInfos(const aq::Base::Ptr baseDesc, const aq::tnode& node, size_t& tId, size_t& cId, size_t& cSize, aq::ColumnType& cType)
 {
+  assert(node.left != nullptr);
+  assert(node.right != nullptr);
+  assert(node.left->getData().val_str != nullptr);
+  assert(node.right->getData().val_str != nullptr);
   std::string tableName = node.left->getData().val_str;
   std::string columnName = node.right->getData().val_str;
   boost::trim(tableName);
