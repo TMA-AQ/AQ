@@ -25,6 +25,12 @@ MySQLDatabase::MySQLDatabase(const std::string& _host, const std::string& _user,
     throw aq::generic_error(aq::generic_error::GENERIC, "[mysql-connector] : cannot create statement");
 }
 
+MySQLDatabase::~MySQLDatabase()
+{
+  delete stmt;
+  delete con;
+}
+
 void MySQLDatabase::createTable(const DatabaseGenerator::handle_t::tables_t::key_type& table)
 {
   query.str("");
@@ -83,6 +89,7 @@ bool MySQLDatabase::execute(const aq::core::SelectStatement& ss, DatabaseIntf::r
         r.push_back(s == "" ? "NULL" : s);
       }
     }
+    delete res;
   }
   catch (const sql::SQLException& ex)
   {

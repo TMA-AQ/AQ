@@ -15,6 +15,7 @@ class MySQLDatabase : public DatabaseIntf
 {
 public:
   MySQLDatabase(const std::string& _host, const std::string& _user, const std::string& _pass, const std::string& _name);
+  ~MySQLDatabase();
   void clean() {};
   void createTable(const DatabaseGenerator::handle_t::tables_t::key_type& table);
   void insertValues(const DatabaseGenerator::handle_t::tables_t::value_type& values);
