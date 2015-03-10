@@ -28,6 +28,8 @@ static void addInnerOuter(aq::tnode * j, aq::tnode * n, int tag)
 //------------------------------------------------------------------------------
 bool JoinVerb::preprocessQuery( aq::tnode* pStart, aq::tnode* pNode, aq::tnode* pStartOriginal )
 {
+  return false;
+
   assert( pNode && pStart );
   aq::tnode* pJoin = pNode;
   while( pJoin->left && pJoin->tag != K_JOIN )

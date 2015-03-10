@@ -208,31 +208,56 @@ void moveFromJoinToWhere( aq::tnode* pStart, Base::Ptr BaseDesc )
 {
   assert( pStart && pStart->tag == K_SELECT );
 
-  aq::tnode* pNode = pStart->find_main(K_FROM);
+  aq::tnode* pFrom = pStart->find_main(K_FROM);
 
   //
   // Get All the tables in inner clause
-  aq::tnode* pInner = nullptr;
+  aq::tnode* pJoin = nullptr;
   do
   {
-    pInner = pNode->find_deeper(K_INNER); // K_OUTER is not managed here
-    if (pInner == nullptr)
-      return;
+    aq::tnode::tag_t j_left = K_INNER;
+    aq::tnode::tag_t j_right = K_INNER;
+    aq::tnode * j_dir = nullptr;
 
-    assert(pInner->left && (pInner->left->tag == K_JOIN));
-    assert(pInner->left->next && (pInner->left->next->tag == K_ON));
-    aq::tnode* tablesNodes = pInner->left;
-    aq::tnode* condNodes = pInner->left->next->left;
+    pJoin = pFrom->find_deeper(K_INNER);
+    if (pJoin == nullptr)
+    {
+      pJoin = pFrom->find_deeper(K_OUTER);
+      if ((pJoin != nullptr) && (pJoin->parent != nullptr))
+      {
+        j_dir = pJoin->parent;
+        switch (pJoin->parent->getTag())
+        {
+        case K_LEFT: j_right = K_OUTER; break;
+        case K_RIGHT: j_left = K_OUTER; break;
+        case K_FULL: j_right = K_OUTER; j_left = K_OUTER; break;
+        default: return; // FIXME
+        }
+      }
+    }
+    if (pJoin == nullptr)
+      return; // FIXME
+
+    if ((j_dir != nullptr) && (j_dir->parent != nullptr))
+    {
+      j_dir->parent->left = j_dir->left; // FIXME
+      delete j_dir;
+    }
+
+    assert(pJoin->left && (pJoin->left->tag == K_JOIN));
+    assert(pJoin->left->next && (pJoin->left->next->tag == K_ON));
+    aq::tnode* tablesNodes = pJoin->left;
+    aq::tnode* condNodes = pJoin->left->next->left;
 
     assert(tablesNodes->left && ((tablesNodes->left->tag == K_IDENT) || (tablesNodes->left->tag == K_COMMA)));
     assert(tablesNodes->right && ((tablesNodes->right->tag == K_IDENT) || (tablesNodes->right->tag == K_COMMA)));
 
-    pInner->tag = K_COMMA;
-    pInner->left = tablesNodes->left;
-    pInner->right = tablesNodes->right;
+    pJoin->tag = K_COMMA;
+    pJoin->left = tablesNodes->left;
+    pJoin->right = tablesNodes->right;
 
     // std::swap(condNodes->left, condNodes->right);
-    addInnerOuterNodes( condNodes, K_INNER, K_INNER );
+    addInnerOuterNodes( condNodes, j_left, j_right );
     condNodes->inf = 1;
 
     aq::tnode* pWhere = pStart->find_main(K_WHERE);
@@ -240,7 +265,7 @@ void moveFromJoinToWhere( aq::tnode* pStart, Base::Ptr BaseDesc )
     {
       pWhere = new aq::tnode( K_WHERE );
       pWhere->left = condNodes;
-      pNode->next = pWhere;
+      pFrom->next = pWhere;
     }
     else
     {
@@ -250,7 +275,7 @@ void moveFromJoinToWhere( aq::tnode* pStart, Base::Ptr BaseDesc )
       pWhere->left = pAnd;
       pWhere = pAnd;
     }
-  } while (pInner != nullptr);
+  } while (pJoin != nullptr);
 }
 
 //------------------------------------------------------------------------------
