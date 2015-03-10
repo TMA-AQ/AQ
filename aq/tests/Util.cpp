@@ -682,7 +682,12 @@ int display(display_cb * cb,
     aq::Table::Ptr table = baseDesc->getTable(t.table_id);
     for (auto& col : table->Columns)
     {
-      auto it = std::find(selectedColumns.begin(), selectedColumns.end(), std::string(table->getName() + "." + col->getName()));
+      auto it = std::find_if(selectedColumns.begin(), selectedColumns.end(), [&] (std::string name) -> bool {
+        std::string s = table->getName() + "." + col->getName();
+        boost::algorithm::to_lower(s);
+        boost::algorithm::to_lower(name);
+        return s == name;
+      });
       if (it != selectedColumns.end())
       {
         column_mapper_t cm;
